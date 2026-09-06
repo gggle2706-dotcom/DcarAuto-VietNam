@@ -22,44 +22,42 @@ const formatCurrency = (val: number) => {
 };
 
 const hasDiscount = product.salePrice && product.salePrice < product.price;
-const discountPercent = hasDiscount ? Math.round(((product.price - product.salePrice!) / product.price) * 100) : 0;
 const currentPrice = hasDiscount ? product.salePrice! : product.price;
 
 // Tin nhắn Zalo tư vấn
 const zaloMessage = encodeURIComponent(
-  `Chào shop AutoTech Pro, tôi quan tâm đến sản phẩm "${product.name}" (Mã: ${product.sku}). Xin báo giá trọn gói thi công và kiểm tra tương thích cho xe của tôi.`
+  `Chào shop AutoTech, tôi quan tâm sản phẩm "${product.name}" (Mã: ${product.sku}). Cho tôi xin báo giá trọn gói thi công cho xe.`
 );
 const zaloUrl = `https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}?text=${zaloMessage}`;
 
-// Sản phẩm liên quan cùng danh mục
+// Sản phẩm liên quan
 const relatedProducts = MOCK_PRODUCTS
   .filter((p) => p.categorySlug === product.categorySlug && p.id !== product.id)
   .slice(0, 4);
 ---
 
 <Layout
-  title={`${product.name} - AutoTech Pro`}
+  title={`${product.name} - AutoTech`}
   description={product.description}
 >
-  <!-- Breadcrumb -->
-  <div class="bg-slate-900/60 border-b border-slate-800 py-3 px-4 sm:px-6 text-xs text-slate-400">
+  <!-- Breadcrumb Sáng -->
+  <div class="bg-slate-100 border-b border-slate-200 py-3 px-4 sm:px-6 text-xs text-slate-500">
     <div class="max-w-7xl mx-auto flex items-center gap-2 flex-wrap">
-      <a href="/" class="hover:text-white">Trang chủ</a>
+      <a href="/" class="hover:text-slate-900">Trang chủ</a>
       <span>/</span>
-      <a href="/san-pham" class="hover:text-white">Sản phẩm</a>
+      <a href="/san-pham" class="hover:text-slate-900">Sản phẩm</a>
       <span>/</span>
-      <a href={`/san-pham?category=${product.categorySlug}`} class="hover:text-white">{product.categoryName}</a>
+      <a href={`/san-pham?category=${product.categorySlug}`} class="hover:text-slate-900">{product.categoryName}</a>
       <span>/</span>
-      <span class="text-amber-400 font-medium truncate max-w-xs">{product.name}</span>
+      <span class="text-slate-900 font-semibold truncate max-w-xs">{product.name}</span>
     </div>
   </div>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-    <!-- Khu vực chính Sản phẩm: Gallery & Order Action -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-      <!-- Cột Gallery (5 cols) -->
+      <!-- Cột Ảnh (5 cols) -->
       <div class="lg:col-span-5 space-y-4">
-        <div class="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 shadow-xl">
+        <div class="relative aspect-[4/3] rounded-xl overflow-hidden bg-white border border-slate-200 shadow-sm">
           <img
             id="main-product-image"
             src={product.image}
@@ -67,52 +65,46 @@ const relatedProducts = MOCK_PRODUCTS
             class="w-full h-full object-cover"
           />
           {hasDiscount && (
-            <span class="absolute top-3 left-3 px-2.5 py-1 rounded-md text-xs font-bold bg-red-600 text-white shadow-lg">
-              GIẢM {discountPercent}%
+            <span class="absolute top-3 left-3 px-2.5 py-1 rounded-md text-xs font-bold bg-red-600 text-white shadow-xs">
+              Giảm giá
             </span>
           )}
         </div>
 
-        <!-- Cam kết nhanh bên dưới ảnh -->
-        <div class="grid grid-cols-3 gap-2 text-center text-[11px] text-slate-300">
-          <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
-            <div class="font-bold text-amber-400">100% Giắc Zin</div>
-            <div class="text-[10px] text-slate-400 mt-0.5">Không cắt trích dây</div>
+        <div class="grid grid-cols-3 gap-2 text-center text-xs text-slate-700">
+          <div class="p-2.5 rounded-lg bg-white border border-slate-200 shadow-2xs">
+            <div class="font-bold text-slate-900">100% Giắc Zin</div>
+            <div class="text-[10px] text-slate-500 mt-0.5">Không cắt trích dây</div>
           </div>
-          <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
-            <div class="font-bold text-emerald-400">BH {product.warrantyMonths} Tháng</div>
-            <div class="text-[10px] text-slate-400 mt-0.5">Lỗi 1 đổi 1 chính hãng</div>
+          <div class="p-2.5 rounded-lg bg-white border border-slate-200 shadow-2xs">
+            <div class="font-bold text-slate-900">BH {product.warrantyMonths} Tháng</div>
+            <div class="text-[10px] text-slate-500 mt-0.5">Lỗi 1 đổi 1 chính hãng</div>
           </div>
-          <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
-            <div class="font-bold text-blue-400">Thi Công Tại Xưởng</div>
-            <div class="text-[10px] text-slate-400 mt-0.5">Hoặc hỗ trợ tận nơi</div>
+          <div class="p-2.5 rounded-lg bg-white border border-slate-200 shadow-2xs">
+            <div class="font-bold text-slate-900">Lắp Đặt Xưởng</div>
+            <div class="text-[10px] text-slate-500 mt-0.5">Hoặc hỗ trợ tận nơi</div>
           </div>
         </div>
       </div>
 
-      <!-- Cột Thông tin & Nút Chốt Đơn (7 cols) -->
+      <!-- Cột Thông tin & Nút Mua (7 cols) -->
       <div class="lg:col-span-7 flex flex-col justify-between">
         <div class="space-y-4">
-          <!-- Thương hiệu & SKU -->
           <div class="flex items-center gap-3 text-xs">
-            <span class="px-2.5 py-1 rounded bg-amber-500/10 text-amber-400 font-bold border border-amber-500/20 uppercase">
+            <span class="px-2.5 py-1 rounded bg-slate-100 text-slate-800 font-bold uppercase tracking-wider">
               {product.brand}
             </span>
-            <span class="text-slate-400">Mã SKU: <span class="text-slate-200 font-mono">{product.sku}</span></span>
-            <span class="text-emerald-400 font-medium inline-flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-              Sẵn hàng tại xưởng
-            </span>
+            <span class="text-slate-500">Mã SKU: <span class="text-slate-800 font-mono font-semibold">{product.sku}</span></span>
+            <span class="text-emerald-700 font-semibold">● Sẵn hàng tại xưởng</span>
           </div>
 
-          <!-- Tên sản phẩm -->
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-snug">
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
             {product.name}
           </h1>
 
-          <!-- Giá bán -->
-          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-baseline gap-3">
-            <span class="text-2xl sm:text-3xl font-black text-amber-400">
+          <!-- Giá -->
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-baseline gap-3">
+            <span class="text-2xl sm:text-3xl font-extrabold text-red-600">
               {formatCurrency(currentPrice)}
             </span>
             {hasDiscount && (
@@ -120,29 +112,28 @@ const relatedProducts = MOCK_PRODUCTS
                 {formatCurrency(product.price)}
               </span>
             )}
-            <span class="text-xs text-slate-400 ml-auto">
+            <span class="text-xs text-slate-500 ml-auto">
               (Giá tham khảo - Đã bao gồm công lắp cơ bản)
             </span>
           </div>
 
           <!-- Tương thích xe -->
-          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-xs">
-            <div class="font-bold text-white mb-1.5 flex items-center gap-1.5">
-              <span>🚗</span>
-              <span>Dòng xe tương thích:</span>
+          <div class="p-4 rounded-xl bg-white border border-slate-200 text-xs space-y-1.5 shadow-2xs">
+            <div class="font-bold text-slate-900">
+              🚗 Dòng xe tương thích:
             </div>
             {product.isUniversal ? (
-              <p class="text-emerald-400 font-medium">
-                Sản phẩm phổ thông — Tương thích với 100% tất cả các hãng và dòng xe trên thị trường.
+              <p class="text-emerald-700 font-medium">
+                Sản phẩm phổ thông — Lắp đặt tương thích với 100% tất cả các dòng xe.
               </p>
             ) : (
               <div>
-                <p class="text-slate-300 mb-2">
-                  Tương thích với các hãng: <span class="text-amber-400 font-semibold uppercase">{product.compatibleBrands.join(', ')}</span> (Bao gồm mặt dưỡng chuyên biệt theo form taplo).
+                <p class="text-slate-600 mb-2">
+                  Tương thích với các hãng: <span class="font-semibold text-slate-900 uppercase">{product.compatibleBrands.join(', ')}</span> (Có sẵn dưỡng theo form xe).
                 </p>
                 <div class="flex flex-wrap gap-1">
                   {product.compatibleModels.map((m) => (
-                    <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[11px] font-mono">
+                    <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-800 text-[11px] font-mono">
                       {m.toUpperCase()}
                     </span>
                   ))}
@@ -151,17 +142,16 @@ const relatedProducts = MOCK_PRODUCTS
             )}
           </div>
 
-          <!-- Thông số kỹ thuật nổi bật (Specs) -->
+          <!-- Thông số kỹ thuật -->
           {product.specs.length > 0 && (
-            <div>
-              <div class="text-xs font-bold text-white uppercase tracking-wider mb-2">
+            <div class="space-y-2">
+              <div class="text-xs font-bold text-slate-900 uppercase tracking-wide">
                 Thông số nổi bật
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                 {product.specs.map((spec) => (
-                  <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-300">
-                    <svg class="w-3.5 h-3.5 text-amber-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                    <span>{spec}</span>
+                  <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 font-medium">
+                    ✓ {spec}
                   </div>
                 ))}
               </div>
@@ -169,69 +159,58 @@ const relatedProducts = MOCK_PRODUCTS
           )}
         </div>
 
-        <!-- Cụm nút Call-To-Action (Lead Generation) -->
-        <div class="pt-6 border-t border-slate-800 space-y-3 mt-6">
+        <!-- CTA Buttons -->
+        <div class="pt-6 border-t border-slate-200 space-y-2.5 mt-6">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <!-- Nút Zalo -->
             <a
               href={zaloUrl}
               target="_blank"
               rel="noopener noreferrer"
-              class="py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm text-center shadow-lg shadow-blue-600/20 active:scale-95 transition flex items-center justify-center gap-2"
+              class="py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm text-center transition shadow-xs flex items-center justify-center gap-2"
             >
-              <span class="font-extrabold text-xs bg-white text-blue-600 px-1 rounded">Z</span>
               <span>Nhận Báo Giá Qua Zalo</span>
             </a>
 
-            <!-- Nút Gọi Hotline -->
             <a
               href={`tel:${DEFAULT_SHOP_SETTINGS.phone.replace(/[^0-9]/g, '')}`}
-              class="py-3 px-4 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-sm text-center shadow-lg shadow-red-600/20 active:scale-95 transition flex items-center justify-center gap-2"
+              class="py-3 px-4 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-sm text-center transition shadow-xs flex items-center justify-center gap-2"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-              </svg>
               <span>Gọi Kỹ Thuật: {DEFAULT_SHOP_SETTINGS.phone}</span>
             </a>
           </div>
 
-          <p class="text-[11px] text-center text-slate-400">
-            * Kỹ thuật viên sẽ kiểm tra form dưỡng taplo và tư vấn trực tiếp theo hình ảnh xe của bạn trước khi thi công.
+          <p class="text-[11px] text-center text-slate-500">
+            * Kỹ thuật viên sẽ kiểm tra form taplo xe của bạn trước khi bắt đầu thi công.
           </p>
         </div>
       </div>
     </div>
 
-    <!-- Mô tả chi tiết sản phẩm -->
-    <div class="mt-12 sm:mt-16 pt-8 border-t border-slate-800">
-      <div class="max-w-4xl">
-        <h2 class="text-xl sm:text-2xl font-bold text-white mb-4">
-          Mô Tả Chi Tiết & Ưu Điểm Nổi Bật
-        </h2>
-        <div class="prose prose-invert max-w-none text-slate-300 text-sm leading-relaxed space-y-4">
-          <p>{product.description}</p>
-          <p>
-            Khi nâng cấp sản phẩm <strong class="text-white">{product.name}</strong> tại {DEFAULT_SHOP_SETTINGS.shop_name}, khách hàng hoàn toàn an tâm về quy trình thi công kỹ thuật:
-          </p>
-          <ul class="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-300">
-            <li>Toàn bộ dây nguồn được sử dụng <strong>giắc cắm zin 100%</strong>, tuyệt đối không chích dây, cắt nối làm mất bảo hành xe của hãng.</li>
-            <li>Hỗ trợ tích hợp điều khiển phím trên vô lăng và đồng bộ âm thanh nguyên bản.</li>
-            <li>Mặt dưỡng được đúc nguyên khối theo đúng phom xe, độ khít đạt tiêu chuẩn như xuất xưởng.</li>
-            <li>Hỗ trợ cài đặt phần mềm dẫn đường bản quyền (Vietmap Live / Navitel / Google Maps) và phần mềm điều khiển giọng nói tiếng Việt Kiki.</li>
-          </ul>
-        </div>
+    <!-- Mô tả chi tiết -->
+    <div class="mt-12 pt-8 border-t border-slate-200 max-w-4xl">
+      <h2 class="text-xl font-bold text-slate-900 mb-3">
+        Mô Tả Sản Phẩm & Quy Trình Thi Công
+      </h2>
+      <div class="prose max-w-none text-slate-700 text-sm leading-relaxed space-y-3">
+        <p>{product.description}</p>
+        <p>
+          Khi lắp đặt <strong class="text-slate-900">{product.name}</strong> tại {DEFAULT_SHOP_SETTINGS.shop_name}, khách hàng an tâm tuyệt đối về quy chuẩn:
+        </p>
+        <ul class="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-slate-600">
+          <li>Toàn bộ dây nguồn dùng <strong>giắc cắm zin 100%</strong>, không chích dây hay cắt nối điện xe.</li>
+          <li>Tích hợp đầy đủ phím điều khiển trên vô lăng và hiển thị thông tin điều hòa/cửa xe.</li>
+          <li>Mặt dưỡng chuẩn theo từng xe, lắp khít nguyên bản.</li>
+          <li>Cài đặt sẵn các ứng dụng hữu ích: Vietmap dẫn đường, YouTube không quảng cáo, điều khiển giọng nói tiếng Việt Kiki.</li>
+        </ul>
       </div>
     </div>
 
-    <!-- Sản phẩm liên quan cùng danh mục -->
+    <!-- Sản phẩm liên quan -->
     {relatedProducts.length > 0 && (
-      <div class="mt-16 pt-12 border-t border-slate-800">
-        <div class="flex items-center justify-between mb-8">
-          <div>
-            <div class="text-amber-400 font-bold text-xs uppercase tracking-wider mb-1">Gợi Ý Thêm</div>
-            <h2 class="text-xl sm:text-2xl font-bold text-white">Sản Phẩm Cùng Phân Khúc</h2>
-          </div>
-          <a href={`/san-pham?category=${product.categorySlug}`} class="text-xs text-amber-400 hover:underline">
+      <div class="mt-12 pt-8 border-t border-slate-200">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-bold text-slate-900">Sản Phẩm Cùng Phân Khúc</h2>
+          <a href={`/san-pham?category=${product.categorySlug}`} class="text-xs font-semibold text-red-600 hover:underline">
             Xem thêm trong danh mục →
           </a>
         </div>

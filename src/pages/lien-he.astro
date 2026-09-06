@@ -4,147 +4,142 @@ import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
 ---
 
 <Layout
-  title="Liên Hệ & Đặt Lịch Lắp Đặt - AutoTech Pro"
-  description="Thông tin liên hệ xưởng độ xe AutoTech Pro: Số điện thoại, Zalo, địa chỉ gara tại Hà Nội, chỉ đường Google Maps."
+  title="Liên Hệ & Đặt Lịch Lắp Đặt - AutoTech"
+  description="Thông tin liên hệ xưởng độ xe AutoTech: Số điện thoại, Zalo, địa chỉ gara tại Hà Nội, chỉ đường Google Maps."
 >
-  <div class="bg-slate-900/60 border-b border-slate-800 py-8 px-4 sm:px-6">
+  <div class="bg-slate-100 border-b border-slate-200 py-8 px-4 sm:px-6">
     <div class="max-w-7xl mx-auto">
-      <nav class="text-xs text-slate-400 mb-3 flex items-center gap-2">
-        <a href="/" class="hover:text-white">Trang chủ</a>
+      <nav class="text-xs text-slate-500 mb-2 flex items-center gap-2">
+        <a href="/" class="hover:text-slate-900">Trang chủ</a>
         <span>/</span>
-        <span class="text-amber-400 font-medium">Liên hệ</span>
+        <span class="text-red-600 font-medium">Liên hệ</span>
       </nav>
-      <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-        Liên Hệ & Đặt Lịch Thi Công
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+        Liên Hệ & Đặt Lịch Lắp Đặt
       </h1>
-      <p class="text-slate-400 text-xs sm:text-sm mt-2 max-w-2xl">
-        Chúng tôi luôn sẵn sàng lắng nghe và tư vấn giải pháp nâng cấp đồ chơi ô tô tối ưu nhất cho xế cưng của bạn.
+      <p class="text-slate-600 text-xs sm:text-sm mt-1 max-w-2xl">
+        Chúng tôi luôn sẵn sàng tư vấn giải pháp nâng cấp đồ chơi ô tô tối ưu và chuẩn xác nhất cho xe của bạn.
       </p>
     </div>
   </div>
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-      <!-- Cột thông tin liên hệ & kênh kết nối -->
-      <div class="space-y-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <!-- Thông tin liên hệ -->
+      <div class="space-y-6">
         <div>
-          <h2 class="text-xl font-bold text-white mb-4">Thông Tin Trung Tâm</h2>
-          <div class="space-y-4 text-sm text-slate-300">
-            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-900 border border-slate-800">
-              <span class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0">📍</span>
+          <h2 class="text-lg font-bold text-slate-900 mb-3">Thông Tin Xưởng</h2>
+          <div class="space-y-3 text-xs text-slate-700">
+            <div class="flex items-start gap-3 p-3.5 rounded-xl bg-white border border-slate-200 shadow-2xs">
+              <span class="text-base">📍</span>
               <div>
-                <div class="font-semibold text-white text-xs">Địa chỉ xưởng thi công</div>
-                <div class="text-xs text-slate-400 mt-0.5">{DEFAULT_SHOP_SETTINGS.address}</div>
+                <div class="font-bold text-slate-900">Địa chỉ xưởng</div>
+                <div class="text-slate-600 mt-0.5">{DEFAULT_SHOP_SETTINGS.address}</div>
               </div>
             </div>
 
-            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-900 border border-slate-800">
-              <span class="w-8 h-8 rounded-lg bg-red-500/10 text-red-400 flex items-center justify-center shrink-0">📞</span>
+            <div class="flex items-start gap-3 p-3.5 rounded-xl bg-white border border-slate-200 shadow-2xs">
+              <span class="text-base">📞</span>
               <div>
-                <div class="font-semibold text-white text-xs">Hotline tư vấn & Đặt lịch</div>
-                <a href={`tel:${DEFAULT_SHOP_SETTINGS.phone.replace(/[^0-9]/g, '')}`} class="text-sm font-bold text-red-400 hover:underline mt-0.5 block">
+                <div class="font-bold text-slate-900">Hotline tư vấn</div>
+                <a href={`tel:${DEFAULT_SHOP_SETTINGS.phone.replace(/[^0-9]/g, '')}`} class="text-red-600 font-bold mt-0.5 block hover:underline">
                   {DEFAULT_SHOP_SETTINGS.phone}
                 </a>
               </div>
             </div>
 
-            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-900 border border-slate-800">
-              <span class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0 font-bold text-xs">Z</span>
+            <div class="flex items-start gap-3 p-3.5 rounded-xl bg-white border border-slate-200 shadow-2xs">
+              <span class="text-base font-bold text-blue-600">Z</span>
               <div>
-                <div class="font-semibold text-white text-xs">Zalo kỹ thuật viên trực tuyến</div>
-                <a href={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}`} target="_blank" rel="noopener noreferrer" class="text-sm font-bold text-blue-400 hover:underline mt-0.5 block">
-                  {DEFAULT_SHOP_SETTINGS.zalo} (Hỗ trợ 24/7)
+                <div class="font-bold text-slate-900">Zalo kỹ thuật</div>
+                <a href={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}`} target="_blank" rel="noopener noreferrer" class="text-blue-600 font-bold mt-0.5 block hover:underline">
+                  {DEFAULT_SHOP_SETTINGS.zalo} (Hỗ trợ nhanh)
                 </a>
               </div>
             </div>
 
-            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-900 border border-slate-800">
-              <span class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">⏰</span>
+            <div class="flex items-start gap-3 p-3.5 rounded-xl bg-white border border-slate-200 shadow-2xs">
+              <span class="text-base">⏰</span>
               <div>
-                <div class="font-semibold text-white text-xs">Thời gian làm việc</div>
-                <div class="text-xs text-slate-400 mt-0.5">{DEFAULT_SHOP_SETTINGS.operating_hours}</div>
+                <div class="font-bold text-slate-900">Thời gian làm việc</div>
+                <div class="text-slate-600 mt-0.5">{DEFAULT_SHOP_SETTINGS.operating_hours}</div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="p-6 rounded-2xl bg-gradient-to-br from-amber-500/10 to-red-500/10 border border-amber-500/30 space-y-3">
-          <h3 class="font-bold text-white text-sm">Dịch Vụ Lắp Đặt Tận Nơi</h3>
-          <p class="text-xs text-slate-300 leading-relaxed">
-            Bạn quá bận rộn không có thời gian mang xe qua xưởng? Chúng tôi có đội kỹ thuật lưu động sẵn sàng đến lắp đặt tận nơi tại nhà hoặc cơ quan trong khu vực nội thành.
+        <div class="p-5 rounded-xl bg-red-50 border border-red-200 space-y-2 text-xs">
+          <div class="font-bold text-red-900 text-sm">Hỗ Trợ Lắp Đặt Tận Nơi</div>
+          <p class="text-red-800 leading-relaxed">
+            Nếu bạn không có thời gian mang xe qua xưởng, chúng tôi có đội ngũ kỹ thuật hỗ trợ thi công tận nhà hoặc cơ quan tại các khu vực nội thành.
           </p>
         </div>
       </div>
 
-      <!-- Cột Form yêu cầu tư vấn báo giá -->
-      <div class="p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl">
-        <h2 class="text-xl font-bold text-white mb-2">Gửi Yêu Cầu Báo Giá / Đặt Lịch</h2>
-        <p class="text-xs text-slate-400 mb-6">
-          Điền thông tin xe của bạn, chúng tôi sẽ gọi lại hoặc nhắn Zalo tư vấn chi tiết trong 15 phút.
+      <!-- Form gửi yêu cầu -->
+      <div class="p-6 rounded-xl bg-white border border-slate-200 shadow-sm text-xs">
+        <h2 class="text-base font-bold text-slate-900 mb-1">Gửi Yêu Cầu Báo Giá / Đặt Lịch</h2>
+        <p class="text-slate-500 mb-5">
+          Điền thông tin dòng xe, chúng tôi sẽ liên hệ lại qua Zalo hoặc điện thoại trong 15 phút.
         </p>
 
-        <form
-          action={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}`}
-          target="_blank"
-          class="space-y-4"
-        >
+        <form action={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}`} target="_blank" class="space-y-3.5">
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Họ và tên của bạn</label>
+            <label class="block font-semibold text-slate-700 mb-1">Họ tên của bạn</label>
             <input
               type="text"
               required
-              placeholder="Ví dụ: Anh Tuấn"
-              class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+              placeholder="Anh Tuấn"
+              class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:border-red-600 focus:bg-white"
             />
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Số điện thoại / Zalo</label>
+              <label class="block font-semibold text-slate-700 mb-1">Số điện thoại / Zalo *</label>
               <input
                 type="tel"
                 required
                 placeholder="09xx.xxx.xxx"
-                class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:border-red-600 focus:bg-white"
               />
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Dòng xe & Năm sản xuất</label>
+              <label class="block font-semibold text-slate-700 mb-1">Dòng xe & Đời xe *</label>
               <input
                 type="text"
                 required
-                placeholder="Ví dụ: Camry 2022"
-                class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                placeholder="Ví dụ: Vios 2021"
+                class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:border-red-600 focus:bg-white"
               />
             </div>
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Phụ kiện bạn muốn nâng cấp</label>
-            <select class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400">
+            <label class="block font-semibold text-slate-700 mb-1">Phụ kiện cần tư vấn</label>
+            <select class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:border-red-600 focus:bg-white">
               <option value="man-hinh">Màn hình Android / Android Box</option>
               <option value="cam-360">Camera 360 độ toàn cảnh</option>
-              <option value="bi-led">Độ đèn Bi LED / Bi Laser tăng sáng</option>
-              <option value="am-thanh">Nâng cấp Loa / Sub gầm ghế / DSP</option>
-              <option value="den-led">Đèn LED viền nội thất Ambient Light</option>
+              <option value="bi-led">Độ đèn Bi LED tăng sáng</option>
+              <option value="am-thanh">Nâng cấp Loa Sub gầm ghế</option>
               <option value="khac">Phụ kiện & Đồ chơi khác</option>
             </select>
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Ghi chú thêm (nếu có)</label>
+            <label class="block font-semibold text-slate-700 mb-1">Ghi chú thêm</label>
             <textarea
               rows="3"
-              placeholder="Yêu cầu cụ thể của bạn (ví dụ: xe bản thiếu có cần thay canbus không...)"
-              class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+              placeholder="Yêu cầu cụ thể của bạn..."
+              class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:border-red-600 focus:bg-white"
             ></textarea>
           </div>
 
           <button
             type="submit"
-            class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-sm shadow-lg shadow-amber-500/20 active:scale-95 transition"
+            class="w-full py-2.5 px-4 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-xs transition shadow-xs"
           >
-            Gửi Yêu Cầu Tư Vấn Ngay
+            Gửi Yêu Cầu Báo Giá
           </button>
         </form>
       </div>

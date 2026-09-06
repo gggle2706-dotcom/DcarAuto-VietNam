@@ -24,7 +24,6 @@ const {
   salePrice,
   image,
   specs = [],
-  warrantyMonths = 12,
   isUniversal = false,
 } = Astro.props;
 
@@ -32,77 +31,79 @@ const hasDiscount = salePrice && salePrice < price;
 const currentPrice = hasDiscount ? salePrice : price;
 
 // Tin nhắn Zalo
-const zaloMessage = encodeURIComponent(`Xin chào, tôi cần tư vấn sản phẩm: ${name} (${brand}). Cho tôi xin báo giá thi công cho xe.`);
+const zaloMessage = encodeURIComponent(`Xin chào shop, tôi cần tư vấn sản phẩm: ${name} (${brand}). Cho tôi xin báo giá thi công cho xe.`);
 const zaloUrl = `https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}?text=${zaloMessage}`;
 ---
 
-<div class="flex flex-col rounded-lg bg-neutral-900 border border-neutral-800 hover:border-neutral-700 transition overflow-hidden">
+<div class="flex flex-col rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md transition overflow-hidden group">
   <!-- Ảnh sản phẩm -->
-  <a href={`/san-pham/${slug}`} class="relative aspect-[4/3] bg-neutral-950 overflow-hidden block">
+  <a href={`/san-pham/${slug}`} class="relative aspect-[4/3] bg-slate-100 overflow-hidden block">
     <img
       src={image}
       alt={name}
       loading="lazy"
-      class="w-full h-full object-cover hover:scale-102 transition duration-300"
+      class="w-full h-full object-cover group-hover:scale-103 transition duration-300"
     />
 
     {hasDiscount && (
-      <span class="absolute top-2 left-2 px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-600 text-white">
+      <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[11px] font-bold bg-red-600 text-white shadow-xs">
         Giảm giá
       </span>
     )}
 
     {isUniversal && (
-      <span class="absolute bottom-2 left-2 px-1.5 py-0.5 rounded text-[10px] bg-neutral-900/90 text-neutral-300 border border-neutral-700">
+      <span class="absolute bottom-2.5 left-2.5 px-2 py-0.5 rounded text-[10px] bg-white/95 text-slate-700 font-medium border border-slate-200 shadow-xs">
         Mọi dòng xe
       </span>
     )}
   </a>
 
   <!-- Nội dung -->
-  <div class="p-3.5 flex-1 flex flex-col justify-between text-xs">
+  <div class="p-4 flex-1 flex flex-col justify-between text-xs">
     <div>
-      <div class="text-[11px] text-neutral-400 mb-1 flex items-center justify-between">
-        <span class="font-semibold text-neutral-300">{brand}</span>
-        {categoryName && <span class="text-neutral-500">{categoryName}</span>}
+      <div class="text-[11px] text-slate-500 mb-1.5 flex items-center justify-between">
+        <span class="font-bold text-slate-700 uppercase tracking-wide">{brand}</span>
+        {categoryName && <span class="text-slate-400">{categoryName}</span>}
       </div>
 
-      <h3 class="font-bold text-white text-sm line-clamp-2 hover:text-red-400 transition mb-2">
+      <h3 class="font-bold text-slate-900 text-sm line-clamp-2 group-hover:text-red-600 transition mb-2.5 leading-snug">
         <a href={`/san-pham/${slug}`}>{name}</a>
       </h3>
 
       {specs.length > 0 && (
-        <div class="text-[11px] text-neutral-400 space-y-0.5 mb-3">
+        <div class="flex flex-wrap gap-1 mb-3">
           {specs.slice(0, 2).map((s) => (
-            <div class="line-clamp-1">• {s}</div>
+            <span class="text-[11px] px-2 py-0.5 rounded bg-slate-100 text-slate-600">
+              {s}
+            </span>
           ))}
         </div>
       )}
     </div>
 
     <!-- Giá & Nút hành động -->
-    <div class="pt-3 border-t border-neutral-800">
-      <div class="mb-2.5">
+    <div class="pt-3 border-t border-slate-100 mt-auto">
+      <div class="mb-3">
         {currentPrice > 0 ? (
           <div class="flex items-baseline gap-2">
-            <span class="text-sm sm:text-base font-extrabold text-white">
+            <span class="text-base sm:text-lg font-extrabold text-red-600">
               {currentPrice.toLocaleString('vi-VN')} đ
             </span>
             {hasDiscount && (
-              <span class="text-[11px] text-neutral-500 line-through">
+              <span class="text-xs text-slate-400 line-through">
                 {price.toLocaleString('vi-VN')} đ
               </span>
             )}
           </div>
         ) : (
-          <span class="text-sm font-bold text-neutral-300">Liên hệ báo giá</span>
+          <span class="text-sm font-bold text-slate-700">Liên hệ báo giá</span>
         )}
       </div>
 
-      <div class="grid grid-cols-2 gap-1.5 text-xs">
+      <div class="grid grid-cols-2 gap-2 text-xs">
         <a
           href={`/san-pham/${slug}`}
-          class="py-1.5 text-center rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200 font-medium transition"
+          class="py-2 text-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold transition"
         >
           Xem chi tiết
         </a>
@@ -110,7 +111,7 @@ const zaloUrl = `https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}?text=${zaloMessag
           href={zaloUrl}
           target="_blank"
           rel="noopener noreferrer"
-          class="py-1.5 text-center rounded bg-blue-600 hover:bg-blue-500 text-white font-medium transition"
+          class="py-2 text-center rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition shadow-xs"
         >
           Nhắn Zalo
         </a>

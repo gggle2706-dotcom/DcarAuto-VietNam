@@ -35,21 +35,21 @@ const availableBrands = Array.from(new Set(MOCK_PRODUCTS.map((p) => p.brand)));
 ---
 
 <Layout
-  title="Tất Cả Sản Phẩm Nâng Cấp Ô Tô - AutoTech Pro"
+  title="Tất Cả Sản Phẩm Nâng Cấp Ô Tô - AutoTech"
   description="Danh mục sản phẩm nâng cấp ô tô chính hãng: Màn hình Android, Camera 360, Âm thanh, Bi LED, Cảm biến chuẩn giắc zin 100%."
 >
-  <div class="bg-slate-900/60 border-b border-slate-800 py-8 px-4 sm:px-6">
+  <div class="bg-slate-100 border-b border-slate-200 py-8 px-4 sm:px-6">
     <div class="max-w-7xl mx-auto">
-      <nav class="text-xs text-slate-400 mb-3 flex items-center gap-2">
-        <a href="/" class="hover:text-white">Trang chủ</a>
+      <nav class="text-xs text-slate-500 mb-2 flex items-center gap-2">
+        <a href="/" class="hover:text-slate-900">Trang chủ</a>
         <span>/</span>
-        <span class="text-amber-400 font-medium">Sản phẩm</span>
+        <span class="text-red-600 font-medium">Sản phẩm</span>
       </nav>
-      <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-        Danh Mục Sản Phẩm & Đồ Chơi Công Nghệ
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+        Danh Mục Sản Phẩm & Phụ Kiện Ô Tô
       </h1>
-      <p class="text-slate-400 text-xs sm:text-sm mt-2 max-w-2xl">
-        Toàn bộ sản phẩm được tuyển chọn kỹ lưỡng, đảm bảo tương thích hệ thống điện nguyên bản của xe, không gây lỗi taplo.
+      <p class="text-slate-600 text-xs sm:text-sm mt-1 max-w-2xl">
+        Toàn bộ sản phẩm được kiểm tra chuẩn giắc cắm theo xe, bảo hành chính hãng từ 12 đến 36 tháng.
       </p>
     </div>
   </div>
@@ -57,25 +57,25 @@ const availableBrands = Array.from(new Set(MOCK_PRODUCTS.map((p) => p.brand)));
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
       <!-- Sidebar Bộ lọc (Desktop) -->
-      <aside class="space-y-6">
+      <aside class="space-y-5">
         <!-- Khung tìm kiếm nhanh -->
-        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <label for="search-input" class="block text-xs font-bold text-white uppercase tracking-wider mb-2">
-            Tìm kiếm từ khóa
+        <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs">
+          <label for="search-input" class="block text-xs font-bold text-slate-900 uppercase tracking-wide mb-2">
+            Tìm kiếm sản phẩm
           </label>
           <form method="GET" action="/san-pham" class="flex gap-2">
             <input
               id="search-input"
               type="text"
               name="q"
-              placeholder="Nhập tên, model, SKU..."
+              placeholder="Tên, mã sản phẩm..."
               value={searchKeyword}
-              class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+              class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-red-600 focus:bg-white transition"
             />
             {selectedCategory && <input type="hidden" name="category" value={selectedCategory} />}
             <button
               type="submit"
-              class="px-3 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg text-xs font-bold transition"
+              class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition"
             >
               Tìm
             </button>
@@ -83,21 +83,21 @@ const availableBrands = Array.from(new Set(MOCK_PRODUCTS.map((p) => p.brand)));
         </div>
 
         <!-- Lọc theo Danh mục -->
-        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <div class="text-xs font-bold text-white uppercase tracking-wider mb-3">
-            Danh mục sản phẩm
+        <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs">
+          <div class="text-xs font-bold text-slate-900 uppercase tracking-wide mb-3">
+            Nhóm sản phẩm
           </div>
-          <ul class="space-y-1.5 text-xs">
+          <ul class="space-y-1 text-xs">
             <li>
               <a
                 href="/san-pham"
                 class={`block px-2.5 py-1.5 rounded-lg transition ${
                   !selectedCategory
-                    ? 'bg-amber-500/10 text-amber-400 font-bold border border-amber-500/20'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                    ? 'bg-red-50 text-red-600 font-bold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                Tất cả danh mục ({MOCK_PRODUCTS.length})
+                Tất cả sản phẩm ({MOCK_PRODUCTS.length})
               </a>
             </li>
             {CATEGORIES_LIST.map((cat) => {
@@ -109,12 +109,12 @@ const availableBrands = Array.from(new Set(MOCK_PRODUCTS.map((p) => p.brand)));
                     href={`/san-pham?category=${cat.slug}${searchKeyword ? `&q=${searchKeyword}` : ''}`}
                     class={`flex items-center justify-between px-2.5 py-1.5 rounded-lg transition ${
                       isSelected
-                        ? 'bg-amber-500/10 text-amber-400 font-bold border border-amber-500/20'
-                        : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                        ? 'bg-red-50 text-red-600 font-bold'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                     }`}
                   >
                     <span>{cat.name}</span>
-                    <span class="text-[10px] text-slate-500 bg-slate-950 px-1.5 py-0.5 rounded">
+                    <span class="text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
                       {count}
                     </span>
                   </a>
@@ -125,8 +125,8 @@ const availableBrands = Array.from(new Set(MOCK_PRODUCTS.map((p) => p.brand)));
         </div>
 
         <!-- Lọc theo Thương hiệu -->
-        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <div class="text-xs font-bold text-white uppercase tracking-wider mb-3">
+        <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs">
+          <div class="text-xs font-bold text-slate-900 uppercase tracking-wide mb-3">
             Thương hiệu
           </div>
           <div class="flex flex-wrap gap-1.5">
@@ -134,8 +134,8 @@ const availableBrands = Array.from(new Set(MOCK_PRODUCTS.map((p) => p.brand)));
               href={`/san-pham${selectedCategory ? `?category=${selectedCategory}` : ''}`}
               class={`text-[11px] px-2.5 py-1 rounded-lg border transition ${
                 !selectedBrand
-                  ? 'bg-amber-500 text-slate-950 font-bold border-amber-500'
-                  : 'bg-slate-950 text-slate-400 border-slate-800 hover:border-slate-700'
+                  ? 'bg-red-600 text-white font-bold border-red-600'
+                  : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
               }`}
             >
               Tất cả
@@ -147,8 +147,8 @@ const availableBrands = Array.from(new Set(MOCK_PRODUCTS.map((p) => p.brand)));
                   href={`/san-pham?brand=${encodeURIComponent(brand.toLowerCase())}${selectedCategory ? `&category=${selectedCategory}` : ''}`}
                   class={`text-[11px] px-2.5 py-1 rounded-lg border transition ${
                     isSelected
-                      ? 'bg-amber-500 text-slate-950 font-bold border-amber-500'
-                      : 'bg-slate-950 text-slate-400 border-slate-800 hover:border-slate-700'
+                      ? 'bg-red-600 text-white font-bold border-red-600'
+                      : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
                   }`}
                 >
                   {brand}
@@ -157,42 +157,24 @@ const availableBrands = Array.from(new Set(MOCK_PRODUCTS.map((p) => p.brand)));
             })}
           </div>
         </div>
-
-        <!-- Banner hỗ trợ tư vấn trực tiếp -->
-        <div class="p-5 rounded-xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 text-center space-y-3">
-          <div class="text-xs font-bold text-amber-400 uppercase">Cần Tư Vấn Nhanh?</div>
-          <p class="text-xs text-slate-400">
-            Gửi hình ảnh taplo xe hiện tại qua Zalo để kỹ thuật viên tư vấn mã màn hình và mặt dưỡng phù hợp nhất.
-          </p>
-          <a
-            href="https://zalo.me/0988123456"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="block py-2 px-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition"
-          >
-            Chat Kỹ Thuật Viên Zalo
-          </a>
-        </div>
       </aside>
 
-      <!-- Main Product Grid & Controls -->
+      <!-- Main Product Grid -->
       <section class="lg:col-span-3">
-        <!-- Status Bar -->
-        <div class="flex items-center justify-between mb-6 pb-3 border-b border-slate-800 text-xs">
-          <div class="text-slate-400">
-            Hiển thị <span class="text-white font-bold">{filteredProducts.length}</span> sản phẩm phù hợp
-            {searchKeyword && <span> cho từ khóa "<span class="text-amber-400 font-semibold">{searchKeyword}</span>"</span>}
+        <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 text-xs">
+          <div class="text-slate-600">
+            Có <span class="text-slate-900 font-bold">{filteredProducts.length}</span> sản phẩm
+            {searchKeyword && <span> cho từ khóa "<span class="text-red-600 font-semibold">{searchKeyword}</span>"</span>}
           </div>
 
           {(selectedCategory || selectedBrand || searchKeyword) && (
-            <a href="/san-pham" class="text-amber-400 hover:underline font-semibold flex items-center gap-1">
+            <a href="/san-pham" class="text-red-600 hover:underline font-semibold flex items-center gap-1">
               <span>✕</span>
               <span>Xóa bộ lọc</span>
             </a>
           )}
         </div>
 
-        <!-- Danh sách sản phẩm -->
         {filteredProducts.length > 0 ? (
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {filteredProducts.map((prod) => (
@@ -212,22 +194,14 @@ const availableBrands = Array.from(new Set(MOCK_PRODUCTS.map((p) => p.brand)));
             ))}
           </div>
         ) : (
-          <div class="py-16 text-center border border-dashed border-slate-800 rounded-2xl bg-slate-900/30">
-            <div class="w-12 h-12 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center mx-auto mb-3 text-xl">
-              🔍
-            </div>
-            <h3 class="text-base font-bold text-white mb-1">Không tìm thấy sản phẩm nào</h3>
-            <p class="text-xs text-slate-400 max-w-sm mx-auto mb-4">
-              Rất có thể chúng tôi có phụ kiện này tại xưởng nhưng chưa kịp cập nhật lên website. Hãy liên hệ trực tiếp để kiểm tra kho hàng.
+          <div class="py-16 text-center border border-dashed border-slate-300 rounded-xl bg-white p-6">
+            <h3 class="text-base font-bold text-slate-800 mb-1">Không tìm thấy sản phẩm</h3>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto mb-4">
+              Bạn có thể liên hệ Zalo kỹ thuật viên để chúng tôi kiểm tra kho hàng trực tiếp cho dòng xe của bạn.
             </p>
-            <div class="flex justify-center gap-2">
-              <a href="/san-pham" class="px-3.5 py-2 rounded-lg bg-slate-800 text-white text-xs font-medium hover:bg-slate-700">
-                Xem tất cả sản phẩm
-              </a>
-              <a href="https://zalo.me/0988123456" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-500">
-                Hỏi kho hàng qua Zalo
-              </a>
-            </div>
+            <a href="https://zalo.me/0988123456" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700">
+              Nhắn Zalo Tư Vấn
+            </a>
           </div>
         )}
       </section>

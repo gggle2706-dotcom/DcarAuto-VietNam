@@ -100,27 +100,27 @@ export default function CarSelectorWidget() {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto rounded-lg bg-neutral-900 border border-neutral-800 p-4 sm:p-5 shadow-lg">
+    <div className="w-full max-w-3xl mx-auto rounded-xl bg-white border border-slate-200 p-4 sm:p-5 shadow-md text-slate-900">
       <div className="text-left mb-3">
-        <h2 className="text-white font-bold text-sm sm:text-base">
-          Tra cứu phụ kiện theo dòng xe
+        <h2 className="text-slate-900 font-bold text-sm sm:text-base">
+          Tra cứu phụ kiện chuẩn theo dòng xe
         </h2>
-        <p className="text-neutral-400 text-xs">
-          Chọn đúng dòng xe để xem các loại màn hình có sẵn dưỡng zin, camera và phụ kiện tương thích.
+        <p className="text-slate-500 text-xs">
+          Chọn dòng xe của bạn để xem danh sách màn hình có sẵn mặt dưỡng zin, camera và phụ kiện tương thích.
         </p>
       </div>
 
       <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-4 gap-2.5 text-xs">
-        {/* Chọn Hãng */}
+        {/* Chọn Hãng xe */}
         <div>
-          <label htmlFor="brand-select" className="block text-neutral-300 font-medium mb-1">
+          <label htmlFor="brand-select" className="block text-slate-700 font-medium mb-1">
             1. Hãng xe
           </label>
           <select
             id="brand-select"
             value={selectedBrand}
             onChange={handleBrandChange}
-            className="w-full bg-neutral-950 border border-neutral-700 rounded px-2.5 py-2 text-white focus:outline-none"
+            className="w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 text-slate-900 focus:outline-none focus:border-red-600 focus:bg-white transition"
           >
             <option value="">-- Chọn Hãng --</option>
             {Object.entries(CAR_DATA).map(([key, item]) => (
@@ -131,7 +131,7 @@ export default function CarSelectorWidget() {
 
         {/* Chọn Dòng xe */}
         <div>
-          <label htmlFor="model-select" className="block text-neutral-300 font-medium mb-1">
+          <label htmlFor="model-select" className="block text-slate-700 font-medium mb-1">
             2. Dòng xe
           </label>
           <select
@@ -139,7 +139,7 @@ export default function CarSelectorWidget() {
             value={selectedModel}
             disabled={!selectedBrand}
             onChange={(e) => setSelectedModel(e.target.value)}
-            className="w-full bg-neutral-950 border border-neutral-700 rounded px-2.5 py-2 text-white disabled:opacity-40 focus:outline-none"
+            className="w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 text-slate-900 disabled:opacity-50 focus:outline-none focus:border-red-600 focus:bg-white transition"
           >
             <option value="">-- Chọn Dòng Xe --</option>
             {currentModels.map((m) => (
@@ -148,9 +148,9 @@ export default function CarSelectorWidget() {
           </select>
         </div>
 
-        {/* Chọn Năm */}
+        {/* Chọn Đời xe */}
         <div>
-          <label htmlFor="year-select" className="block text-neutral-300 font-medium mb-1">
+          <label htmlFor="year-select" className="block text-slate-700 font-medium mb-1">
             3. Đời xe (Năm)
           </label>
           <select
@@ -158,7 +158,7 @@ export default function CarSelectorWidget() {
             value={selectedYear}
             disabled={!selectedModel}
             onChange={(e) => setSelectedYear(e.target.value)}
-            className="w-full bg-neutral-950 border border-neutral-700 rounded px-2.5 py-2 text-white disabled:opacity-40 focus:outline-none"
+            className="w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 text-slate-900 disabled:opacity-50 focus:outline-none focus:border-red-600 focus:bg-white transition"
           >
             <option value="">-- Tất cả các đời --</option>
             {[2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015].map((y) => (
@@ -172,7 +172,7 @@ export default function CarSelectorWidget() {
           <button
             type="submit"
             disabled={!selectedBrand}
-            className="w-full py-2 px-3 rounded bg-red-600 hover:bg-red-500 disabled:opacity-40 text-white font-bold transition"
+            className="w-full py-2 px-3 rounded-lg bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-bold transition active:scale-95 shadow-xs"
           >
             Tìm Phụ Kiện
           </button>

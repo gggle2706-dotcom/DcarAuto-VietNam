@@ -18,33 +18,33 @@ const {
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="bg-neutral-950 border-t border-neutral-800 text-neutral-400 text-xs mt-auto pb-16 sm:pb-8">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<footer class="bg-slate-100 border-t border-slate-200 text-slate-600 text-xs mt-auto pb-16 sm:pb-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
     <!-- Cột 1: Thông tin liên hệ -->
     <div class="space-y-3">
-      <div class="font-bold text-base text-white">
+      <div class="font-extrabold text-base text-slate-900">
         {shopName}
       </div>
-      <p class="text-neutral-400 leading-relaxed text-xs">
+      <p class="text-slate-500 leading-relaxed text-xs">
         {DEFAULT_SHOP_SETTINGS.shop_tagline}. Chuyên lắp đặt phụ kiện, đồ chơi xe hơi chuẩn giắc zin 100%.
       </p>
-      <div class="space-y-1.5 pt-1">
-        <div>Hotline: <a href={`tel:${phone.replace(/[^0-9]/g, '')}`} class="text-white font-semibold">{phone}</a></div>
-        <div>Zalo: <a href={`https://zalo.me/${zalo}`} target="_blank" rel="noopener noreferrer" class="text-white font-semibold">{zalo}</a></div>
-        <div>Địa chỉ: <span class="text-neutral-300">{address}</span></div>
-        <div>Giờ làm việc: <span class="text-neutral-300">{DEFAULT_SHOP_SETTINGS.operating_hours}</span></div>
+      <div class="space-y-1.5 pt-1 text-slate-700">
+        <div>Hotline: <a href={`tel:${phone.replace(/[^0-9]/g, '')}`} class="text-red-600 font-bold">{phone}</a></div>
+        <div>Zalo: <a href={`https://zalo.me/${zalo}`} target="_blank" rel="noopener noreferrer" class="text-blue-600 font-bold">{zalo}</a></div>
+        <div>Địa chỉ: <span>{address}</span></div>
+        <div>Giờ làm việc: <span>{DEFAULT_SHOP_SETTINGS.operating_hours}</span></div>
       </div>
     </div>
 
     <!-- Cột 2: Danh mục sản phẩm -->
     <div>
-      <div class="font-semibold text-white uppercase tracking-wider mb-3">
+      <div class="font-bold text-slate-900 uppercase tracking-wider mb-3">
         Danh Mục Sản Phẩm
       </div>
-      <ul class="space-y-1.5">
+      <ul class="space-y-2">
         {CATEGORIES_LIST.slice(0, 6).map((cat) => (
           <li>
-            <a href={`/san-pham?category=${cat.slug}`} class="text-neutral-400 hover:text-white transition">
+            <a href={`/san-pham?category=${cat.slug}`} class="text-slate-600 hover:text-red-600 transition">
               {cat.name}
             </a>
           </li>
@@ -54,43 +54,43 @@ const currentYear = new Date().getFullYear();
 
     <!-- Cột 3: Liên kết nhanh -->
     <div>
-      <div class="font-semibold text-white uppercase tracking-wider mb-3">
+      <div class="font-bold text-slate-900 uppercase tracking-wider mb-3">
         Thông Tin Hỗ Trợ
       </div>
-      <ul class="space-y-1.5">
+      <ul class="space-y-2">
         {NAVIGATION_LINKS.map((link) => (
           <li>
-            <a href={link.href} class="text-neutral-400 hover:text-white transition">
+            <a href={link.href} class="text-slate-600 hover:text-red-600 transition">
               {link.label}
             </a>
           </li>
         ))}
         <li>
-          <a href="/gioi-thieu" class="text-neutral-400 hover:text-white transition">Chính sách bảo hành</a>
+          <a href="/gioi-thieu" class="text-slate-600 hover:text-red-600 transition">Chính sách bảo hành</a>
         </li>
       </ul>
     </div>
 
     <!-- Cột 4: Chỉ đường Google Maps -->
     <div class="space-y-3">
-      <div class="font-semibold text-white uppercase tracking-wider mb-3">
+      <div class="font-bold text-slate-900 uppercase tracking-wider mb-3">
         Vị Trí Cửa Hàng
       </div>
-      <p class="text-neutral-400">
+      <p class="text-slate-500">
         Khách hàng có thể mang xe qua xưởng để được kiểm tra dưỡng taplo và tư vấn trực tiếp:
       </p>
       <a
         href={DEFAULT_SHOP_SETTINGS.google_maps_url}
         target="_blank"
         rel="noopener noreferrer"
-        class="inline-block py-2 px-3.5 rounded bg-neutral-900 border border-neutral-700 text-neutral-200 hover:text-white transition font-medium"
+        class="inline-block py-2.5 px-4 rounded-lg bg-white border border-slate-300 text-slate-800 hover:border-red-500 hover:text-red-600 transition font-semibold shadow-2xs"
       >
         📍 Xem vị trí trên Google Maps
       </a>
     </div>
   </div>
 
-  <div class="border-t border-neutral-900 max-w-7xl mx-auto px-4 sm:px-6 pt-6 text-center text-neutral-600">
+  <div class="border-t border-slate-200 max-w-7xl mx-auto px-4 sm:px-6 pt-6 text-center text-slate-400">
     © {currentYear} {shopName}. Bản quyền thuộc về chủ cửa hàng.
   </div>
 </footer>
