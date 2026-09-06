@@ -1,0 +1,28 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Nội Thất & Đồ Chơi Công Nghệ Ô Tô Chuyên Nghiệp',
+  description = 'Chuyên nâng cấp màn hình Android, camera 360, âm thanh, bi LED, cảm biến và phụ kiện ô tô chính hãng.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="vi" class="h-full bg-slate-950 text-slate-100 antialiased">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body class="min-h-full flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
+    <slot />
+  </body>
+</html>
