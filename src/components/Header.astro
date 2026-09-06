@@ -39,16 +39,22 @@ const cleanPhone = phone.replace(/[^0-9]/g, '');
   <!-- Main Navigation Bar -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
     <!-- Logo & Tên shop -->
-    <a href="/" class="flex items-center gap-2.5">
-      <div class="w-9 h-9 rounded-lg bg-red-600 flex items-center justify-center text-white font-black text-lg shadow-sm overflow-hidden">
-        <span class="shop-logo-fallback">A</span>
-        <img src="" alt="Logo" class="shop-logo-img w-full h-full object-contain hidden" />
+    <a href="/" class="flex items-center gap-3 sm:gap-4 py-1 group">
+      <div class="shop-logo-container flex items-center justify-center">
+        <span class="shop-logo-fallback w-12 h-12 rounded-xl bg-red-600 flex items-center justify-center text-white font-black text-2xl shadow-sm">
+          {DEFAULT_SHOP_SETTINGS.shop_name.charAt(0).toUpperCase()}
+        </span>
+        <img
+          src=""
+          alt={DEFAULT_SHOP_SETTINGS.shop_name}
+          class="shop-logo-img h-14 sm:h-16 md:h-18 w-auto max-w-[240px] sm:max-w-[340px] object-contain hidden drop-shadow-xs transition transform group-hover:scale-102"
+        />
       </div>
-      <div>
-        <div class="shop-name-val font-extrabold text-xl tracking-tight text-slate-900 leading-tight">
+      <div class="shop-text-brand flex flex-col justify-center">
+        <div class="shop-name-val font-black text-xl sm:text-2xl md:text-3xl tracking-tight text-slate-900 leading-tight group-hover:text-red-600 transition">
           {DEFAULT_SHOP_SETTINGS.shop_name}
         </div>
-        <div class="shop-tagline-val text-[11px] text-slate-500 font-medium hidden sm:block">
+        <div class="shop-tagline-val text-[11px] sm:text-xs text-slate-500 font-semibold tracking-wide mt-0.5 hidden sm:block">
           {DEFAULT_SHOP_SETTINGS.shop_tagline}
         </div>
       </div>

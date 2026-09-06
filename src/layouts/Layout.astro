@@ -135,6 +135,25 @@ const {
             document.querySelectorAll('.shop-logo-fallback').forEach(function(el) {
               el.classList.add('hidden');
             });
+            if (settings.hide_text_logo) {
+              document.querySelectorAll('.shop-text-brand').forEach(function(el) {
+                el.classList.add('hidden');
+              });
+            } else {
+              document.querySelectorAll('.shop-text-brand').forEach(function(el) {
+                el.classList.remove('hidden');
+              });
+            }
+          } else {
+            document.querySelectorAll('.shop-logo-img').forEach(function(el) {
+              el.classList.add('hidden');
+            });
+            document.querySelectorAll('.shop-logo-fallback').forEach(function(el) {
+              el.classList.remove('hidden');
+            });
+            document.querySelectorAll('.shop-text-brand').forEach(function(el) {
+              el.classList.remove('hidden');
+            });
           }
         } catch (e) {
           console.error('Lỗi đồng bộ cấu hình:', e);

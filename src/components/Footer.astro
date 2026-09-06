@@ -22,8 +22,20 @@ const currentYear = new Date().getFullYear();
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
     <!-- Cột 1: Thông tin liên hệ -->
     <div class="space-y-3">
-      <div class="shop-name-val font-extrabold text-base text-slate-900">
-        {shopName}
+      <div class="flex items-center gap-3">
+        <div class="shop-logo-container flex items-center justify-center">
+          <span class="shop-logo-fallback w-10 h-10 rounded-lg bg-red-600 flex items-center justify-center text-white font-black text-lg shadow-2xs">
+            {shopName.charAt(0).toUpperCase()}
+          </span>
+          <img
+            src=""
+            alt={shopName}
+            class="shop-logo-img h-12 w-auto max-w-[180px] object-contain hidden"
+          />
+        </div>
+        <div class="shop-text-brand shop-name-val font-extrabold text-base text-slate-900 leading-tight">
+          {shopName}
+        </div>
       </div>
       <p class="shop-tagline-val text-slate-500 leading-relaxed text-xs">
         {DEFAULT_SHOP_SETTINGS.shop_tagline}. Chuyên lắp đặt phụ kiện, đồ chơi xe hơi chuẩn giắc zin 100%.

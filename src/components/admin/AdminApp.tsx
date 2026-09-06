@@ -818,17 +818,19 @@ export default function AdminApp() {
             </div>
 
             {/* Logo */}
-            <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
-              <div className="font-semibold text-slate-800">Logo Cửa Hàng</div>
-              <div className="flex items-center gap-4">
+            <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
+              <div className="font-semibold text-slate-800">Logo Cửa Hàng (Hiển thị to, sắc nét trên thanh điều hướng)</div>
+              <div className="flex flex-wrap items-center gap-4">
                 {settings.logo_url ? (
-                  <img src={settings.logo_url} alt="Logo" className="w-14 h-14 object-contain rounded bg-white p-1 border border-slate-300" />
+                  <div className="h-20 min-w-[140px] max-w-[280px] p-2 rounded-lg bg-white border border-slate-300 flex items-center justify-center shadow-xs">
+                    <img src={settings.logo_url} alt="Logo" className="max-h-full max-w-full object-contain" />
+                  </div>
                 ) : (
-                  <div className="w-14 h-14 rounded bg-white flex items-center justify-center text-slate-400 border border-slate-300 font-bold">
-                    Logo
+                  <div className="w-20 h-20 rounded-lg bg-white flex items-center justify-center text-slate-400 border border-slate-300 font-bold text-sm">
+                    Chưa có logo
                   </div>
                 )}
-                <div>
+                <div className="space-y-2">
                   <input
                     type="file"
                     ref={logoInputRef}
@@ -836,16 +838,46 @@ export default function AdminApp() {
                     onChange={handleLogoUpload}
                     className="hidden"
                   />
-                  <button
-                    type="button"
-                    onClick={() => logoInputRef.current?.click()}
-                    className="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-800 rounded border border-slate-300 font-medium shadow-2xs"
-                  >
-                    Tải logo từ máy tính
-                  </button>
-                  <div className="text-[11px] text-slate-400 mt-1">Định dạng PNG, JPG hoặc WebP</div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => logoInputRef.current?.click()}
+                      className="px-3.5 py-2 bg-white hover:bg-slate-100 text-slate-800 rounded-lg border border-slate-300 font-semibold text-xs shadow-2xs transition"
+                    >
+                      📁 Tải ảnh logo mới
+                    </button>
+                    {settings.logo_url && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSettings({ ...settings, logo_url: '' } as any);
+                          notify('Đã gỡ bỏ ảnh logo');
+                        }}
+                        className="px-3 py-2 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg border border-red-200 font-medium text-xs transition"
+                      >
+                        Gỡ logo
+                      </button>
+                    )}
+                  </div>
+                  <div className="text-[11px] text-slate-500">
+                    Khuyên dùng: Ảnh trong suốt (PNG) hoặc ảnh ngang, hệ thống tự động co giãn to và đẹp mắt.
+                  </div>
                 </div>
               </div>
+
+              {settings.logo_url && (
+                <div className="pt-2 border-t border-slate-200">
+                  <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-700 font-medium select-none">
+                    <input
+                      type="checkbox"
+                      checked={Boolean((settings as any).hide_text_logo)}
+                      onChange={(e) => setSettings({ ...settings, hide_text_logo: e.target.checked } as any)}
+                      className="rounded border-slate-300 text-red-600 focus:ring-red-500 w-4 h-4"
+                    />
+                    <span>Chỉ hiển thị ảnh logo (Ẩn dòng chữ tên cửa hàng bên cạnh nếu trong ảnh logo đã có sẵn tên thương hiệu)</span>
+                  </label>
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
