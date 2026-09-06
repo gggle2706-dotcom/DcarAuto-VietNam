@@ -1,11 +1,12 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import AdminApp from '@/components/admin/AdminApp';
+import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
 ---
 
 <Layout
-  title="Bảng Điều Khiển Quản Trị - AutoTech Pro"
-  description="Khu vực quản lý sản phẩm, danh mục, tương thích dòng xe, bài viết và cấu hình cửa hàng AutoTech Pro."
+  title={`Bảng Quản Trị - ${DEFAULT_SHOP_SETTINGS.shop_name}`}
+  description={`Khu vực quản lý sản phẩm, danh mục, tương thích dòng xe, bài viết và cấu hình cửa hàng ${DEFAULT_SHOP_SETTINGS.shop_name}.`}
   hideHeaderFooter={true}
 >
   <AdminApp client:only="react" />

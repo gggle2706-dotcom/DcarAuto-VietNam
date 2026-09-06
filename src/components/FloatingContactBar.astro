@@ -21,12 +21,12 @@ const cleanPhone = phone.replace(/[^0-9]/g, '');
   <!-- Gọi điện -->
   <a
     href={`tel:${cleanPhone}`}
-    class="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-xs shadow-xs active:scale-95 transition"
+    class="shop-phone-link flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-xs shadow-xs active:scale-95 transition"
   >
     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
     </svg>
-    <span>Gọi Ngay</span>
+    <span>Gọi <span class="shop-phone-val">{phone}</span></span>
   </a>
 
   <!-- Chat Zalo -->
@@ -34,7 +34,7 @@ const cleanPhone = phone.replace(/[^0-9]/g, '');
     href={`https://zalo.me/${zalo}`}
     target="_blank"
     rel="noopener noreferrer"
-    class="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs active:scale-95 transition"
+    class="shop-zalo-link flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs active:scale-95 transition"
   >
     <span class="font-bold text-xs bg-white text-blue-600 px-1 rounded">Z</span>
     <span>Chat Zalo</span>
@@ -45,7 +45,7 @@ const cleanPhone = phone.replace(/[^0-9]/g, '');
     href={mapsUrl}
     target="_blank"
     rel="noopener noreferrer"
-    class="flex items-center justify-center py-2 px-3 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs border border-slate-200 active:scale-95 transition"
+    class="shop-maps-link flex items-center justify-center py-2 px-3 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs border border-slate-200 active:scale-95 transition"
   >
     <span>📍 Bản Đồ</span>
   </a>
@@ -57,7 +57,7 @@ const cleanPhone = phone.replace(/[^0-9]/g, '');
     href={`https://zalo.me/${zalo}`}
     target="_blank"
     rel="noopener noreferrer"
-    class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:scale-105 transition font-black text-xs"
+    class="shop-zalo-link flex items-center justify-center w-12 h-12 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:scale-105 transition font-black text-xs"
     title="Tư vấn Zalo"
   >
     Zalo
@@ -65,7 +65,7 @@ const cleanPhone = phone.replace(/[^0-9]/g, '');
 
   <a
     href={`tel:${cleanPhone}`}
-    class="flex items-center justify-center w-12 h-12 rounded-full bg-red-600 hover:bg-red-700 text-white shadow-lg hover:scale-105 transition"
+    class="shop-phone-link flex items-center justify-center w-12 h-12 rounded-full bg-red-600 hover:bg-red-700 text-white shadow-lg hover:scale-105 transition"
     title={`Gọi hotline: ${phone}`}
   >
     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

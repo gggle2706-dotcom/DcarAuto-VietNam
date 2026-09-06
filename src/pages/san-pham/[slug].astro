@@ -26,7 +26,7 @@ const currentPrice = hasDiscount ? product.salePrice! : product.price;
 
 // Tin nhắn Zalo tư vấn
 const zaloMessage = encodeURIComponent(
-  `Chào shop AutoTech, tôi quan tâm sản phẩm "${product.name}" (Mã: ${product.sku}). Cho tôi xin báo giá trọn gói thi công cho xe.`
+  `Chào shop ${DEFAULT_SHOP_SETTINGS.shop_name}, tôi quan tâm sản phẩm "${product.name}" (Mã: ${product.sku}). Cho tôi xin báo giá trọn gói thi công cho xe.`
 );
 const zaloUrl = `https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}?text=${zaloMessage}`;
 
@@ -37,7 +37,7 @@ const relatedProducts = MOCK_PRODUCTS
 ---
 
 <Layout
-  title={`${product.name} - AutoTech`}
+  title={`${product.name} - ${DEFAULT_SHOP_SETTINGS.shop_name}`}
   description={product.description}
 >
   <!-- Breadcrumb Sáng -->
@@ -166,16 +166,16 @@ const relatedProducts = MOCK_PRODUCTS
               href={zaloUrl}
               target="_blank"
               rel="noopener noreferrer"
-              class="py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm text-center transition shadow-xs flex items-center justify-center gap-2"
+              class="shop-zalo-link py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm text-center transition shadow-xs flex items-center justify-center gap-2"
             >
               <span>Nhận Báo Giá Qua Zalo</span>
             </a>
 
             <a
               href={`tel:${DEFAULT_SHOP_SETTINGS.phone.replace(/[^0-9]/g, '')}`}
-              class="py-3 px-4 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-sm text-center transition shadow-xs flex items-center justify-center gap-2"
+              class="shop-phone-link py-3 px-4 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-sm text-center transition shadow-xs flex items-center justify-center gap-2"
             >
-              <span>Gọi Kỹ Thuật: {DEFAULT_SHOP_SETTINGS.phone}</span>
+              <span>Gọi Kỹ Thuật: <span class="shop-phone-val">{DEFAULT_SHOP_SETTINGS.phone}</span></span>
             </a>
           </div>
 
@@ -194,7 +194,7 @@ const relatedProducts = MOCK_PRODUCTS
       <div class="prose max-w-none text-slate-700 text-sm leading-relaxed space-y-3">
         <p>{product.description}</p>
         <p>
-          Khi lắp đặt <strong class="text-slate-900">{product.name}</strong> tại {DEFAULT_SHOP_SETTINGS.shop_name}, khách hàng an tâm tuyệt đối về quy chuẩn:
+          Khi lắp đặt <strong class="text-slate-900">{product.name}</strong> tại <span class="shop-name-val">{DEFAULT_SHOP_SETTINGS.shop_name}</span>, khách hàng an tâm tuyệt đối về quy chuẩn:
         </p>
         <ul class="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-slate-600">
           <li>Toàn bộ dây nguồn dùng <strong>giắc cắm zin 100%</strong>, không chích dây hay cắt nối điện xe.</li>

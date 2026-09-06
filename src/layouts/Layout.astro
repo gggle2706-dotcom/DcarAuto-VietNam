@@ -46,5 +46,108 @@ const {
     </main>
     {!hideHeaderFooter && <Footer />}
     {!hideHeaderFooter && <FloatingContactBar />}
+
+    <!-- Script tự động đồng bộ cấu hình cửa hàng từ Admin (localStorage) theo thời gian thực -->
+    <script is:inline>
+      function syncShopSettings() {
+        try {
+          var raw = localStorage.getItem('app_shop_settings');
+          if (!raw) return;
+          var settings = JSON.parse(raw);
+          if (!settings) return;
+
+          if (settings.shop_name) {
+            document.querySelectorAll('.shop-name-val').forEach(function(el) {
+              el.textContent = settings.shop_name;
+            });
+            document.querySelectorAll('.shop-logo-fallback').forEach(function(el) {
+              el.textContent = settings.shop_name.charAt(0).toUpperCase();
+            });
+          }
+
+          if (settings.shop_tagline) {
+            document.querySelectorAll('.shop-tagline-val').forEach(function(el) {
+              el.textContent = settings.shop_tagline;
+            });
+          }
+
+          if (settings.phone) {
+            var cleanPhone = settings.phone.replace(/[^0-9]/g, '');
+            document.querySelectorAll('.shop-phone-val').forEach(function(el) {
+              el.textContent = settings.phone;
+            });
+            document.querySelectorAll('.shop-phone-link').forEach(function(el) {
+              if (el instanceof HTMLAnchorElement) {
+                el.href = 'tel:' + cleanPhone;
+              }
+            });
+          }
+
+          if (settings.zalo) {
+            document.querySelectorAll('.shop-zalo-val').forEach(function(el) {
+              el.textContent = settings.zalo;
+            });
+            document.querySelectorAll('.shop-zalo-link').forEach(function(el) {
+              if (el instanceof HTMLAnchorElement) {
+                var currentHref = el.getAttribute('href') || '';
+                if (currentHref.indexOf('text=') !== -1) {
+                  try {
+                    var u = new URL(currentHref, window.location.origin);
+                    var textParam = u.searchParams.get('text') || '';
+                    el.href = 'https://zalo.me/' + settings.zalo + '?text=' + encodeURIComponent(textParam);
+                  } catch (e) {
+                    el.href = 'https://zalo.me/' + settings.zalo;
+                  }
+                } else {
+                  el.href = 'https://zalo.me/' + settings.zalo;
+                }
+              }
+            });
+          }
+
+          if (settings.address) {
+            document.querySelectorAll('.shop-address-val').forEach(function(el) {
+              el.textContent = settings.address;
+            });
+          }
+
+          if (settings.operating_hours) {
+            document.querySelectorAll('.shop-hours-val').forEach(function(el) {
+              el.textContent = settings.operating_hours;
+            });
+          }
+
+          if (settings.google_maps_url) {
+            document.querySelectorAll('.shop-maps-link').forEach(function(el) {
+              if (el instanceof HTMLAnchorElement) {
+                el.href = settings.google_maps_url;
+              }
+            });
+          }
+
+          if (settings.logo_url) {
+            document.querySelectorAll('.shop-logo-img').forEach(function(el) {
+              if (el instanceof HTMLImageElement) {
+                el.src = settings.logo_url;
+                el.classList.remove('hidden');
+              }
+            });
+            document.querySelectorAll('.shop-logo-fallback').forEach(function(el) {
+              el.classList.add('hidden');
+            });
+          }
+        } catch (e) {
+          console.error('Lỗi đồng bộ cấu hình:', e);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', syncShopSettings);
+      } else {
+        syncShopSettings();
+      }
+      window.addEventListener('storage', syncShopSettings);
+      window.addEventListener('app-settings-updated', syncShopSettings);
+    </script>
   </body>
 </html>

@@ -265,6 +265,8 @@ export default function AdminApp() {
         ? prev.map((p) => (p.id === finalizedProduct.id ? finalizedProduct : p))
         : [finalizedProduct, ...prev];
       localStorage.setItem('app_products', JSON.stringify(updated));
+      window.dispatchEvent(new Event('app-products-updated'));
+      window.dispatchEvent(new Event('storage'));
       return updated;
     });
 
@@ -278,6 +280,8 @@ export default function AdminApp() {
       const updated = products.filter((p) => p.id !== id);
       setProducts(updated);
       localStorage.setItem('app_products', JSON.stringify(updated));
+      window.dispatchEvent(new Event('app-products-updated'));
+      window.dispatchEvent(new Event('storage'));
       notify('Đã xóa sản phẩm');
     }
   };
@@ -381,7 +385,9 @@ export default function AdminApp() {
   const handleSaveSettings = (e: React.FormEvent) => {
     e.preventDefault();
     localStorage.setItem('app_shop_settings', JSON.stringify(settings));
-    notify('Đã lưu thông tin cửa hàng thành công!');
+    window.dispatchEvent(new Event('app-settings-updated'));
+    window.dispatchEvent(new Event('storage'));
+    notify('Đã lưu thông tin cửa hàng thành công! Đã tự động cập nhật toàn bộ trang.');
   };
 
   const filteredProducts = products.filter((p) => {

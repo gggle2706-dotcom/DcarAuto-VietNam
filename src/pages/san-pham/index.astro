@@ -1,7 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import ProductCard from '@/components/ProductCard.astro';
-import { CATEGORIES_LIST } from '@/lib/constants';
+import { CATEGORIES_LIST, DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
 import { MOCK_PRODUCTS } from '@/lib/mock-products';
 
 // Lấy query parameters từ URL
@@ -35,8 +35,8 @@ const availableBrands = Array.from(new Set(MOCK_PRODUCTS.map((p) => p.brand)));
 ---
 
 <Layout
-  title="Tất Cả Sản Phẩm Nâng Cấp Ô Tô - AutoTech"
-  description="Danh mục sản phẩm nâng cấp ô tô chính hãng: Màn hình Android, Camera 360, Âm thanh, Bi LED, Cảm biến chuẩn giắc zin 100%."
+  title={`Tất Cả Sản Phẩm Nâng Cấp Ô Tô - ${DEFAULT_SHOP_SETTINGS.shop_name}`}
+  description={`Danh mục sản phẩm nâng cấp ô tô chính hãng tại ${DEFAULT_SHOP_SETTINGS.shop_name}: Màn hình Android, Camera 360, Âm thanh, Bi LED, Cảm biến chuẩn giắc zin 100%.`}
 >
   <div class="bg-slate-100 border-b border-slate-200 py-8 px-4 sm:px-6">
     <div class="max-w-7xl mx-auto">
@@ -199,8 +199,8 @@ const availableBrands = Array.from(new Set(MOCK_PRODUCTS.map((p) => p.brand)));
             <p class="text-xs text-slate-500 max-w-sm mx-auto mb-4">
               Bạn có thể liên hệ Zalo kỹ thuật viên để chúng tôi kiểm tra kho hàng trực tiếp cho dòng xe của bạn.
             </p>
-            <a href="https://zalo.me/0988123456" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700">
-              Nhắn Zalo Tư Vấn
+            <a href={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}`} target="_blank" rel="noopener noreferrer" class="shop-zalo-link px-4 py-2 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700">
+              Nhắn Zalo Tư Vấn (<span class="shop-zalo-val">{DEFAULT_SHOP_SETTINGS.zalo}</span>)
             </a>
           </div>
         )}

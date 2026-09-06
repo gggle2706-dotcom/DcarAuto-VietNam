@@ -1,19 +1,19 @@
 // Cấu hình thông tin cửa hàng
 
 export const DEFAULT_SHOP_SETTINGS = {
-  shop_name: 'AutoTech',
+  shop_name: 'Dcar Auto Vietnam',
   shop_tagline: 'Phụ Kiện & Đồ Chơi Xe Hơi Chính Hãng',
-  phone: '0988.123.456',
-  hotline: '0988.123.456',
-  zalo: '0988123456',
-  address: 'Số 88 Lê Quang Đạo, Nam Từ Liêm, Hà Nội',
-  email: 'lienhe@autotech.vn',
+  phone: '0977694364',
+  hotline: '0977694364',
+  zalo: '0977694364',
+  address: 'motel Thành Nam',
+  email: 'lienhe@dcarauto.vn',
   facebook_url: 'https://facebook.com',
   messenger_url: 'https://m.me',
   google_maps_url: 'https://maps.google.com',
   operating_hours: '08:00 - 18:30 (Thứ 2 - Chủ Nhật)',
-  seo_title: 'Nội Thất & Đồ Chơi Công Nghệ Ô Tô Chính Hãng',
-  seo_description: 'Chuyên màn hình Android ô tô, camera 360, loa sub, độ đèn bi LED chuẩn giắc zin theo xe.',
+  seo_title: 'Dcar Auto Vietnam - Phụ Kiện & Đồ Chơi Xe Hơi Chính Hãng',
+  seo_description: 'Dcar Auto Vietnam chuyên màn hình Android, camera 360, độ đèn, loa ô tô chính hãng tại motel Thành Nam.',
 };
 
 export const NAVIGATION_LINKS = [

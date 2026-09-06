@@ -145,15 +145,15 @@ const featuredProducts = MOCK_PRODUCTS.filter((p) => p.isFeatured).slice(0, 8);
           href={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}`}
           target="_blank"
           rel="noopener noreferrer"
-          class="px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition"
+          class="shop-zalo-link px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition"
         >
-          Nhắn Zalo Kỹ Thuật Viên ({DEFAULT_SHOP_SETTINGS.zalo})
+          Nhắn Zalo Kỹ Thuật Viên (<span class="shop-zalo-val">{DEFAULT_SHOP_SETTINGS.zalo}</span>)
         </a>
         <a
           href={`tel:${DEFAULT_SHOP_SETTINGS.phone.replace(/[^0-9]/g, '')}`}
-          class="px-6 py-3 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-300 transition"
+          class="shop-phone-link px-6 py-3 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-300 transition"
         >
-          Gọi Hotline: {DEFAULT_SHOP_SETTINGS.phone}
+          Gọi Hotline: <span class="shop-phone-val">{DEFAULT_SHOP_SETTINGS.phone}</span>
         </a>
       </div>
     </div>

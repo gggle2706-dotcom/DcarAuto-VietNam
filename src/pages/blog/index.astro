@@ -1,10 +1,11 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
 import { MOCK_POSTS } from '@/lib/mock-posts';
 ---
 
 <Layout
-  title="Kinh Nghiệm & Tư Vấn Nâng Cấp Ô Tô - AutoTech"
+  title={`Kinh Nghiệm & Tư Vấn Nâng Cấp Ô Tô - ${DEFAULT_SHOP_SETTINGS.shop_name}`}
   description="Chia sẻ kiến thức thực tế về màn hình Android, độ đèn bi LED văn minh, nâng cấp âm thanh và phụ kiện ô tô chuẩn zin."
 >
   <div class="bg-slate-100 border-b border-slate-200 py-8 px-4 sm:px-6">

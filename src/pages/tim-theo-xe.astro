@@ -2,6 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import CarSelectorWidget from '@/components/CarSelectorWidget';
 import ProductCard from '@/components/ProductCard.astro';
+import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
 import { MOCK_PRODUCTS } from '@/lib/mock-products';
 
 // Lấy query parameters từ URL
@@ -13,18 +14,9 @@ const yearParam = url.searchParams.get('year') || '';
 // Lọc sản phẩm tương thích xe
 const compatibleProducts = MOCK_PRODUCTS.filter((prod) => {
   if (prod.isUniversal) return true;
-
-  if (brandParam) {
-    const matchBrand = prod.compatibleBrands.some((b) => b.toLowerCase() === brandParam);
-    if (!matchBrand) return false;
-  }
-
-  if (modelParam) {
-    const matchModel = prod.compatibleModels.some((m) => m.toLowerCase() === modelParam);
-    if (!matchModel) return false;
-  }
-
-  return true;
+  const matchBrand = !brandParam || prod.compatibleBrands.includes(brandParam);
+  const matchModel = !modelParam || prod.compatibleModels.includes(modelParam);
+  return matchBrand && matchModel;
 });
 
 const dedicatedProducts = compatibleProducts.filter((p) => !p.isUniversal);
@@ -38,7 +30,7 @@ const carTitle = [
 ---
 
 <Layout
-  title={`Phụ Kiện Tương Thích Xe ${carTitle || 'Theo Dòng Xe'} - AutoTech`}
+  title={`Phụ Kiện Tương Thích Xe ${carTitle || 'Theo Dòng Xe'} - ${DEFAULT_SHOP_SETTINGS.shop_name}`}
   description={`Tra cứu đồ chơi, màn hình android, camera 360, loa âm thanh tương thích chuẩn giắc zin cho xe ${carTitle || 'ô tô các dòng'}.`}
 >
   <!-- Header Banner Sáng -->

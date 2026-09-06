@@ -22,17 +22,17 @@ const currentYear = new Date().getFullYear();
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
     <!-- Cột 1: Thông tin liên hệ -->
     <div class="space-y-3">
-      <div class="font-extrabold text-base text-slate-900">
+      <div class="shop-name-val font-extrabold text-base text-slate-900">
         {shopName}
       </div>
-      <p class="text-slate-500 leading-relaxed text-xs">
+      <p class="shop-tagline-val text-slate-500 leading-relaxed text-xs">
         {DEFAULT_SHOP_SETTINGS.shop_tagline}. Chuyên lắp đặt phụ kiện, đồ chơi xe hơi chuẩn giắc zin 100%.
       </p>
       <div class="space-y-1.5 pt-1 text-slate-700">
-        <div>Hotline: <a href={`tel:${phone.replace(/[^0-9]/g, '')}`} class="text-red-600 font-bold">{phone}</a></div>
-        <div>Zalo: <a href={`https://zalo.me/${zalo}`} target="_blank" rel="noopener noreferrer" class="text-blue-600 font-bold">{zalo}</a></div>
-        <div>Địa chỉ: <span>{address}</span></div>
-        <div>Giờ làm việc: <span>{DEFAULT_SHOP_SETTINGS.operating_hours}</span></div>
+        <div>Hotline: <a href={`tel:${phone.replace(/[^0-9]/g, '')}`} class="shop-phone-link text-red-600 font-bold"><span class="shop-phone-val">{phone}</span></a></div>
+        <div>Zalo: <a href={`https://zalo.me/${zalo}`} target="_blank" rel="noopener noreferrer" class="shop-zalo-link text-blue-600 font-bold"><span class="shop-zalo-val">{zalo}</span></a></div>
+        <div>Địa chỉ: <span class="shop-address-val">{address}</span></div>
+        <div>Giờ làm việc: <span class="shop-hours-val">{DEFAULT_SHOP_SETTINGS.operating_hours}</span></div>
       </div>
     </div>
 
@@ -83,7 +83,7 @@ const currentYear = new Date().getFullYear();
         href={DEFAULT_SHOP_SETTINGS.google_maps_url}
         target="_blank"
         rel="noopener noreferrer"
-        class="inline-block py-2.5 px-4 rounded-lg bg-white border border-slate-300 text-slate-800 hover:border-red-500 hover:text-red-600 transition font-semibold shadow-2xs"
+        class="shop-maps-link inline-block py-2.5 px-4 rounded-lg bg-white border border-slate-300 text-slate-800 hover:border-red-500 hover:text-red-600 transition font-semibold shadow-2xs"
       >
         📍 Xem vị trí trên Google Maps
       </a>
@@ -91,6 +91,6 @@ const currentYear = new Date().getFullYear();
   </div>
 
   <div class="border-t border-slate-200 max-w-7xl mx-auto px-4 sm:px-6 pt-6 text-center text-slate-400">
-    © {currentYear} {shopName}. Bản quyền thuộc về chủ cửa hàng.
+    © {currentYear} <span class="shop-name-val">{shopName}</span>. Bản quyền thuộc về chủ cửa hàng.
   </div>
 </footer>

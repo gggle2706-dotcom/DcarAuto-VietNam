@@ -4,8 +4,8 @@ import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
 ---
 
 <Layout
-  title="Liên Hệ & Đặt Lịch Lắp Đặt - AutoTech"
-  description="Thông tin liên hệ xưởng độ xe AutoTech: Số điện thoại, Zalo, địa chỉ gara tại Hà Nội, chỉ đường Google Maps."
+  title={`Liên Hệ & Đặt Lịch Lắp Đặt - ${DEFAULT_SHOP_SETTINGS.shop_name}`}
+  description={`Thông tin liên hệ xưởng độ xe ${DEFAULT_SHOP_SETTINGS.shop_name}: Số điện thoại, Zalo, địa chỉ gara tại ${DEFAULT_SHOP_SETTINGS.address}, chỉ đường Google Maps.`}
 >
   <div class="bg-slate-100 border-b border-slate-200 py-8 px-4 sm:px-6">
     <div class="max-w-7xl mx-auto">
@@ -34,7 +34,7 @@ import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
               <span class="text-base">📍</span>
               <div>
                 <div class="font-bold text-slate-900">Địa chỉ xưởng</div>
-                <div class="text-slate-600 mt-0.5">{DEFAULT_SHOP_SETTINGS.address}</div>
+                <div class="text-slate-600 mt-0.5 shop-address-val">{DEFAULT_SHOP_SETTINGS.address}</div>
               </div>
             </div>
 
@@ -42,8 +42,8 @@ import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
               <span class="text-base">📞</span>
               <div>
                 <div class="font-bold text-slate-900">Hotline tư vấn</div>
-                <a href={`tel:${DEFAULT_SHOP_SETTINGS.phone.replace(/[^0-9]/g, '')}`} class="text-red-600 font-bold mt-0.5 block hover:underline">
-                  {DEFAULT_SHOP_SETTINGS.phone}
+                <a href={`tel:${DEFAULT_SHOP_SETTINGS.phone.replace(/[^0-9]/g, '')}`} class="shop-phone-link text-red-600 font-bold mt-0.5 block hover:underline">
+                  <span class="shop-phone-val">{DEFAULT_SHOP_SETTINGS.phone}</span>
                 </a>
               </div>
             </div>
@@ -52,8 +52,8 @@ import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
               <span class="text-base font-bold text-blue-600">Z</span>
               <div>
                 <div class="font-bold text-slate-900">Zalo kỹ thuật</div>
-                <a href={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}`} target="_blank" rel="noopener noreferrer" class="text-blue-600 font-bold mt-0.5 block hover:underline">
-                  {DEFAULT_SHOP_SETTINGS.zalo} (Hỗ trợ nhanh)
+                <a href={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}`} target="_blank" rel="noopener noreferrer" class="shop-zalo-link text-blue-600 font-bold mt-0.5 block hover:underline">
+                  <span class="shop-zalo-val">{DEFAULT_SHOP_SETTINGS.zalo}</span> (Hỗ trợ nhanh)
                 </a>
               </div>
             </div>
@@ -62,7 +62,7 @@ import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
               <span class="text-base">⏰</span>
               <div>
                 <div class="font-bold text-slate-900">Thời gian làm việc</div>
-                <div class="text-slate-600 mt-0.5">{DEFAULT_SHOP_SETTINGS.operating_hours}</div>
+                <div class="text-slate-600 mt-0.5 shop-hours-val">{DEFAULT_SHOP_SETTINGS.operating_hours}</div>
               </div>
             </div>
           </div>

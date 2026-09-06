@@ -4,8 +4,8 @@ import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
 ---
 
 <Layout
-  title="Về Chúng Tôi - AutoTech"
-  description="Giới thiệu trung tâm nâng cấp phụ kiện và đồ chơi ô tô AutoTech: Tiêu chuẩn cắm giắc zin 100%, bảo hành chính hãng dài hạn."
+  title={`Về Chúng Tôi - ${DEFAULT_SHOP_SETTINGS.shop_name}`}
+  description={`Giới thiệu trung tâm nâng cấp phụ kiện và đồ chơi ô tô ${DEFAULT_SHOP_SETTINGS.shop_name}: Tiêu chuẩn cắm giắc zin 100%, bảo hành chính hãng dài hạn.`}
 >
   <div class="bg-slate-100 border-b border-slate-200 py-8 px-4 sm:px-6">
     <div class="max-w-7xl mx-auto">
@@ -15,7 +15,7 @@ import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
         <span class="text-red-600 font-medium">Về chúng tôi</span>
       </nav>
       <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-        Trung Tâm Nâng Cấp Phụ Kiện Ô Tô AutoTech
+        Trung Tâm Nâng Cấp Phụ Kiện Ô Tô <span class="shop-name-val">{DEFAULT_SHOP_SETTINGS.shop_name}</span>
       </h1>
       <p class="text-slate-600 text-xs sm:text-sm mt-1 max-w-2xl">
         Chuyên sâu trong lĩnh vực màn hình Android, hệ thống camera 360, âm thanh và tăng sáng đèn bi LED ô tô.
@@ -30,7 +30,7 @@ import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
           Giữ Trọn Tính Nguyên Bản Của Xe
         </h2>
         <p>
-          Tại <strong class="text-slate-900">{DEFAULT_SHOP_SETTINGS.shop_name}</strong>, chúng tôi hiểu rằng việc can thiệp lên hệ thống điện của xe hơi đòi hỏi sự cẩn trọng và chuẩn xác tuyệt đối.
+          Tại <strong class="text-slate-900 shop-name-val">{DEFAULT_SHOP_SETTINGS.shop_name}</strong>, chúng tôi hiểu rằng việc can thiệp lên hệ thống điện của xe hơi đòi hỏi sự cẩn trọng và chuẩn xác tuyệt đối.
         </p>
         <p>
           Tiêu chí của xưởng là: <strong>100% Cắm Giắc Zin</strong> theo xe, tuyệt đối không cắt nối hay chích dây, bảo vệ an toàn cho hệ thống điện và giữ trọn chế độ bảo hành hãng của xe.
@@ -49,7 +49,7 @@ import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
     <!-- 4 Cam kết -->
     <div class="pt-6 border-t border-slate-200">
       <h2 class="text-lg font-bold text-slate-900 text-center mb-6">
-        4 Tiêu Chuẩn Phục Vụ Tại AutoTech
+        4 Tiêu Chuẩn Phục Vụ Tại <span class="shop-name-val">{DEFAULT_SHOP_SETTINGS.shop_name}</span>
       </h2>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
