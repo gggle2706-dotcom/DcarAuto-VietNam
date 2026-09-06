@@ -9,6 +9,8 @@ export const DEFAULT_SHOP_SETTINGS = {
   address: 'motel Thành Nam',
   email: 'lienhe@dcarauto.vn',
   facebook_url: 'https://facebook.com',
+  tiktok_url: 'https://tiktok.com',
+  youtube_url: 'https://youtube.com',
   messenger_url: 'https://m.me',
   google_maps_url: 'https://maps.google.com',
   operating_hours: '08:00 - 18:30 (Thứ 2 - Chủ Nhật)',

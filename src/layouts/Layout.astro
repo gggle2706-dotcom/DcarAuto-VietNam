@@ -125,6 +125,30 @@ const {
             });
           }
 
+          if (settings.facebook_url) {
+            document.querySelectorAll('.shop-facebook-link').forEach(function(el) {
+              if (el instanceof HTMLAnchorElement) {
+                el.href = settings.facebook_url;
+              }
+            });
+          }
+
+          if (settings.tiktok_url) {
+            document.querySelectorAll('.shop-tiktok-link').forEach(function(el) {
+              if (el instanceof HTMLAnchorElement) {
+                el.href = settings.tiktok_url;
+              }
+            });
+          }
+
+          if (settings.youtube_url) {
+            document.querySelectorAll('.shop-youtube-link').forEach(function(el) {
+              if (el instanceof HTMLAnchorElement) {
+                el.href = settings.youtube_url;
+              }
+            });
+          }
+
           if (settings.logo_url) {
             document.querySelectorAll('.shop-logo-img').forEach(function(el) {
               if (el instanceof HTMLImageElement) {
