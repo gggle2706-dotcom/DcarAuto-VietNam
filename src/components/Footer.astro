@@ -18,97 +18,33 @@ const {
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="bg-slate-950 border-t border-slate-800 text-slate-400 text-sm mt-auto pb-20 sm:pb-8">
-  <!-- Cam kết chất lượng dịch vụ (Service Trust Badges) -->
-  <div class="border-b border-slate-900 bg-slate-900/40 py-8 px-4 sm:px-6">
-    <div class="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-6">
-      <div class="flex items-start gap-3">
-        <div class="w-10 h-10 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/20">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-          </svg>
-        </div>
-        <div>
-          <div class="font-semibold text-white text-sm">Cắm Giắc Zin 100%</div>
-          <div class="text-xs text-slate-400 mt-0.5">Không cắt trích dây, giữ trọn bảo hành của hãng xe.</div>
-        </div>
-      </div>
-
-      <div class="flex items-start gap-3">
-        <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/20">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-        </div>
-        <div>
-          <div class="font-semibold text-white text-sm">Bảo Hành Chính Hãng</div>
-          <div class="text-xs text-slate-400 mt-0.5">Bảo hành điện tử từ 12 - 24 tháng, lỗi 1 đổi 1.</div>
-        </div>
-      </div>
-
-      <div class="flex items-start gap-3">
-        <div class="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/20">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
-          </svg>
-        </div>
-        <div>
-          <div class="font-semibold text-white text-sm">Kỹ Thuật Chuyên Sâu</div>
-          <div class="text-xs text-slate-400 mt-0.5">Đội ngũ thợ thi công chuẩn chỉ, căn chỉnh âm thanh và ánh sáng chuẩn góc.</div>
-        </div>
-      </div>
-
-      <div class="flex items-start gap-3">
-        <div class="w-10 h-10 rounded-lg bg-red-500/10 text-red-400 flex items-center justify-center shrink-0 border border-red-500/20">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M12 8v4l3 3"/>
-          </svg>
-        </div>
-        <div>
-          <div class="font-semibold text-white text-sm">Lắp Đặt Tận Nơi</div>
-          <div class="text-xs text-slate-400 mt-0.5">Hỗ trợ thi công lắp đặt tại nhà hoặc cơ quan nhanh chóng, tiện lợi.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Thông tin chi tiết Footer -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-    <!-- Cột 1: Thông tin shop -->
-    <div class="space-y-4">
-      <div class="font-extrabold text-xl text-white tracking-tight flex items-center gap-1.5">
+<footer class="bg-neutral-950 border-t border-neutral-800 text-neutral-400 text-xs mt-auto pb-16 sm:pb-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+    <!-- Cột 1: Thông tin liên hệ -->
+    <div class="space-y-3">
+      <div class="font-bold text-base text-white">
         {shopName}
-        <span class="text-xs px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30 uppercase">PRO</span>
       </div>
-      <p class="text-xs text-slate-400 leading-relaxed">
-        {DEFAULT_SHOP_SETTINGS.shop_tagline}. Địa chỉ uy tín chuyên phân phối và lắp đặt phụ kiện đồ chơi xe hơi chính hãng với tiêu chuẩn giắc zin 100%.
+      <p class="text-neutral-400 leading-relaxed text-xs">
+        {DEFAULT_SHOP_SETTINGS.shop_tagline}. Chuyên lắp đặt phụ kiện, đồ chơi xe hơi chuẩn giắc zin 100%.
       </p>
-      <div class="pt-2 text-xs space-y-2">
-        <div class="flex items-center gap-2">
-          <span class="text-slate-500">Hotline:</span>
-          <a href={`tel:${phone.replace(/[^0-9]/g, '')}`} class="text-white font-semibold hover:text-amber-400">{phone}</a>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="text-slate-500">Zalo:</span>
-          <a href={`https://zalo.me/${zalo}`} target="_blank" rel="noopener noreferrer" class="text-blue-400 font-semibold hover:underline">{zalo}</a>
-        </div>
-        <div class="flex items-start gap-2">
-          <span class="text-slate-500 shrink-0">Địa chỉ:</span>
-          <span class="text-slate-300">{address}</span>
-        </div>
+      <div class="space-y-1.5 pt-1">
+        <div>Hotline: <a href={`tel:${phone.replace(/[^0-9]/g, '')}`} class="text-white font-semibold">{phone}</a></div>
+        <div>Zalo: <a href={`https://zalo.me/${zalo}`} target="_blank" rel="noopener noreferrer" class="text-white font-semibold">{zalo}</a></div>
+        <div>Địa chỉ: <span class="text-neutral-300">{address}</span></div>
+        <div>Giờ làm việc: <span class="text-neutral-300">{DEFAULT_SHOP_SETTINGS.operating_hours}</span></div>
       </div>
     </div>
 
     <!-- Cột 2: Danh mục sản phẩm -->
     <div>
-      <div class="font-semibold text-white text-sm uppercase tracking-wider mb-4">
-        Sản Phẩm Nổi Bật
+      <div class="font-semibold text-white uppercase tracking-wider mb-3">
+        Danh Mục Sản Phẩm
       </div>
-      <ul class="space-y-2 text-xs">
-        {CATEGORIES_LIST.map((cat) => (
+      <ul class="space-y-1.5">
+        {CATEGORIES_LIST.slice(0, 6).map((cat) => (
           <li>
-            <a href={`/danh-muc/${cat.slug}`} class="text-slate-400 hover:text-amber-400 transition">
+            <a href={`/san-pham?category=${cat.slug}`} class="text-neutral-400 hover:text-white transition">
               {cat.name}
             </a>
           </li>
@@ -116,60 +52,45 @@ const currentYear = new Date().getFullYear();
       </ul>
     </div>
 
-    <!-- Cột 3: Liên kết nhanh & Dịch vụ -->
+    <!-- Cột 3: Liên kết nhanh -->
     <div>
-      <div class="font-semibold text-white text-sm uppercase tracking-wider mb-4">
-        Hỗ Trợ Khách Hàng
+      <div class="font-semibold text-white uppercase tracking-wider mb-3">
+        Thông Tin Hỗ Trợ
       </div>
-      <ul class="space-y-2 text-xs">
+      <ul class="space-y-1.5">
         {NAVIGATION_LINKS.map((link) => (
           <li>
-            <a href={link.href} class="text-slate-400 hover:text-amber-400 transition">
+            <a href={link.href} class="text-neutral-400 hover:text-white transition">
               {link.label}
             </a>
           </li>
         ))}
         <li>
-          <a href="/chinh-sach-bao-hanh" class="text-slate-400 hover:text-amber-400 transition">Chính sách bảo hành & đổi trả</a>
-        </li>
-        <li>
-          <a href="/quy-trinh-lap-dat" class="text-slate-400 hover:text-amber-400 transition">Quy trình thi công tại xưởng</a>
+          <a href="/gioi-thieu" class="text-neutral-400 hover:text-white transition">Chính sách bảo hành</a>
         </li>
       </ul>
     </div>
 
-    <!-- Cột 4: Kết nối & Chỉ đường -->
-    <div class="space-y-4">
-      <div class="font-semibold text-white text-sm uppercase tracking-wider mb-4">
-        Kết Nối & Chỉ Đường
+    <!-- Cột 4: Chỉ đường Google Maps -->
+    <div class="space-y-3">
+      <div class="font-semibold text-white uppercase tracking-wider mb-3">
+        Vị Trí Cửa Hàng
       </div>
-      <p class="text-xs text-slate-400">
-        Bạn cần tìm xưởng hoặc muốn tư vấn trực tiếp tận nơi? Bấm vào chỉ đường Google Maps dưới đây:
+      <p class="text-neutral-400">
+        Khách hàng có thể mang xe qua xưởng để được kiểm tra dưỡng taplo và tư vấn trực tiếp:
       </p>
       <a
         href={DEFAULT_SHOP_SETTINGS.google_maps_url}
         target="_blank"
         rel="noopener noreferrer"
-        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 text-xs font-medium w-full justify-center transition"
+        class="inline-block py-2 px-3.5 rounded bg-neutral-900 border border-neutral-700 text-neutral-200 hover:text-white transition font-medium"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polygon points="3 11 22 2 13 21 11 13 3 11"/>
-        </svg>
-        <span>Mở Google Maps dẫn đường</span>
+        📍 Xem vị trí trên Google Maps
       </a>
-      <div class="pt-2 text-xs text-slate-500">
-        Giờ phục vụ: {DEFAULT_SHOP_SETTINGS.operating_hours}
-      </div>
     </div>
   </div>
 
-  <!-- Bottom Copyright -->
-  <div class="border-t border-slate-900 max-w-7xl mx-auto px-4 sm:px-6 py-6 text-center text-xs text-slate-600 flex flex-col sm:flex-row items-center justify-between gap-2">
-    <div>
-      © {currentYear} {shopName}. Bản quyền thuộc về chủ shop.
-    </div>
-    <div class="text-slate-500">
-      Thiết kế chuyên biệt cho Nâng cấp Công nghệ & Phụ kiện Ô tô
-    </div>
+  <div class="border-t border-neutral-900 max-w-7xl mx-auto px-4 sm:px-6 pt-6 text-center text-neutral-600">
+    © {currentYear} {shopName}. Bản quyền thuộc về chủ cửa hàng.
   </div>
 </footer>

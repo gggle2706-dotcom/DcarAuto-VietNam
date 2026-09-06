@@ -24,115 +24,95 @@ const {
   salePrice,
   image,
   specs = [],
-  warrantyMonths = 24,
+  warrantyMonths = 12,
   isUniversal = false,
 } = Astro.props;
 
-const formatCurrency = (val: number) => {
-  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val);
-};
-
 const hasDiscount = salePrice && salePrice < price;
-const discountPercent = hasDiscount ? Math.round(((price - salePrice) / price) * 100) : 0;
 const currentPrice = hasDiscount ? salePrice : price;
 
-// Tạo tin nhắn Zalo tư vấn trực tiếp sản phẩm này
-const zaloMessage = encodeURIComponent(`Chào shop, tôi cần tư vấn sản phẩm: ${name} (Thương hiệu: ${brand}). Giá hiện tại thế nào và có lắp được xe của tôi không?`);
+// Tin nhắn Zalo
+const zaloMessage = encodeURIComponent(`Xin chào, tôi cần tư vấn sản phẩm: ${name} (${brand}). Cho tôi xin báo giá thi công cho xe.`);
 const zaloUrl = `https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}?text=${zaloMessage}`;
 ---
 
-<div class="group flex flex-col rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/50 transition duration-300 overflow-hidden shadow-lg hover:shadow-amber-500/5">
-  <!-- Ảnh sản phẩm & Badges -->
-  <div class="relative aspect-[4/3] bg-slate-950 overflow-hidden">
+<div class="flex flex-col rounded-lg bg-neutral-900 border border-neutral-800 hover:border-neutral-700 transition overflow-hidden">
+  <!-- Ảnh sản phẩm -->
+  <a href={`/san-pham/${slug}`} class="relative aspect-[4/3] bg-neutral-950 overflow-hidden block">
     <img
       src={image}
       alt={name}
       loading="lazy"
-      class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+      class="w-full h-full object-cover hover:scale-102 transition duration-300"
     />
 
-    <!-- Badges nổi -->
-    <div class="absolute top-2.5 left-2.5 flex flex-col gap-1.5 z-10">
-      {hasDiscount && (
-        <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-red-600 text-white shadow-md">
-          GIẢM {discountPercent}%
-        </span>
-      )}
-      {isUniversal && (
-        <span class="px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-600/90 text-white backdrop-blur-sm">
-          Mọi Dòng Xe
-        </span>
-      )}
-    </div>
-
-    <!-- Badge bảo hành -->
-    <div class="absolute bottom-2.5 right-2.5 z-10">
-      <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-950/80 text-amber-400 border border-amber-500/30 backdrop-blur-sm">
-        BH {warrantyMonths} Tháng
+    {hasDiscount && (
+      <span class="absolute top-2 left-2 px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-600 text-white">
+        Giảm giá
       </span>
-    </div>
-  </div>
+    )}
 
-  <!-- Nội dung thông tin -->
-  <div class="p-4 flex-1 flex flex-col justify-between">
+    {isUniversal && (
+      <span class="absolute bottom-2 left-2 px-1.5 py-0.5 rounded text-[10px] bg-neutral-900/90 text-neutral-300 border border-neutral-700">
+        Mọi dòng xe
+      </span>
+    )}
+  </a>
+
+  <!-- Nội dung -->
+  <div class="p-3.5 flex-1 flex flex-col justify-between text-xs">
     <div>
-      <!-- Brand & Category -->
-      <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
-        <span class="font-semibold text-amber-400 uppercase tracking-wider text-[11px]">{brand}</span>
-        {categoryName && <span class="text-slate-500">{categoryName}</span>}
+      <div class="text-[11px] text-neutral-400 mb-1 flex items-center justify-between">
+        <span class="font-semibold text-neutral-300">{brand}</span>
+        {categoryName && <span class="text-neutral-500">{categoryName}</span>}
       </div>
 
-      <!-- Tên sản phẩm -->
-      <h3 class="font-bold text-white text-sm sm:text-base line-clamp-2 group-hover:text-amber-400 transition mb-2">
+      <h3 class="font-bold text-white text-sm line-clamp-2 hover:text-red-400 transition mb-2">
         <a href={`/san-pham/${slug}`}>{name}</a>
       </h3>
 
-      <!-- Thông số nổi bật (Tags) -->
       {specs.length > 0 && (
-        <div class="flex flex-wrap gap-1 mb-3">
-          {specs.slice(0, 3).map((spec) => (
-            <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700/60">
-              {spec}
-            </span>
+        <div class="text-[11px] text-neutral-400 space-y-0.5 mb-3">
+          {specs.slice(0, 2).map((s) => (
+            <div class="line-clamp-1">• {s}</div>
           ))}
         </div>
       )}
     </div>
 
     <!-- Giá & Nút hành động -->
-    <div class="pt-3 border-t border-slate-800/80 mt-auto">
-      <div class="mb-3">
+    <div class="pt-3 border-t border-neutral-800">
+      <div class="mb-2.5">
         {currentPrice > 0 ? (
           <div class="flex items-baseline gap-2">
-            <span class="text-base sm:text-lg font-extrabold text-amber-400">
-              {formatCurrency(currentPrice)}
+            <span class="text-sm sm:text-base font-extrabold text-white">
+              {currentPrice.toLocaleString('vi-VN')} đ
             </span>
             {hasDiscount && (
-              <span class="text-xs text-slate-500 line-through">
-                {formatCurrency(price)}
+              <span class="text-[11px] text-neutral-500 line-through">
+                {price.toLocaleString('vi-VN')} đ
               </span>
             )}
           </div>
         ) : (
-          <span class="text-base font-bold text-amber-400">Liên hệ báo giá</span>
+          <span class="text-sm font-bold text-neutral-300">Liên hệ báo giá</span>
         )}
       </div>
 
-      <!-- 2 Nút bấm: Xem chi tiết & Chat Zalo -->
-      <div class="grid grid-cols-2 gap-2 text-xs">
+      <div class="grid grid-cols-2 gap-1.5 text-xs">
         <a
           href={`/san-pham/${slug}`}
-          class="py-2 px-2.5 text-center rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold border border-slate-700 transition"
+          class="py-1.5 text-center rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200 font-medium transition"
         >
-          Chi Tiết
+          Xem chi tiết
         </a>
         <a
           href={zaloUrl}
           target="_blank"
           rel="noopener noreferrer"
-          class="py-2 px-2.5 text-center rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-sm transition flex items-center justify-center gap-1"
+          class="py-1.5 text-center rounded bg-blue-600 hover:bg-blue-500 text-white font-medium transition"
         >
-          <span>Tư Vấn Zalo</span>
+          Nhắn Zalo
         </a>
       </div>
     </div>
