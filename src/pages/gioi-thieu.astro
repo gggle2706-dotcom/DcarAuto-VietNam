@@ -1,0 +1,99 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
+---
+
+<Layout
+  title="Về Chúng Tôi - AutoTech Pro"
+  description="Giới thiệu trung tâm nâng cấp phụ kiện và đồ chơi công nghệ ô tô AutoTech Pro: Quy chuẩn thi công cắm giắc zin, đội ngũ thợ lành nghề, trang thiết bị đo đạc hiện đại."
+>
+  <div class="bg-slate-900/60 border-b border-slate-800 py-8 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto">
+      <nav class="text-xs text-slate-400 mb-3 flex items-center gap-2">
+        <a href="/" class="hover:text-white">Trang chủ</a>
+        <span>/</span>
+        <span class="text-amber-400 font-medium">Về chúng tôi</span>
+      </nav>
+      <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+        Trung Tâm Nâng Cấp Ô Tô AutoTech Pro
+      </h1>
+      <p class="text-slate-400 text-xs sm:text-sm mt-2 max-w-2xl">
+        Hơn 8 năm kinh nghiệm chuyên sâu trong lĩnh vực màn hình Android, hệ thống camera 360, âm thanh và tăng sáng ô tô.
+      </p>
+    </div>
+  </div>
+
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-12 space-y-12">
+    <!-- Giới thiệu tầm nhìn & sứ mệnh -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+        <h2 class="text-2xl font-bold text-white tracking-tight">
+          Giữ Trọn Tính Nguyên Bản — Nâng Tầm Tiện Nghi Hiện Đại
+        </h2>
+        <p>
+          Tại <strong class="text-white">{DEFAULT_SHOP_SETTINGS.shop_name}</strong>, chúng tôi hiểu rằng chiếc xe không đơn thuần là phương tiện đi lại, mà là ngôi nhà thứ hai của bạn. Mỗi sự can thiệp lên hệ thống điện của xe đều phải tuân thủ nghiêm ngặt các tiêu chuẩn an toàn kỹ thuật.
+        </p>
+        <p>
+          Tiêu chí hoạt động của chúng tôi là: <strong>100% Cắm Giắc Zin</strong> theo xe, tuyệt đối không cắt nối, không chích dây, bảo toàn chính sách bảo hành chính hãng của mọi chiếc xe xuất xưởng.
+        </p>
+      </div>
+
+      <div class="rounded-2xl overflow-hidden border border-slate-800 shadow-2xl aspect-video bg-slate-900">
+        <img
+          src="https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=800&q=80"
+          alt="Xưởng nâng cấp ô tô"
+          class="w-full h-full object-cover"
+        />
+      </div>
+    </div>
+
+    <!-- 4 Trụ Cột Cam Kết -->
+    <div class="pt-8 border-t border-slate-800">
+      <h2 class="text-xl sm:text-2xl font-bold text-white text-center mb-8">
+        4 Giá Trị Cốt Lõi Tại AutoTech Pro
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold text-lg border border-amber-500/20">
+            01
+          </div>
+          <h3 class="font-bold text-white text-base">Cắm Giắc Zin Nguyên Bản</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Sử dụng toàn bộ giắc chuyển đổi chuyên dụng cho từng đời xe từ Toyota, Honda, Hyundai, Kia đến Ford, VinFast. Không ảnh hưởng đến hệ thống điện tử của xe.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-lg border border-emerald-500/20">
+            02
+          </div>
+          <h3 class="font-bold text-white text-base">Bảo Hành Điện Tử Dài Hạn</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Tra cứu bảo hành tiện lợi qua số điện thoại hoặc biển số xe. Chính sách lỗi 1 đổi 1 nhanh chóng từ 12 đến 36 tháng tùy theo từng dòng sản phẩm chính hãng.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold text-lg border border-blue-500/20">
+            03
+          </div>
+          <h3 class="font-bold text-white text-base">Trang Thiết Bị Canh Chỉnh Tiêu Chuẩn</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Độ đèn bằng máy canh tâm Laser chuyên dụng; cân chỉnh âm thanh xe hơi bằng micro RTA; căn bạt camera 360 chuẩn xác từng milimet.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
+          <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold text-lg border border-purple-500/20">
+            04
+          </div>
+          <h3 class="font-bold text-white text-base">Hỗ Trợ Kỹ Thuật Trọn Đời Xe</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Cập nhật bản đồ Vietmap định kỳ miễn phí, nâng cấp phần mềm điều khiển giọng nói và giải đáp mọi thắc mắc của chủ xe trong suốt quá trình sử dụng.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

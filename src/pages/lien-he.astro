@@ -1,0 +1,153 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
+---
+
+<Layout
+  title="Liên Hệ & Đặt Lịch Lắp Đặt - AutoTech Pro"
+  description="Thông tin liên hệ xưởng độ xe AutoTech Pro: Số điện thoại, Zalo, địa chỉ gara tại Hà Nội, chỉ đường Google Maps."
+>
+  <div class="bg-slate-900/60 border-b border-slate-800 py-8 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto">
+      <nav class="text-xs text-slate-400 mb-3 flex items-center gap-2">
+        <a href="/" class="hover:text-white">Trang chủ</a>
+        <span>/</span>
+        <span class="text-amber-400 font-medium">Liên hệ</span>
+      </nav>
+      <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+        Liên Hệ & Đặt Lịch Thi Công
+      </h1>
+      <p class="text-slate-400 text-xs sm:text-sm mt-2 max-w-2xl">
+        Chúng tôi luôn sẵn sàng lắng nghe và tư vấn giải pháp nâng cấp đồ chơi ô tô tối ưu nhất cho xế cưng của bạn.
+      </p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <!-- Cột thông tin liên hệ & kênh kết nối -->
+      <div class="space-y-8">
+        <div>
+          <h2 class="text-xl font-bold text-white mb-4">Thông Tin Trung Tâm</h2>
+          <div class="space-y-4 text-sm text-slate-300">
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-900 border border-slate-800">
+              <span class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0">📍</span>
+              <div>
+                <div class="font-semibold text-white text-xs">Địa chỉ xưởng thi công</div>
+                <div class="text-xs text-slate-400 mt-0.5">{DEFAULT_SHOP_SETTINGS.address}</div>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-900 border border-slate-800">
+              <span class="w-8 h-8 rounded-lg bg-red-500/10 text-red-400 flex items-center justify-center shrink-0">📞</span>
+              <div>
+                <div class="font-semibold text-white text-xs">Hotline tư vấn & Đặt lịch</div>
+                <a href={`tel:${DEFAULT_SHOP_SETTINGS.phone.replace(/[^0-9]/g, '')}`} class="text-sm font-bold text-red-400 hover:underline mt-0.5 block">
+                  {DEFAULT_SHOP_SETTINGS.phone}
+                </a>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-900 border border-slate-800">
+              <span class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0 font-bold text-xs">Z</span>
+              <div>
+                <div class="font-semibold text-white text-xs">Zalo kỹ thuật viên trực tuyến</div>
+                <a href={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}`} target="_blank" rel="noopener noreferrer" class="text-sm font-bold text-blue-400 hover:underline mt-0.5 block">
+                  {DEFAULT_SHOP_SETTINGS.zalo} (Hỗ trợ 24/7)
+                </a>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-900 border border-slate-800">
+              <span class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">⏰</span>
+              <div>
+                <div class="font-semibold text-white text-xs">Thời gian làm việc</div>
+                <div class="text-xs text-slate-400 mt-0.5">{DEFAULT_SHOP_SETTINGS.operating_hours}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-amber-500/10 to-red-500/10 border border-amber-500/30 space-y-3">
+          <h3 class="font-bold text-white text-sm">Dịch Vụ Lắp Đặt Tận Nơi</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Bạn quá bận rộn không có thời gian mang xe qua xưởng? Chúng tôi có đội kỹ thuật lưu động sẵn sàng đến lắp đặt tận nơi tại nhà hoặc cơ quan trong khu vực nội thành.
+          </p>
+        </div>
+      </div>
+
+      <!-- Cột Form yêu cầu tư vấn báo giá -->
+      <div class="p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl">
+        <h2 class="text-xl font-bold text-white mb-2">Gửi Yêu Cầu Báo Giá / Đặt Lịch</h2>
+        <p class="text-xs text-slate-400 mb-6">
+          Điền thông tin xe của bạn, chúng tôi sẽ gọi lại hoặc nhắn Zalo tư vấn chi tiết trong 15 phút.
+        </p>
+
+        <form
+          action={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}`}
+          target="_blank"
+          class="space-y-4"
+        >
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Họ và tên của bạn</label>
+            <input
+              type="text"
+              required
+              placeholder="Ví dụ: Anh Tuấn"
+              class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+            />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Số điện thoại / Zalo</label>
+              <input
+                type="tel"
+                required
+                placeholder="09xx.xxx.xxx"
+                class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Dòng xe & Năm sản xuất</label>
+              <input
+                type="text"
+                required
+                placeholder="Ví dụ: Camry 2022"
+                class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Phụ kiện bạn muốn nâng cấp</label>
+            <select class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400">
+              <option value="man-hinh">Màn hình Android / Android Box</option>
+              <option value="cam-360">Camera 360 độ toàn cảnh</option>
+              <option value="bi-led">Độ đèn Bi LED / Bi Laser tăng sáng</option>
+              <option value="am-thanh">Nâng cấp Loa / Sub gầm ghế / DSP</option>
+              <option value="den-led">Đèn LED viền nội thất Ambient Light</option>
+              <option value="khac">Phụ kiện & Đồ chơi khác</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Ghi chú thêm (nếu có)</label>
+            <textarea
+              rows="3"
+              placeholder="Yêu cầu cụ thể của bạn (ví dụ: xe bản thiếu có cần thay canbus không...)"
+              class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-sm shadow-lg shadow-amber-500/20 active:scale-95 transition"
+          >
+            Gửi Yêu Cầu Tư Vấn Ngay
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,65 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { MOCK_POSTS } from '@/lib/mock-posts';
+---
+
+<Layout
+  title="Kinh Nghiệm & Tư Vấn Nâng Cấp Ô Tô - AutoTech Pro"
+  description="Chia sẻ kiến thức thực tế về màn hình Android, độ đèn bi LED văn minh, nâng cấp âm thanh và phụ kiện ô tô chuẩn zin."
+>
+  <div class="bg-slate-900/60 border-b border-slate-800 py-8 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto">
+      <nav class="text-xs text-slate-400 mb-3 flex items-center gap-2">
+        <a href="/" class="hover:text-white">Trang chủ</a>
+        <span>/</span>
+        <span class="text-amber-400 font-medium">Kinh nghiệm & Tư vấn</span>
+      </nav>
+      <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+        Kiến Thức & Cẩm Nang Nâng Cấp Ô Tô
+      </h1>
+      <p class="text-slate-400 text-xs sm:text-sm mt-2 max-w-2xl">
+        Tập hợp các bài viết chuyên sâu từ đội ngũ kỹ thuật viên giúp bạn lựa chọn giải pháp nâng cấp xe phù hợp và tiết kiệm nhất.
+      </p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {MOCK_POSTS.map((post) => (
+        <article class="flex flex-col rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/50 transition overflow-hidden group shadow-lg">
+          <a href={`/blog/${post.slug}`} class="relative aspect-video overflow-hidden bg-slate-950">
+            <img
+              src={post.image}
+              alt={post.title}
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+            />
+            <span class="absolute top-3 left-3 px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-950/80 text-amber-400 border border-amber-500/30 backdrop-blur-sm">
+              {post.category}
+            </span>
+          </a>
+
+          <div class="p-5 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="text-[11px] text-slate-500 mb-2">
+                Ngày đăng: {post.publishedAt} • Bởi {post.author}
+              </div>
+              <h2 class="font-bold text-base text-white group-hover:text-amber-400 transition line-clamp-2 mb-2">
+                <a href={`/blog/${post.slug}`}>{post.title}</a>
+              </h2>
+              <p class="text-xs text-slate-400 line-clamp-3 leading-relaxed">
+                {post.excerpt}
+              </p>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800/80 mt-4 flex items-center justify-between text-xs">
+              <a href={`/blog/${post.slug}`} class="text-amber-400 hover:underline font-semibold flex items-center gap-1">
+                <span>Đọc bài viết</span>
+                <span>→</span>
+              </a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</Layout>

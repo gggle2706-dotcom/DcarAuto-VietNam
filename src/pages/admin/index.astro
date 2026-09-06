@@ -1,0 +1,12 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import AdminApp from '@/components/admin/AdminApp';
+---
+
+<Layout
+  title="Bảng Điều Khiển Quản Trị - AutoTech Pro"
+  description="Khu vực quản lý sản phẩm, danh mục, tương thích dòng xe, bài viết và cấu hình cửa hàng AutoTech Pro."
+  hideHeaderFooter={true}
+>
+  <AdminApp client:only="react" />
+</Layout>

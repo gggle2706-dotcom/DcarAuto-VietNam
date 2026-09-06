@@ -1,38 +1,191 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import CarSelectorWidget from '@/components/CarSelectorWidget';
+import ProductCard from '@/components/ProductCard.astro';
+import { CATEGORIES_LIST, CAR_BRANDS_SAMPLE, DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
+import { MOCK_PRODUCTS } from '@/lib/mock-products';
+
+const featuredProducts = MOCK_PRODUCTS.filter((p) => p.isFeatured).slice(0, 8);
 ---
 
-<Layout title="AutoTech Pro - Nội Thất & Đồ Chơi Công Nghệ Ô Tô">
-  <main class="flex-1 flex flex-col items-center justify-center p-6 text-center max-w-4xl mx-auto">
-    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20 mb-6">
-      <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-      Hệ thống Khởi tạo Môi trường Thành công
+<Layout>
+  <!-- 1. Hero Section với Car Fitment Selector Widget -->
+  <section class="relative bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 py-12 sm:py-20 px-4 sm:px-6 overflow-hidden border-b border-slate-800/60">
+    <!-- Hiệu ứng Glow nền công nghệ -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-amber-500/10 blur-[120px] pointer-events-none rounded-full"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10 text-center">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 mb-6 shadow-inner">
+        <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+        Trung Tâm Nâng Cấp Công Nghệ Ô Tô Chuẩn Giắc Zin 100%
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white max-w-4xl mx-auto leading-tight sm:leading-none mb-6">
+        Nâng Tầm Đẳng Cấp Khoang Lái <br class="hidden sm:block" />
+        <span class="bg-gradient-to-r from-amber-400 via-amber-300 to-red-500 bg-clip-text text-transparent">
+          & Tiện Nghi An Toàn Xe Hơi
+        </span>
+      </h1>
+
+      <p class="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed">
+        Chuyên phân phối và thi công Màn hình Android, Camera 360, Bi LED siêu sáng, Âm thanh Hi-end và phụ kiện công nghệ tương thích chuẩn xác theo từng đời xe.
+      </p>
+
+      <!-- Widget Tra cứu theo xe (React Island) -->
+      <div class="mt-4">
+        <CarSelectorWidget client:load />
+      </div>
+
+      <!-- Quick stats / cam kết -->
+      <div class="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto text-left pt-6 border-t border-slate-800/60 text-xs">
+        <div class="flex items-center gap-2 text-slate-300">
+          <svg class="w-4 h-4 text-amber-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          <span>Không cắt trích dây zin</span>
+        </div>
+        <div class="flex items-center gap-2 text-slate-300">
+          <svg class="w-4 h-4 text-amber-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          <span>Bảo hành điện tử 2 năm</span>
+        </div>
+        <div class="flex items-center gap-2 text-slate-300">
+          <svg class="w-4 h-4 text-amber-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          <span>Căn chỉnh góc sáng chuẩn</span>
+        </div>
+        <div class="flex items-center gap-2 text-slate-300">
+          <svg class="w-4 h-4 text-amber-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          <span>Tư vấn kỹ thuật tận tâm</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Danh mục Nâng Cấp Nổi Bật -->
+  <section class="py-12 sm:py-16 px-4 sm:px-6 max-w-7xl mx-auto">
+    <div class="flex items-end justify-between mb-8">
+      <div>
+        <div class="text-amber-400 font-bold text-xs uppercase tracking-wider mb-1">Dịch Vụ & Danh Mục</div>
+        <h2 class="text-2xl sm:text-3xl font-black text-white">Bạn Muốn Nâng Cấp Gì Cho Xe?</h2>
+      </div>
+      <a href="/san-pham" class="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-amber-400 hover:underline">
+        <span>Xem tất cả danh mục</span>
+        <span>→</span>
+      </a>
     </div>
 
-    <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white mb-4">
-      Nội Thất & Đồ Chơi Công Nghệ Ô Tô
-    </h1>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+      {CATEGORIES_LIST.map((cat, idx) => (
+        <a
+          href={`/danh-muc/${cat.slug}`}
+          class="group p-4 sm:p-5 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-amber-500/60 transition duration-300 flex flex-col justify-between hover:-translate-y-1 shadow-md hover:shadow-amber-500/10"
+        >
+          <div class="flex items-center justify-between mb-3">
+            <span class="w-8 h-8 rounded-lg bg-slate-800 text-amber-400 flex items-center justify-center font-bold text-xs group-hover:bg-amber-500 group-hover:text-slate-950 transition">
+              0{idx + 1}
+            </span>
+            <span class="text-slate-600 group-hover:text-amber-400 text-xs transition">→</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm sm:text-base text-white group-hover:text-amber-400 transition leading-snug">
+              {cat.name}
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-1">Chuẩn giắc zin theo xe</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
 
-    <p class="text-lg text-slate-400 max-w-2xl mb-8">
-      Nền tảng tra cứu phụ kiện theo đời xe (Car Fitment), xem catalog sản phẩm nâng cấp ô tô và kết nối tư vấn chuyên nghiệp.
-    </p>
+  <!-- 3. Sản Phẩm Nổi Bật Được Tin Dùng Nhất -->
+  <section class="py-12 sm:py-16 px-4 sm:px-6 bg-slate-900/40 border-y border-slate-800/80">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+        <div>
+          <div class="text-amber-400 font-bold text-xs uppercase tracking-wider mb-1">Bộ Sưu Tập Nổi Bật</div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white">Sản Phẩm Được Lắp Đặt Nhiều Nhất</h2>
+          <p class="text-xs text-slate-400 mt-1">Các gói đồ chơi công nghệ cao cấp, hoạt động ổn định và có bảo hành dài hạn</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <a
+            href="/san-pham"
+            class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold border border-slate-700 transition"
+          >
+            Xem Toàn Bộ Sản Phẩm ({MOCK_PRODUCTS.length})
+          </a>
+        </div>
+      </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full text-left">
-      <div class="p-5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition">
-        <div class="text-amber-400 font-semibold text-sm mb-1">Công nghệ</div>
-        <div class="text-white font-medium text-base mb-1">Astro + Tailwind CSS</div>
-        <div class="text-slate-400 text-xs">Tốc độ tải trang tối đa, Zero-JS mặc định, tối ưu SEO vượt trội.</div>
-      </div>
-      <div class="p-5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition">
-        <div class="text-amber-400 font-semibold text-sm mb-1">Lõi dữ liệu</div>
-        <div class="text-white font-medium text-base mb-1">PostgreSQL & Supabase</div>
-        <div class="text-slate-400 text-xs">Mô hình liên kết tương thích xe (Fitment) & Row Level Security.</div>
-      </div>
-      <div class="p-5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition">
-        <div class="text-amber-400 font-semibold text-sm mb-1">Hạ tầng</div>
-        <div class="text-white font-medium text-base mb-1">Cloudflare Edge</div>
-        <div class="text-slate-400 text-xs">Băng thông không giới hạn, chi phí vận hành 0đ ở quy mô shop nhỏ.</div>
+      <!-- Grid Sản phẩm -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        {featuredProducts.map((prod) => (
+          <ProductCard
+            id={prod.id}
+            slug={prod.slug}
+            name={prod.name}
+            brand={prod.brand}
+            categoryName={prod.categoryName}
+            price={prod.price}
+            salePrice={prod.salePrice}
+            image={prod.image}
+            specs={prod.specs}
+            warrantyMonths={prod.warrantyMonths}
+            isUniversal={prod.isUniversal}
+          />
+        ))}
       </div>
     </div>
-  </main>
+  </section>
+
+  <!-- 4. Lựa Chọn Theo Hãng Xe Phổ Biến -->
+  <section class="py-12 sm:py-16 px-4 sm:px-6 max-w-7xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-10">
+      <div class="text-amber-400 font-bold text-xs uppercase tracking-wider mb-1">Tra Cứu Nhanh</div>
+      <h2 class="text-2xl sm:text-3xl font-black text-white">Bạn Đang Đi Xe Của Hãng Nào?</h2>
+      <p class="text-xs text-slate-400 mt-2">Bấm chọn hãng xe để xem ngay toàn bộ màn hình, mặt dưỡng, camera và đồ chơi tương thích</p>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+      {CAR_BRANDS_SAMPLE.map((brand) => (
+        <a
+          href={`/tim-theo-xe?brand=${brand.slug}`}
+          class="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-400/80 text-center group transition duration-200 hover:-translate-y-1 flex flex-col items-center justify-center gap-2"
+        >
+          <div class="w-10 h-10 rounded-full bg-slate-800 group-hover:bg-amber-500/20 text-white group-hover:text-amber-400 flex items-center justify-center font-black text-base border border-slate-700 transition">
+            {brand.name.slice(0, 1)}
+          </div>
+          <span class="font-bold text-xs text-slate-300 group-hover:text-white transition">
+            {brand.name}
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- 5. CTA Tư Vấn & Hỗ Trợ Kỹ Thuật Trực Tiếp -->
+  <section class="py-12 sm:py-16 px-4 sm:px-6 bg-gradient-to-r from-amber-600 to-red-600 text-white">
+    <div class="max-w-4xl mx-auto text-center space-y-6">
+      <h2 class="text-2xl sm:text-4xl font-black tracking-tight">
+        Chưa Biết Xe Của Bạn Lắp Được Loại Màn Hình & Phụ Kiện Nào?
+      </h2>
+      <p class="text-sm sm:text-base text-amber-100 max-w-2xl mx-auto">
+        Đừng ngần ngại! Hãy chụp ảnh bảng điều khiển xe hoặc gửi dòng xe của bạn qua Zalo, đội ngũ kỹ thuật viên sẽ tư vấn giải pháp cắm giắc zin chuẩn xác nhất kèm báo giá trọn gói thi công.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+        <a
+          href={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-slate-950 hover:bg-slate-900 text-white font-bold text-sm shadow-xl transition active:scale-95 flex items-center justify-center gap-2"
+        >
+          <span>Nhắn Zalo Nhận Tư Vấn Kỹ Thuật</span>
+          <span class="text-xs bg-amber-500 text-slate-950 font-bold px-1.5 py-0.5 rounded">Miễn phí</span>
+        </a>
+        <a
+          href={`tel:${DEFAULT_SHOP_SETTINGS.phone.replace(/[^0-9]/g, '')}`}
+          class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-bold text-sm border border-white/30 transition active:scale-95 flex items-center justify-center gap-2"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          <span>Gọi Hotline: {DEFAULT_SHOP_SETTINGS.phone}</span>
+        </a>
+      </div>
+    </div>
+  </section>
 </Layout>

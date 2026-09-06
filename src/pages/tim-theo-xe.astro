@@ -1,0 +1,177 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import CarSelectorWidget from '@/components/CarSelectorWidget';
+import ProductCard from '@/components/ProductCard.astro';
+import { MOCK_PRODUCTS } from '@/lib/mock-products';
+
+// Lấy query parameters từ URL
+const url = new URL(Astro.request.url);
+const brandParam = (url.searchParams.get('brand') || '').toLowerCase();
+const modelParam = (url.searchParams.get('model') || '').toLowerCase();
+const yearParam = url.searchParams.get('year') || '';
+
+// Lọc sản phẩm tương thích xe
+const compatibleProducts = MOCK_PRODUCTS.filter((prod) => {
+  // Nếu sản phẩm là Universal thì tương thích với mọi xe
+  if (prod.isUniversal) return true;
+
+  // Nếu người dùng có chọn hãng xe
+  if (brandParam) {
+    const matchBrand = prod.compatibleBrands.some((b) => b.toLowerCase() === brandParam);
+    if (!matchBrand) return false;
+  }
+
+  // Nếu người dùng có chọn dòng xe cụ thể
+  if (modelParam) {
+    const matchModel = prod.compatibleModels.some((m) => m.toLowerCase() === modelParam);
+    if (!matchModel) return false;
+  }
+
+  return true;
+});
+
+// Tách ra: Sản phẩm chuyên biệt theo xe vs Sản phẩm phổ thông (Universal)
+const dedicatedProducts = compatibleProducts.filter((p) => !p.isUniversal);
+const universalProducts = compatibleProducts.filter((p) => p.isUniversal);
+
+// Format tên hiển thị xe
+const carTitle = [
+  brandParam ? brandParam.toUpperCase() : '',
+  modelParam ? modelParam.toUpperCase() : '',
+  yearParam ? `(Năm ${yearParam})` : '',
+].filter(Boolean).join(' ');
+---
+
+<Layout
+  title={`Phụ Kiện & Đồ Chơi Xe Hơi Tương Thích ${carTitle || 'Theo Dòng Xe'} - AutoTech Pro`}
+  description={`Tra cứu đồ chơi, màn hình android, camera 360, loa âm thanh tương thích chuẩn giắc zin cho xe ${carTitle || 'ô tô các dòng'}.`}
+>
+  <!-- Header Banner -->
+  <div class="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800 py-10 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto text-center">
+      <nav class="text-xs text-slate-400 mb-3 flex items-center justify-center gap-2">
+        <a href="/" class="hover:text-white">Trang chủ</a>
+        <span>/</span>
+        <span class="text-amber-400 font-medium">Tìm theo xe</span>
+      </nav>
+
+      <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">
+        {carTitle ? `Phụ Kiện Tương Thích Xe: ${carTitle}` : 'Tra Cứu Phụ Kiện Chuẩn Theo Dòng Xe'}
+      </h1>
+      <p class="text-slate-400 text-xs sm:text-sm max-w-xl mx-auto mb-6">
+        Cam kết 100% cắm giắc zin nguyên bản, vừa khít phom mặt dưỡng taplo và đồng bộ hệ thống canbus xe.
+      </p>
+
+      <!-- Widget chọn lại xe -->
+      <div class="max-w-3xl mx-auto text-left">
+        <CarSelectorWidget client:load />
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+    {brandParam || modelParam ? (
+      <div class="space-y-12">
+        <!-- 1. Danh sách sản phẩm chuyên biệt theo dòng xe này -->
+        <div>
+          <div class="flex items-center justify-between mb-6 pb-3 border-b border-slate-800">
+            <div>
+              <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+                <span>Sản Phẩm Thiết Kế Riêng Cho {carTitle}</span>
+              </h2>
+              <p class="text-xs text-slate-400 mt-1">
+                Kèm mặt dưỡng theo xe và cục giải mã Canbus tương thích màn hình zin
+              </p>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              {dedicatedProducts.length} sản phẩm
+            </span>
+          </div>
+
+          {dedicatedProducts.length > 0 ? (
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+              {dedicatedProducts.map((prod) => (
+                <ProductCard
+                  id={prod.id}
+                  slug={prod.slug}
+                  name={prod.name}
+                  brand={prod.brand}
+                  categoryName={prod.categoryName}
+                  price={prod.price}
+                  salePrice={prod.salePrice}
+                  image={prod.image}
+                  specs={prod.specs}
+                  warrantyMonths={prod.warrantyMonths}
+                  isUniversal={prod.isUniversal}
+                />
+              ))}
+            </div>
+          ) : (
+            <div class="p-8 text-center bg-slate-900/50 rounded-xl border border-slate-800 text-xs text-slate-400">
+              Chưa có sản phẩm chuyên biệt nào được đăng cho dòng xe này. Vui lòng chat với kỹ thuật viên để chúng tôi kiểm tra mặt dưỡng và canbus sẵn có trong kho.
+            </div>
+          )}
+        </div>
+
+        <!-- 2. Danh sách sản phẩm phụ trợ phổ thông (Lắp được cho mọi xe) -->
+        <div>
+          <div class="flex items-center justify-between mb-6 pb-3 border-b border-slate-800">
+            <div>
+              <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+                <span>Phụ Kiện Nâng Cấp Phổ Thông (Tương Thích Mọi Dòng Xe)</span>
+              </h2>
+              <p class="text-xs text-slate-400 mt-1">
+                Bao gồm Android Box cắm cổng USB, Camera hành trình, Bi LED, Loa Sub gầm ghế, Đèn LED nội thất...
+              </p>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              {universalProducts.length} sản phẩm
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {universalProducts.map((prod) => (
+              <ProductCard
+                id={prod.id}
+                slug={prod.slug}
+                name={prod.name}
+                brand={prod.brand}
+                categoryName={prod.categoryName}
+                price={prod.price}
+                salePrice={prod.salePrice}
+                image={prod.image}
+                specs={prod.specs}
+                warrantyMonths={prod.warrantyMonths}
+                isUniversal={prod.isUniversal}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    ) : (
+      <div class="py-16 text-center border border-dashed border-slate-800 rounded-2xl bg-slate-900/20 max-w-2xl mx-auto p-6">
+        <div class="text-4xl mb-3">🚗</div>
+        <h2 class="text-base font-bold text-white mb-2">Vui lòng chọn Hãng Xe & Dòng Xe ở phía trên</h2>
+        <p class="text-xs text-slate-400 leading-relaxed mb-6">
+          Hệ thống sẽ tự động đối chiếu cơ sở dữ liệu để tìm đúng các bộ màn hình có sẵn mặt dưỡng zin, bộ canbus giải mã nút vô lăng, và các phụ kiện chuẩn xác nhất cho xe của bạn.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-2">
+          <a href="/tim-theo-xe?brand=toyota&model=vios" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-amber-400 hover:bg-slate-700 border border-slate-700">
+            Xem phụ kiện Toyota Vios
+          </a>
+          <a href="/tim-theo-xe?brand=toyota&model=camry" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-amber-400 hover:bg-slate-700 border border-slate-700">
+            Xem phụ kiện Toyota Camry
+          </a>
+          <a href="/tim-theo-xe?brand=hyundai&model=accent" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-amber-400 hover:bg-slate-700 border border-slate-700">
+            Xem phụ kiện Hyundai Accent
+          </a>
+          <a href="/tim-theo-xe?brand=mitsubishi&model=xpander" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-amber-400 hover:bg-slate-700 border border-slate-700">
+            Xem phụ kiện Mitsubishi Xpander
+          </a>
+        </div>
+      </div>
+    )}
+  </div>
+</Layout>
