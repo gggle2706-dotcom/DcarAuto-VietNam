@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { DEFAULT_SHOP_SETTINGS, CATEGORIES_LIST } from '@/lib/constants';
 import { MOCK_PRODUCTS, type MockProduct } from '@/lib/mock-products';
 import { MOCK_POSTS, type MockPost } from '@/lib/mock-posts';
+import { parseVideoUrl } from '@/lib/video-helpers';
 
 interface EditableCategory {
   id: string;
@@ -109,7 +110,7 @@ export default function AdminApp() {
   const [products, setProducts] = useState<MockProduct[]>(MOCK_PRODUCTS);
   const [categories, setCategories] = useState<EditableCategory[]>(CATEGORIES_LIST);
   const [carBrands, setCarBrands] = useState<EditableCarBrand[]>(INITIAL_CAR_BRANDS);
-  const [posts] = useState<MockPost[]>(MOCK_POSTS);
+  const [posts, setPosts] = useState<MockPost[]>(MOCK_POSTS);
   const [settings, setSettings] = useState(DEFAULT_SHOP_SETTINGS);
   const [notification, setNotification] = useState<string>('');
 
@@ -131,6 +132,12 @@ export default function AdminApp() {
   const [newModelName, setNewModelName] = useState<string>('');
   const [newModelYears, setNewModelYears] = useState<string>('2018 - 2024');
 
+  // Modal Bài viết & Video
+  const [editingPost, setEditingPost] = useState<MockPost | null>(null);
+  const [isPostModalOpen, setIsPostModalOpen] = useState<boolean>(false);
+  const [postProductSearch, setPostProductSearch] = useState<string>('');
+  const postImageInputRef = useRef<HTMLInputElement>(null);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
 
@@ -149,6 +156,10 @@ export default function AdminApp() {
     const savedBrands = localStorage.getItem('app_car_brands');
     if (savedBrands) {
       try { setCarBrands(JSON.parse(savedBrands)); } catch (e) {}
+    }
+    const savedPosts = localStorage.getItem('app_posts');
+    if (savedPosts) {
+      try { setPosts(JSON.parse(savedPosts)); } catch (e) {}
     }
     const savedSettings = localStorage.getItem('app_shop_settings');
     if (savedSettings) {
@@ -388,6 +399,107 @@ export default function AdminApp() {
     window.dispatchEvent(new Event('app-settings-updated'));
     window.dispatchEvent(new Event('storage'));
     notify('Đã lưu thông tin cửa hàng thành công! Đã tự động cập nhật toàn bộ trang.');
+  };
+
+  // =========================================================
+  // XỬ LÝ BÀI VIẾT, VIDEO & GẮN SẢN PHẨM
+  // =========================================================
+  const handleOpenPostEdit = (post?: MockPost) => {
+    if (post) {
+      setEditingPost({
+        ...post,
+        relatedProductIds: post.relatedProductIds ? [...post.relatedProductIds] : [],
+      });
+    } else {
+      setEditingPost({
+        id: 'post-' + Date.now(),
+        slug: '',
+        title: '',
+        excerpt: '',
+        content: '',
+        category: 'Tư vấn mua hàng',
+        author: 'Kỹ thuật viên Dcar Auto',
+        publishedAt: new Date().toISOString().split('T')[0],
+        image: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=800&q=80',
+        videoUrl: '',
+        relatedProductIds: [],
+        relatedCar: '',
+      });
+    }
+    setPostProductSearch('');
+    setIsPostModalOpen(true);
+  };
+
+  const handlePostImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64 = event.target?.result as string;
+      if (editingPost) {
+        setEditingPost({ ...editingPost, image: base64 });
+        notify('Đã tải ảnh bìa bài viết lên!');
+      }
+    };
+    reader.readAsDataURL(files[0]);
+  };
+
+  const handleTogglePostProduct = (productId: string) => {
+    if (!editingPost) return;
+    const current = editingPost.relatedProductIds || [];
+    const exists = current.includes(productId);
+    const updated = exists ? current.filter((id) => id !== productId) : [...current, productId];
+    setEditingPost({ ...editingPost, relatedProductIds: updated });
+  };
+
+  const handleSavePost = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingPost || !editingPost.title.trim()) {
+      notify('Vui lòng nhập tiêu đề bài viết');
+      return;
+    }
+
+    const autoSlug = (editingPost.slug.trim() || editingPost.title.trim())
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/đ/g, 'd')
+      .replace(/[^a-z0-9\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-');
+
+    const postToSave: MockPost = {
+      ...editingPost,
+      slug: autoSlug || 'bai-viet-' + Date.now(),
+      relatedProductIds: editingPost.relatedProductIds || [],
+    };
+
+    const exists = posts.some((p) => p.id === postToSave.id);
+    let updatedPosts: MockPost[];
+    if (exists) {
+      updatedPosts = posts.map((p) => (p.id === postToSave.id ? postToSave : p));
+    } else {
+      updatedPosts = [postToSave, ...posts];
+    }
+
+    setPosts(updatedPosts);
+    localStorage.setItem('app_posts', JSON.stringify(updatedPosts));
+    window.dispatchEvent(new Event('app-posts-updated'));
+    window.dispatchEvent(new Event('storage'));
+    setIsPostModalOpen(false);
+    setEditingPost(null);
+    notify('Đã lưu bài viết thành công!');
+  };
+
+  const handleDeletePost = (postId: string) => {
+    if (window.confirm('Bạn có chắc chắn muốn xóa bài viết này không?')) {
+      const updated = posts.filter((p) => p.id !== postId);
+      setPosts(updated);
+      localStorage.setItem('app_posts', JSON.stringify(updated));
+      window.dispatchEvent(new Event('app-posts-updated'));
+      window.dispatchEvent(new Event('storage'));
+      notify('Đã xóa bài viết');
+    }
   };
 
   const filteredProducts = products.filter((p) => {
@@ -778,29 +890,110 @@ export default function AdminApp() {
         {/* TAB 4: BÀI VIẾT */}
         {/* ======================================================= */}
         {activeTab === 'posts' && (
-          <div className="space-y-3 text-xs">
-            <div className="bg-white p-3 rounded-lg border border-slate-200 text-slate-600 shadow-2xs">
-              Danh sách bài viết tư vấn kỹ thuật trên website
+          <div className="space-y-4 text-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
+              <div>
+                <h2 className="font-bold text-slate-900 text-sm">Quản Lý Bài Viết & Video Thi Công</h2>
+                <p className="text-slate-500 text-xs mt-0.5">
+                  Tạo bài viết hướng dẫn, nhúng video từ YouTube / TikTok / Facebook và gắn sản phẩm để khách hàng xem báo giá Zalo.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => handleOpenPostEdit()}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition shadow-2xs shrink-0 flex items-center gap-1.5"
+              >
+                <span>+</span>
+                <span>Thêm Bài Viết Mới</span>
+              </button>
             </div>
 
-            <div className="space-y-2">
-              {posts.map((post) => (
-                <div key={post.id} className="p-3 rounded-lg bg-white border border-slate-200 flex items-center justify-between gap-4 shadow-2xs">
-                  <div>
-                    <div className="font-bold text-slate-800">{post.title}</div>
-                    <div className="text-[11px] text-slate-400 mt-0.5">
-                      Chuyên mục: {post.category} • Ngày: {post.publishedAt}
+            <div className="space-y-3">
+              {posts.map((post) => {
+                const video = parseVideoUrl(post.videoUrl);
+                const attachedProductsCount = post.relatedProductIds?.length || 0;
+
+                return (
+                  <div
+                    key={post.id}
+                    className="p-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 transition flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-2xs"
+                  >
+                    <div className="flex items-start gap-4">
+                      {/* Thumbnail ảnh hoặc icon video */}
+                      <div className="relative w-28 h-20 rounded-lg overflow-hidden bg-slate-100 shrink-0 border border-slate-200">
+                        <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+                        {video && (
+                          <span className={`absolute bottom-1 left-1 px-1.5 py-0.5 rounded text-[9px] font-bold ${video.badgeBg}`}>
+                            ▶ {video.platformName}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="space-y-1.5 min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-red-50 text-red-600 border border-red-200">
+                            {post.category}
+                          </span>
+                          {post.relatedCar && (
+                            <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                              🚗 {post.relatedCar}
+                            </span>
+                          )}
+                          {attachedProductsCount > 0 && (
+                            <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                              🛠️ {attachedProductsCount} sản phẩm gắn kèm
+                            </span>
+                          )}
+                        </div>
+
+                        <h3 className="font-bold text-sm text-slate-900 leading-snug">
+                          {post.title}
+                        </h3>
+
+                        <div className="text-[11px] text-slate-400 flex flex-wrap items-center gap-3">
+                          <span>Ngày: {post.publishedAt}</span>
+                          <span>•</span>
+                          <span>Tác giả: {post.author}</span>
+                          <span>•</span>
+                          <span className="font-mono text-slate-500">/blog/{post.slug}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0 border-t md:border-t-0 pt-3 md:pt-0 border-slate-100">
+                      <a
+                        href={`/blog/${post.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 font-medium transition"
+                      >
+                        Xem web ↗
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => handleOpenPostEdit(post)}
+                        className="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-medium transition"
+                      >
+                        Chỉnh sửa
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeletePost(post.id)}
+                        className="px-2.5 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition font-medium"
+                      >
+                        Xóa
+                      </button>
                     </div>
                   </div>
-                  <a
-                    href={`/blog/${post.slug}`}
-                    target="_blank"
-                    className="text-slate-600 hover:text-slate-900 underline shrink-0 font-medium"
-                  >
-                    Xem bài viết ↗
-                  </a>
+                );
+              })}
+
+              {posts.length === 0 && (
+                <div className="p-12 text-center bg-white border border-dashed border-slate-300 rounded-xl text-slate-500">
+                  Chưa có bài viết nào. Hãy bấm "+ Thêm Bài Viết Mới" để bắt đầu!
                 </div>
-              ))}
+              )}
             </div>
           </div>
         )}
@@ -1341,6 +1534,364 @@ export default function AdminApp() {
                   className="px-4 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded"
                 >
                   Lưu
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL BÀI VIẾT, VIDEO & GẮN SẢN PHẨM */}
+      {isPostModalOpen && editingPost && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-3xl max-h-[92vh] flex flex-col shadow-2xl text-xs">
+            {/* Header Modal */}
+            <div className="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between shrink-0 bg-slate-50 rounded-t-2xl">
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm sm:text-base">
+                  {editingPost.title ? 'Chỉnh Sửa Bài Viết & Video' : 'Tạo Bài Viết & Nhúng Video Mới'}
+                </h3>
+                <p className="text-slate-500 text-[11px] mt-0.5">
+                  Đăng tải kinh nghiệm, video thi công thực tế và gắn sản phẩm để khách hàng xem báo giá Zalo
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsPostModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center font-bold text-sm transition"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Body Modal Cuộn được */}
+            <form onSubmit={handleSavePost} className="p-4 sm:p-6 overflow-y-auto space-y-6 flex-1">
+              {/* 1. THÔNG TIN BÀI VIẾT */}
+              <div className="space-y-3">
+                <div className="font-bold text-slate-800 uppercase tracking-wide text-[11px] pb-1 border-b border-slate-100 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-red-600"></span>
+                  <span>1. Thông tin bài viết</span>
+                </div>
+
+                <div>
+                  <label className="block font-medium text-slate-700 mb-1">Tiêu Đề Bài Viết *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Ví dụ: Lắp màn hình Android ZX10 cho xe Toyota Vios 2022 giắc zin"
+                    value={editingPost.title}
+                    onChange={(e) => setEditingPost({ ...editingPost, title: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 font-medium focus:outline-none focus:bg-white focus:border-slate-500"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-medium text-slate-700 mb-1">Chuyên Mục *</label>
+                    <select
+                      value={editingPost.category}
+                      onChange={(e) => setEditingPost({ ...editingPost, category: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:bg-white"
+                    >
+                      <option value="Tư vấn mua hàng">Tư vấn mua hàng</option>
+                      <option value="Kinh nghiệm độ xe">Kinh nghiệm độ xe</option>
+                      <option value="Kiến thức kỹ thuật">Kiến thức kỹ thuật</option>
+                      <option value="Dự án thực tế">Dự án thực tế thi công</option>
+                      <option value="Đánh giá sản phẩm">Đánh giá sản phẩm</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block font-medium text-slate-700 mb-1">Dòng Xe Thi Công (Tùy chọn)</label>
+                    <input
+                      type="text"
+                      placeholder="Ví dụ: Toyota Vios 2018 - 2024"
+                      value={editingPost.relatedCar || ''}
+                      onChange={(e) => setEditingPost({ ...editingPost, relatedCar: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:bg-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-medium text-slate-700 mb-1">Tác Giả</label>
+                    <input
+                      type="text"
+                      value={editingPost.author}
+                      onChange={(e) => setEditingPost({ ...editingPost, author: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:bg-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-medium text-slate-700 mb-1">Ngày Đăng</label>
+                    <input
+                      type="date"
+                      value={editingPost.publishedAt}
+                      onChange={(e) => setEditingPost({ ...editingPost, publishedAt: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:bg-white"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block font-medium text-slate-700 mb-1">Đường Dẫn Tĩnh (Slug)</label>
+                    <input
+                      type="text"
+                      placeholder="Tự động tạo từ tiêu đề nếu để trống"
+                      value={editingPost.slug}
+                      onChange={(e) => setEditingPost({ ...editingPost, slug: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 font-mono focus:outline-none focus:bg-white"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 2. ẢNH ĐẠI DIỆN BÀI VIẾT */}
+              <div className="space-y-3">
+                <div className="font-bold text-slate-800 uppercase tracking-wide text-[11px] pb-1 border-b border-slate-100 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-red-600"></span>
+                  <span>2. Ảnh bìa bài viết</span>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-4 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="w-28 h-20 rounded-lg overflow-hidden bg-white border border-slate-300 shrink-0 shadow-2xs">
+                    <img src={editingPost.image} alt="Preview" className="w-full h-full object-cover" />
+                  </div>
+
+                  <div className="space-y-2 flex-1 min-w-[240px]">
+                    <input
+                      type="file"
+                      ref={postImageInputRef}
+                      accept="image/*"
+                      onChange={handlePostImageUpload}
+                      className="hidden"
+                    />
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => postImageInputRef.current?.click()}
+                        className="px-3.5 py-1.5 bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 rounded-lg font-semibold text-xs shadow-2xs transition"
+                      >
+                        📁 Chọn ảnh từ máy tính
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Hoặc dán URL ảnh tại đây..."
+                      value={editingPost.image}
+                      onChange={(e) => setEditingPost({ ...editingPost, image: e.target.value })}
+                      className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-900 text-xs focus:outline-none focus:bg-white"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 3. VIDEO NHÚNG (YOUTUBE / TIKTOK / FACEBOOK) */}
+              <div className="space-y-3">
+                <div className="font-bold text-slate-800 uppercase tracking-wide text-[11px] pb-1 border-b border-slate-100 flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-red-600"></span>
+                    <span>3. Video thực tế thi công (YouTube / TikTok / Facebook)</span>
+                  </div>
+                  <span className="text-[10px] text-slate-400 font-normal">Tùy chọn</span>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-slate-700 font-medium">
+                    Link Video (Dán đường dẫn từ YouTube, TikTok hoặc Facebook)
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="Ví dụ: https://www.youtube.com/watch?v=... hoặc https://tiktok.com/@... hoặc https://facebook.com/..."
+                      value={editingPost.videoUrl || ''}
+                      onChange={(e) => setEditingPost({ ...editingPost, videoUrl: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:bg-white"
+                    />
+                    {editingPost.videoUrl && (
+                      <button
+                        type="button"
+                        onClick={() => setEditingPost({ ...editingPost, videoUrl: '' })}
+                        className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg shrink-0"
+                      >
+                        Xóa link
+                      </button>
+                    )}
+                  </div>
+                  <div className="text-[11px] text-slate-500">
+                    💡 Hỗ trợ mọi định dạng: YouTube thông thường, YouTube Shorts, video TikTok, Facebook Watch và Reels.
+                  </div>
+
+                  {/* Live Video Preview nếu có URL */}
+                  {editingPost.videoUrl && (() => {
+                    const videoInfo = parseVideoUrl(editingPost.videoUrl);
+                    if (!videoInfo) return null;
+                    return (
+                      <div className="mt-3 p-3 rounded-xl bg-slate-900 text-white space-y-2">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${videoInfo.badgeBg}`}>
+                            ▶ Nhận diện: {videoInfo.platformName}
+                          </span>
+                          <span className="text-slate-400 text-[11px]">Xem trước trình phát video:</span>
+                        </div>
+                        {videoInfo.embedUrl ? (
+                          <div className="aspect-video w-full rounded-lg overflow-hidden bg-black border border-slate-700">
+                            <iframe
+                              src={videoInfo.embedUrl}
+                              title="Preview"
+                              className="w-full h-full"
+                              allowFullScreen
+                            />
+                          </div>
+                        ) : (
+                          <div className="p-4 text-center text-xs text-slate-300 bg-slate-800 rounded-lg">
+                            Link video hợp lệ. Do chính sách bảo mật của ứng dụng, khách hàng sẽ có nút bấm mở trực tiếp trên {videoInfo.platformName}.
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
+                </div>
+              </div>
+
+              {/* 4. GẮN SẢN PHẨM VÀO BÀI VIẾT (RẤT QUAN TRỌNG) */}
+              <div className="space-y-3">
+                <div className="font-bold text-slate-800 uppercase tracking-wide text-[11px] pb-1 border-b border-slate-100 flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-red-600"></span>
+                    <span>4. Gắn sản phẩm được lắp đặt trong bài viết</span>
+                  </div>
+                  <span className="text-[10px] text-emerald-700 font-bold">
+                    Đã gắn: {(editingPost.relatedProductIds || []).length} sản phẩm
+                  </span>
+                </div>
+
+                <p className="text-slate-500 text-[11px]">
+                  Tích chọn các phụ kiện thi công trong bài viết. Sản phẩm sẽ hiển thị đẹp mắt bên dưới bài viết kèm giá niêm yết và nút "Báo giá Zalo".
+                </p>
+
+                {/* Danh sách sản phẩm đã chọn (chips) */}
+                {(editingPost.relatedProductIds || []).length > 0 && (
+                  <div className="flex flex-wrap gap-2 p-2.5 rounded-xl bg-emerald-50/70 border border-emerald-200">
+                    {(editingPost.relatedProductIds || []).map((id) => {
+                      const prod = products.find((p) => p.id === id);
+                      if (!prod) return null;
+                      return (
+                        <div
+                          key={id}
+                          className="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-white border border-emerald-300 text-xs shadow-2xs"
+                        >
+                          <img src={prod.image} alt={prod.name} className="w-5 h-5 rounded object-cover" />
+                          <span className="font-semibold text-slate-800 max-w-[180px] truncate">{prod.name}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleTogglePostProduct(id)}
+                            className="text-slate-400 hover:text-red-600 font-bold ml-1"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Ô tìm kiếm sản phẩm trong kho */}
+                <input
+                  type="text"
+                  placeholder="🔍 Gõ tên hoặc mã SKU sản phẩm để tìm nhanh..."
+                  value={postProductSearch}
+                  onChange={(e) => setPostProductSearch(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:bg-white"
+                />
+
+                {/* Bảng chọn sản phẩm cuộn được */}
+                <div className="max-h-52 overflow-y-auto rounded-xl border border-slate-200 divide-y divide-slate-100 bg-white shadow-inner">
+                  {products
+                    .filter((p) => {
+                      if (!postProductSearch.trim()) return true;
+                      const q = postProductSearch.toLowerCase();
+                      return p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q);
+                    })
+                    .map((prod) => {
+                      const isChecked = (editingPost.relatedProductIds || []).includes(prod.id);
+                      const formatPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(prod.salePrice || prod.price);
+                      return (
+                        <label
+                          key={prod.id}
+                          className={`flex items-center justify-between p-2.5 hover:bg-slate-50 cursor-pointer transition ${
+                            isChecked ? 'bg-red-50/50' : ''
+                          }`}
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={() => handleTogglePostProduct(prod.id)}
+                              className="w-4 h-4 rounded text-red-600 focus:ring-red-500 cursor-pointer"
+                            />
+                            <img src={prod.image} alt={prod.name} className="w-10 h-8 rounded object-cover border border-slate-200 shrink-0" />
+                            <div className="min-w-0">
+                              <div className="font-semibold text-slate-900 truncate max-w-sm">{prod.name}</div>
+                              <div className="text-[10px] text-slate-400">
+                                SKU: {prod.sku} • Hãng: {prod.brand}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="text-right shrink-0 font-bold text-red-600 text-xs">
+                            {formatPrice}
+                          </div>
+                        </label>
+                      );
+                    })}
+                </div>
+              </div>
+
+              {/* 5. TÓM TẮT & NỘI DUNG */}
+              <div className="space-y-3">
+                <div className="font-bold text-slate-800 uppercase tracking-wide text-[11px] pb-1 border-b border-slate-100 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-red-600"></span>
+                  <span>5. Nội dung bài viết</span>
+                </div>
+
+                <div>
+                  <label className="block font-medium text-slate-700 mb-1">Đoạn Tóm Tắt Ngắn (Hiển thị ở trang danh sách & đầu bài viết)</label>
+                  <textarea
+                    rows={2}
+                    placeholder="Tóm tắt ngắn gọn nội dung bài viết..."
+                    value={editingPost.excerpt}
+                    onChange={(e) => setEditingPost({ ...editingPost, excerpt: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-medium text-slate-700 mb-1">Nội Dung Chi Tiết *</label>
+                  <textarea
+                    rows={8}
+                    required
+                    placeholder="Nhập nội dung bài viết hướng dẫn, quy trình lắp đặt..."
+                    value={editingPost.content}
+                    onChange={(e) => setEditingPost({ ...editingPost, content: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:bg-white leading-relaxed font-sans"
+                  />
+                </div>
+              </div>
+
+              {/* Nút hành động */}
+              <div className="pt-4 border-t border-slate-200 flex items-center justify-end gap-3 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setIsPostModalOpen(false)}
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition"
+                >
+                  Hủy Bỏ
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg shadow-xs transition"
+                >
+                  Lưu Bài Viết
                 </button>
               </div>
             </form>

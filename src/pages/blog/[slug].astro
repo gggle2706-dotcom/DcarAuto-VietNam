@@ -2,6 +2,8 @@
 import Layout from '@/layouts/Layout.astro';
 import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
 import { MOCK_POSTS, type MockPost } from '@/lib/mock-posts';
+import { MOCK_PRODUCTS, type MockProduct } from '@/lib/mock-products';
+import { parseVideoUrl } from '@/lib/video-helpers';
 
 export function getStaticPaths() {
   return MOCK_POSTS.map((post) => ({
@@ -15,6 +17,17 @@ interface Props {
 }
 
 const { post } = Astro.props;
+
+const formatCurrency = (val: number) => {
+  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val);
+};
+
+// Tìm sản phẩm gắn kèm
+const postProducts: MockProduct[] = (post.relatedProductIds || [])
+  .map((id) => MOCK_PRODUCTS.find((p) => p.id === id))
+  .filter(Boolean) as MockProduct[];
+
+const videoInfo = parseVideoUrl(post.videoUrl);
 ---
 
 <Layout
@@ -25,47 +38,346 @@ const { post } = Astro.props;
     <div class="max-w-4xl mx-auto flex items-center gap-2 flex-wrap">
       <a href="/" class="hover:text-slate-900">Trang chủ</a>
       <span>/</span>
-      <a href="/blog" class="hover:text-slate-900">Kinh nghiệm</a>
+      <a href="/blog" class="hover:text-slate-900">Kinh nghiệm & Video</a>
       <span>/</span>
-      <span class="text-slate-900 font-medium truncate">{post.title}</span>
+      <span id="post-breadcrumb-title" class="text-slate-900 font-medium truncate">{post.title}</span>
     </div>
   </div>
 
-  <article class="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-    <header class="mb-6 space-y-2">
-      <span class="inline-block px-2.5 py-0.5 rounded text-xs font-semibold bg-red-50 text-red-600 border border-red-200">
-        {post.category}
-      </span>
-      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
+  <article class="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12" data-post-slug={post.slug}>
+    <header class="mb-6 space-y-3">
+      <div class="flex flex-wrap items-center gap-2">
+        <span id="post-category-badge" class="inline-block px-2.5 py-0.5 rounded text-xs font-semibold bg-red-50 text-red-600 border border-red-200">
+          {post.category}
+        </span>
+        {post.relatedCar && (
+          <span id="post-car-badge" class="inline-block px-2.5 py-0.5 rounded text-xs font-semibold bg-slate-100 text-slate-800 border border-slate-300">
+            Dòng xe: {post.relatedCar}
+          </span>
+        )}
+        {videoInfo && (
+          <span id="post-video-tag" class={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-xs font-semibold ${videoInfo.badgeBg}`}>
+            <span>▶</span>
+            <span>Video {videoInfo.platformName}</span>
+          </span>
+        )}
+      </div>
+
+      <h1 id="post-title" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
         {post.title}
       </h1>
-      <div class="text-xs text-slate-500">
-        Ngày đăng: {post.publishedAt} • Tác giả: {post.author}
+
+      <div class="flex items-center gap-4 text-xs text-slate-500 pb-4 border-b border-slate-200">
+        <span>Ngày đăng: <strong id="post-date" class="text-slate-700">{post.publishedAt}</strong></span>
+        <span>•</span>
+        <span>Tác giả: <strong id="post-author" class="text-slate-700">{post.author}</strong></span>
       </div>
     </header>
 
-    <div class="aspect-video rounded-xl overflow-hidden mb-8 border border-slate-200 shadow-sm bg-slate-100">
-      <img src={post.image} alt={post.title} class="w-full h-full object-cover" />
+    <!-- KHU VỰC VIDEO NHÚNG THỰC TẾ (NẾU CÓ) -->
+    <div id="post-video-wrapper" class={videoInfo ? 'mb-8' : 'hidden'}>
+      <div class="rounded-xl overflow-hidden border border-slate-300 bg-black shadow-md">
+        <div class="bg-slate-900 px-4 py-2 flex items-center justify-between text-xs text-white border-b border-slate-800">
+          <div class="flex items-center gap-2 font-semibold">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-600 animate-ping"></span>
+            <span>Video Thực Tế Thi Công</span>
+          </div>
+          {videoInfo && (
+            <a
+              id="post-video-open-link"
+              href={videoInfo.originalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-slate-300 hover:text-white transition flex items-center gap-1 font-medium"
+            >
+              <span>Xem trên {videoInfo.platformName}</span>
+              <span>↗</span>
+            </a>
+          )}
+        </div>
+
+        <div class="aspect-video w-full bg-black relative flex items-center justify-center">
+          {videoInfo?.embedUrl ? (
+            <iframe
+              id="post-video-iframe"
+              src={videoInfo.embedUrl}
+              title={post.title}
+              class="w-full h-full"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          ) : (
+            <div id="post-video-fallback" class="p-6 text-center text-white space-y-3">
+              <div class="text-3xl">🎬</div>
+              <div class="font-bold text-sm">Xem video trên ứng dụng {videoInfo?.platformName || 'mạng xã hội'}</div>
+              <a
+                href={videoInfo?.originalUrl || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-block px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition"
+              >
+                Mở Xem Video Ngay ↗
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
 
-    <div class="text-slate-700 text-sm leading-relaxed whitespace-pre-line space-y-4">
+    <!-- ẢNH ĐẠI DIỆN BÀI VIẾT (HIỂN THỊ NẾU KHÔNG CÓ VIDEO) -->
+    <div id="post-featured-image-wrapper" class={`aspect-video rounded-xl overflow-hidden mb-8 border border-slate-200 shadow-xs bg-slate-100 ${videoInfo ? 'hidden' : ''}`}>
+      <img id="post-featured-image" src={post.image} alt={post.title} class="w-full h-full object-cover" />
+    </div>
+
+    <!-- TÓM TẮT NỘI DUNG NẾU CÓ -->
+    {post.excerpt && (
+      <div id="post-excerpt-box" class="p-4 rounded-xl bg-slate-50 border-l-4 border-red-600 text-slate-700 text-xs sm:text-sm italic leading-relaxed mb-6">
+        {post.excerpt}
+      </div>
+    )}
+
+    <!-- NỘI DUNG BÀI VIẾT -->
+    <div id="post-content" class="text-slate-800 text-sm leading-relaxed whitespace-pre-line space-y-4">
       {post.content}
     </div>
 
-    <!-- CTA tư vấn trong bài viết -->
+    <!-- KHU VỰC SẢN PHẨM ĐƯỢC LẮP ĐẶT TRONG BÀI VIẾT -->
+    <div id="post-related-products-section" class={`mt-10 pt-8 border-t border-slate-200 ${postProducts.length > 0 ? '' : 'hidden'}`}>
+      <div class="mb-4">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-red-600 text-white uppercase tracking-wider">
+            Phụ Kiện Chính Hãng
+          </span>
+          <h2 class="text-lg sm:text-xl font-bold text-slate-900">
+            Sản Phẩm Lắp Đặt Trong Bài Viết
+          </h2>
+        </div>
+        <p class="text-xs text-slate-500 mt-1">
+          Các thiết bị phụ kiện thực tế được kỹ thuật viên Dcar Auto thi công hoàn thiện trên xe.
+        </p>
+      </div>
+
+      <div id="post-related-products-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {postProducts.map((prod) => {
+          const hasDiscount = prod.salePrice && prod.salePrice < prod.price;
+          const currentPrice = hasDiscount ? prod.salePrice! : prod.price;
+          const zaloMsg = encodeURIComponent(`Chào shop Dcar Auto, tôi quan tâm sản phẩm "${prod.name}" trong bài viết "${post.title}". Cho tôi xin báo giá thi công hoàn thiện cho xe.`);
+          return (
+            <div class="p-3.5 rounded-xl bg-white border border-slate-200 hover:border-slate-300 shadow-2xs hover:shadow-md transition flex flex-col justify-between group">
+              <div class="flex gap-3">
+                <a href={`/san-pham/${prod.slug}`} class="w-24 h-20 rounded-lg overflow-hidden bg-slate-100 shrink-0 border border-slate-100">
+                  <img src={prod.image} alt={prod.name} class="w-full h-full object-cover group-hover:scale-105 transition" />
+                </a>
+
+                <div class="flex-1 min-w-0">
+                  <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{prod.brand}</div>
+                  <a href={`/san-pham/${prod.slug}`} class="font-bold text-xs text-slate-900 group-hover:text-red-600 transition line-clamp-2 leading-snug">
+                    {prod.name}
+                  </a>
+
+                  <div class="mt-1 flex items-baseline gap-2">
+                    <span class="font-bold text-xs text-red-600">{formatCurrency(currentPrice)}</span>
+                    {hasDiscount && (
+                      <span class="text-[10px] text-slate-400 line-through">{formatCurrency(prod.price)}</span>
+                    )}
+                  </div>
+
+                  <div class="mt-1 flex items-center gap-1.5 text-[10px] text-emerald-700 font-semibold">
+                    <span>✓ Cắm giắc zin 100%</span>
+                    <span>•</span>
+                    <span>BH {prod.warrantyMonths}T</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center gap-2">
+                <a
+                  href={`/san-pham/${prod.slug}`}
+                  class="flex-1 py-1.5 px-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-center font-semibold text-[11px] transition"
+                >
+                  Xem chi tiết
+                </a>
+                <a
+                  href={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}?text=${zaloMsg}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex-1 py-1.5 px-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-center font-bold text-[11px] transition"
+                >
+                  Báo giá Zalo
+                </a>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+
+    <!-- CTA TƯ VẤN TRONG BÀI VIẾT -->
     <div class="mt-10 p-5 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
       <div class="text-xs">
-        <div class="font-bold text-slate-900 text-sm mb-0.5">Bạn Cần Tư Vấn Cho Xe Của Mình?</div>
-        <div class="text-slate-600">Gửi tên dòng xe qua Zalo để kỹ thuật viên kiểm tra mã màn hình và mặt dưỡng phù hợp.</div>
+        <div class="font-bold text-slate-900 text-sm mb-0.5">Bạn Cần Nâng Cấp Tương Tự Cho Xe Của Mình?</div>
+        <div class="text-slate-600">Gửi tên dòng xe & đời xe qua Zalo để kỹ thuật viên kiểm tra mã mặt dưỡng zin và gửi hình ảnh thi công thực tế.</div>
       </div>
-      <a
-        href={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="shrink-0 px-4 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition"
-      >
-        Nhắn Zalo Kỹ Thuật
-      </a>
+      <div class="flex items-center gap-2 shrink-0">
+        <a
+          href={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}?text=${encodeURIComponent(`Chào shop Dcar Auto, tôi xem bài viết "${post.title}", muốn được tư vấn nâng cấp cho xe của tôi.`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="px-4 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition"
+        >
+          Nhắn Zalo Kỹ Thuật
+        </a>
+        <a
+          href={`tel:${DEFAULT_SHOP_SETTINGS.phone.replace(/[^0-9]/g, '')}`}
+          class="px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 font-bold text-xs transition"
+        >
+          Gọi Hotline
+        </a>
+      </div>
     </div>
   </article>
+
+  <!-- Client-side hydration script: Cập nhật dữ liệu tức thì nếu bài viết được chỉnh sửa trong Admin -->
+  <script is:inline>
+    (function () {
+      try {
+        const path = window.location.pathname;
+        const currentSlug = path.split('/').filter(Boolean).pop();
+        const savedPostsRaw = localStorage.getItem('app_posts');
+        if (!savedPostsRaw) return;
+        const savedPosts = JSON.parse(savedPostsRaw);
+        const dynamicPost = savedPosts.find((p) => p.slug === currentSlug);
+        if (!dynamicPost) return;
+
+        // Cập nhật tiêu đề & thông tin
+        if (dynamicPost.title) {
+          document.title = dynamicPost.title + ' - Dcar Auto Vietnam';
+          const titleEl = document.getElementById('post-title');
+          if (titleEl) titleEl.textContent = dynamicPost.title;
+          const breadcrumbEl = document.getElementById('post-breadcrumb-title');
+          if (breadcrumbEl) breadcrumbEl.textContent = dynamicPost.title;
+        }
+        if (dynamicPost.category) {
+          const catEl = document.getElementById('post-category-badge');
+          if (catEl) catEl.textContent = dynamicPost.category;
+        }
+        if (dynamicPost.author) {
+          const authorEl = document.getElementById('post-author');
+          if (authorEl) authorEl.textContent = dynamicPost.author;
+        }
+        if (dynamicPost.publishedAt) {
+          const dateEl = document.getElementById('post-date');
+          if (dateEl) dateEl.textContent = dynamicPost.publishedAt;
+        }
+        if (dynamicPost.excerpt) {
+          const excerptEl = document.getElementById('post-excerpt-box');
+          if (excerptEl) excerptEl.textContent = dynamicPost.excerpt;
+        }
+        if (dynamicPost.content) {
+          const contentEl = document.getElementById('post-content');
+          if (contentEl) contentEl.textContent = dynamicPost.content;
+        }
+
+        // Cập nhật video
+        const videoWrapper = document.getElementById('post-video-wrapper');
+        const imgWrapper = document.getElementById('post-featured-image-wrapper');
+        const imgEl = document.getElementById('post-featured-image');
+        if (dynamicPost.image && imgEl) {
+          imgEl.src = dynamicPost.image;
+        }
+
+        if (dynamicPost.videoUrl && dynamicPost.videoUrl.trim()) {
+          const url = dynamicPost.videoUrl.trim();
+          let embedUrl = null;
+          let platformName = 'Video';
+
+          // YouTube
+          const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
+          if (ytMatch && ytMatch[1]) {
+            embedUrl = 'https://www.youtube-nocookie.com/embed/' + ytMatch[1] + '?rel=0';
+            platformName = 'YouTube';
+          } else if (url.includes('facebook.com') || url.includes('fb.watch')) {
+            embedUrl = 'https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(url) + '&show_text=false&width=auto';
+            platformName = 'Facebook Video';
+          } else if (url.includes('tiktok.com')) {
+            const ttMatch = url.match(/tiktok\.com\/(?:@[\w.-]+\/video\/|v\/|embed\/v2\/)(\d+)/);
+            if (ttMatch && ttMatch[1]) {
+              embedUrl = 'https://www.tiktok.com/embed/v2/' + ttMatch[1];
+            }
+            platformName = 'TikTok';
+          }
+
+          if (videoWrapper) {
+            videoWrapper.classList.remove('hidden');
+            const iframe = document.getElementById('post-video-iframe');
+            if (iframe && embedUrl) {
+              iframe.src = embedUrl;
+            }
+            const openLink = document.getElementById('post-video-open-link');
+            if (openLink) {
+              openLink.href = url;
+              openLink.textContent = 'Xem trên ' + platformName + ' ↗';
+            }
+          }
+          if (imgWrapper) {
+            imgWrapper.classList.add('hidden');
+          }
+        } else {
+          if (videoWrapper) videoWrapper.classList.add('hidden');
+          if (imgWrapper) imgWrapper.classList.remove('hidden');
+        }
+
+        // Cập nhật sản phẩm liên quan từ localStorage sản phẩm
+        if (dynamicPost.relatedProductIds && dynamicPost.relatedProductIds.length > 0) {
+          const savedProdsRaw = localStorage.getItem('app_products');
+          let allProds = [];
+          if (savedProdsRaw) {
+            try { allProds = JSON.parse(savedProdsRaw); } catch (e) {}
+          }
+          const matched = dynamicPost.relatedProductIds
+            .map(function (id) { return allProds.find(function (p) { return p.id === id; }); })
+            .filter(Boolean);
+
+          const section = document.getElementById('post-related-products-section');
+          const grid = document.getElementById('post-related-products-grid');
+          if (section && grid && matched.length > 0) {
+            section.classList.remove('hidden');
+            grid.innerHTML = matched.map(function (p) {
+              const hasDiscount = p.salePrice && p.salePrice < p.price;
+              const currentPrice = hasDiscount ? p.salePrice : p.price;
+              const formattedCurrent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentPrice);
+              const formattedOrig = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(p.price);
+              const zaloMsg = encodeURIComponent('Chào shop Dcar Auto, tôi quan tâm sản phẩm "' + p.name + '" trong bài viết "' + dynamicPost.title + '". Cho tôi xin báo giá thi công cho xe.');
+
+              return '<div class="p-3.5 rounded-xl bg-white border border-slate-200 hover:border-slate-300 shadow-2xs hover:shadow-md transition flex flex-col justify-between group">' +
+                '<div class="flex gap-3">' +
+                  '<a href="/san-pham/' + p.slug + '" class="w-24 h-20 rounded-lg overflow-hidden bg-slate-100 shrink-0 border border-slate-100">' +
+                    '<img src="' + p.image + '" alt="' + p.name + '" class="w-full h-full object-cover group-hover:scale-105 transition" />' +
+                  '</a>' +
+                  '<div class="flex-1 min-w-0">' +
+                    '<div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">' + (p.brand || '') + '</div>' +
+                    '<a href="/san-pham/' + p.slug + '" class="font-bold text-xs text-slate-900 group-hover:text-red-600 transition line-clamp-2 leading-snug">' + p.name + '</a>' +
+                    '<div class="mt-1 flex items-baseline gap-2">' +
+                      '<span class="font-bold text-xs text-red-600">' + formattedCurrent + '</span>' +
+                      (hasDiscount ? '<span class="text-[10px] text-slate-400 line-through">' + formattedOrig + '</span>' : '') +
+                    '</div>' +
+                    '<div class="mt-1 flex items-center gap-1.5 text-[10px] text-emerald-700 font-semibold">' +
+                      '<span>✓ Cắm giắc zin 100%</span><span>•</span><span>BH ' + (p.warrantyMonths || 24) + 'T</span>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+                '<div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center gap-2">' +
+                  '<a href="/san-pham/' + p.slug + '" class="flex-1 py-1.5 px-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-center font-semibold text-[11px] transition">Xem chi tiết</a>' +
+                  '<a href="https://zalo.me/0977694364?text=' + zaloMsg + '" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 px-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-center font-bold text-[11px] transition">Báo giá Zalo</a>' +
+                '</div>' +
+              '</div>';
+            }).join('');
+          }
+        }
+      } catch (err) {
+        console.error('Error hydrating post:', err);
+      }
+    })();
+  </script>
 </Layout>

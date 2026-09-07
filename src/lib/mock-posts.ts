@@ -8,6 +8,8 @@ export interface MockPost {
   author: string;
   publishedAt: string;
   image: string;
+  videoUrl?: string; // Link video YouTube, TikTok, Facebook
+  relatedProductIds?: string[]; // IDs sản phẩm được lắp đặt / gắn trong bài viết
   relatedCar?: string;
   relatedProductSlug?: string;
 }
@@ -19,9 +21,12 @@ export const MOCK_POSTS: MockPost[] = [
     title: 'Nên Độ Màn Hình Android Hay Dùng Android Box Cho Ô Tô?',
     excerpt: 'Phân tích chi tiết ưu nhược điểm giữa thay màn hình Android nguyên cụm và cắm Android Box giữ màn zin.',
     category: 'Tư vấn mua hàng',
-    author: 'Kỹ thuật viên Trưởng',
+    author: 'Kỹ thuật viên Dcar Auto',
     publishedAt: '2025-01-15',
     image: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=800&q=80',
+    videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    relatedProductIds: ['prod-1', 'prod-5'],
+    relatedCar: 'Toyota Vios & Corolla Cross',
     content: `
       Nhiều chủ xe mới nhận xe thường băn khoăn giữa 2 phương án: thay luôn một chiếc màn hình Android kích thước lớn 9 - 13 inch hay chỉ cần cắm một cục Android Box nhỏ gọn vào cổng USB của xe?
 
@@ -42,9 +47,12 @@ export const MOCK_POSTS: MockPost[] = [
     title: 'Top 5 Dòng Bi LED Tăng Sáng Văn Minh Không Gây Chói Mắt Đối Diện',
     excerpt: 'Kinh nghiệm nâng cấp đèn bi LED ô tô: chọn nhiệt màu bám đường, công suất tối ưu và căn chỉnh góc chiếu đạt chuẩn đăng kiểm.',
     category: 'Kiến thức kỹ thuật',
-    author: 'Chuyên gia Ánh sáng',
+    author: 'Chuyên gia Ánh sáng Dcar',
     publishedAt: '2025-01-20',
     image: 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=800&q=80',
+    videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    relatedProductIds: ['prod-3'],
+    relatedCar: 'Mọi dòng xe',
     content: `
       Độ đèn ô tô không chỉ để sáng hơn mà quan trọng nhất là phải an toàn và văn minh với người tham gia giao thông.
 
@@ -60,9 +68,12 @@ export const MOCK_POSTS: MockPost[] = [
     title: 'Nâng Cấp Âm Thanh Ô Tô Cơ Bản Với Ngân Sách Dưới 10 Triệu Đồng',
     excerpt: 'Hướng dẫn phối ghép loa Sub gầm ghế và dán cách âm cánh cửa để có dàn âm thanh sống động nhất trong tầm giá.',
     category: 'Kinh nghiệm độ xe',
-    author: 'Kỹ sư Âm thanh',
+    author: 'Kỹ sư Âm thanh Dcar',
     publishedAt: '2025-02-02',
     image: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=800&q=80',
+    videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    relatedProductIds: ['prod-4'],
+    relatedCar: 'Hyundai Accent, Vios, City, Xpander',
     content: `
       Loa zin theo các dòng xe phổ thông (như Vios, Accent, City, Xpander) thường có màng giấy mỏng và thiếu hẳn dải âm trầm (Bass).
 
