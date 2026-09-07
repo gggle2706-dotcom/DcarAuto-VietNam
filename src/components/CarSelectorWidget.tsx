@@ -79,6 +79,20 @@ export default function CarSelectorWidget() {
   const [selectedModel, setSelectedModel] = useState<string>('');
   const [selectedYear, setSelectedYear] = useState<string>('');
 
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const p = new URLSearchParams(window.location.search);
+      const b = (p.get('brand') || '').toLowerCase();
+      const m = (p.get('model') || '').toLowerCase();
+      const y = p.get('year') || '';
+      if (b && CAR_DATA[b]) {
+        setSelectedBrand(b);
+        if (m) setSelectedModel(m);
+        if (y) setSelectedYear(y);
+      }
+    }
+  }, []);
+
   const currentModels = selectedBrand && CAR_DATA[selectedBrand] ? CAR_DATA[selectedBrand].models : [];
 
   const handleBrandChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
