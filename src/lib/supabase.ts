@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || '';
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || 'https://egxfbhigyyrgpnmgbffv.supabase.co';
+const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVneGZiaGlneXlyZ3BubWdiZmZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5NzA1NzYsImV4cCI6MjEwNDU0NjU3Nn0.LE08B8XpD8gN6f1vNURQA40VvFY1oqWud_Z1EtVbzaY';
 
 export const isSupabaseConfigured = Boolean(
   supabaseUrl &&
