@@ -1,0 +1,181 @@
+import { t as __exportAll } from "./rolldown-runtime_D7D4PA-g.mjs";
+import { S as createAstro, d as maybeRenderHead, i as renderComponent, p as addAttribute, u as renderTemplate } from "./server_Klmzst-W.mjs";
+import { t as createComponent } from "./compiler_BRFb4go0.mjs";
+import { i as DEFAULT_SHOP_SETTINGS, r as CATEGORIES_LIST, t as $$Layout } from "./Layout_Bl7_188Z.mjs";
+import { t as MOCK_PRODUCTS } from "./mock-products_B-uxnCdY.mjs";
+import { t as $$ProductCard } from "./ProductCard_DdYE0tor.mjs";
+//#region src/pages/san-pham/index.astro
+var san_pham_exports = /* @__PURE__ */ __exportAll({
+	default: () => $$Index,
+	file: () => $$file,
+	prerender: () => false,
+	url: () => $$url
+});
+createAstro("https://astro.build");
+var $$Index = createComponent(($$result, $$props, $$slots) => {
+	const Astro = $$result.createAstro($$props, $$slots);
+	Astro.self = $$Index;
+	const url = new URL(Astro.request.url);
+	const searchKeyword = (url.searchParams.get("q") || "").toLowerCase().trim();
+	const selectedCategory = url.searchParams.get("category") || "";
+	const selectedBrand = (url.searchParams.get("brand") || "").toLowerCase();
+	const filteredProducts = MOCK_PRODUCTS.filter((product) => {
+		if (searchKeyword) {
+			const matchName = product.name.toLowerCase().includes(searchKeyword);
+			const matchBrand = product.brand.toLowerCase().includes(searchKeyword);
+			const matchSku = product.sku.toLowerCase().includes(searchKeyword);
+			if (!matchName && !matchBrand && !matchSku) return false;
+		}
+		if (selectedCategory && product.categorySlug !== selectedCategory) return false;
+		if (selectedBrand && product.brand.toLowerCase() !== selectedBrand) return false;
+		return true;
+	});
+	const availableBrands = Array.from(new Set(MOCK_PRODUCTS.map((p) => p.brand)));
+	return renderTemplate`${renderComponent($$result, "Layout", $$Layout, {
+		"title": `Tất Cả Sản Phẩm Nâng Cấp Ô Tô - ${DEFAULT_SHOP_SETTINGS.shop_name}`,
+		"description": `Danh mục sản phẩm nâng cấp ô tô chính hãng tại ${DEFAULT_SHOP_SETTINGS.shop_name}: Màn hình Android, Camera 360, Âm thanh, Bi LED, Cảm biến chuẩn giắc zin 100%.`
+	}, { "default": ($$result) => renderTemplate`${maybeRenderHead($$result)}<div class="bg-slate-100 border-b border-slate-200 py-8 px-4 sm:px-6"><div class="max-w-7xl mx-auto"><nav class="text-xs text-slate-500 mb-2 flex items-center gap-2"><a href="/" class="hover:text-slate-900">Trang chủ</a><span>/</span><span class="text-red-600 font-medium">Sản phẩm</span></nav><h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Danh Mục Sản Phẩm & Phụ Kiện Ô Tô</h1><p class="text-slate-600 text-xs sm:text-sm mt-1 max-w-2xl">Toàn bộ sản phẩm được kiểm tra chuẩn giắc cắm theo xe, bảo hành chính hãng từ 12 đến 36 tháng.</p></div></div><div class="max-w-7xl mx-auto px-4 sm:px-6 py-8"><div class="grid grid-cols-1 lg:grid-cols-4 gap-8"><!-- Sidebar Bộ lọc (Desktop) --><aside class="space-y-5"><!-- Khung tìm kiếm nhanh --><div class="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs"><label for="search-input" class="block text-xs font-bold text-slate-900 uppercase tracking-wide mb-2">Tìm kiếm sản phẩm</label><form method="GET" action="/san-pham" class="flex gap-2"><input id="search-input" type="text" name="q" placeholder="Tên, mã sản phẩm..."${addAttribute(searchKeyword, "value")} class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-red-600 focus:bg-white transition">${selectedCategory && renderTemplate`<input type="hidden" name="category"${addAttribute(selectedCategory, "value")}>`}<button type="submit" class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition">Tìm</button></form></div><!-- Lọc theo Danh mục --><div class="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs"><div class="text-xs font-bold text-slate-900 uppercase tracking-wide mb-3">Nhóm sản phẩm</div><ul id="sidebar-categories-list" class="space-y-1 text-xs"><li><a href="/san-pham"${addAttribute(`block px-2.5 py-1.5 rounded-lg transition ${!selectedCategory ? "bg-red-50 text-red-600 font-bold" : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"}`, "class")}>Tất cả sản phẩm (${MOCK_PRODUCTS.length})</a></li>${CATEGORIES_LIST.map((cat) => {
+		const count = MOCK_PRODUCTS.filter((p) => p.categorySlug === cat.slug).length;
+		const isSelected = selectedCategory === cat.slug;
+		return renderTemplate`<li><a${addAttribute(`/san-pham?category=${cat.slug}${searchKeyword ? `&q=${searchKeyword}` : ""}`, "href")}${addAttribute(`flex items-center justify-between px-2.5 py-1.5 rounded-lg transition ${isSelected ? "bg-red-50 text-red-600 font-bold" : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"}`, "class")}><span>${cat.name}</span><span class="text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">${count}</span></a></li>`;
+	})}</ul></div><!-- Lọc theo Thương hiệu --><div class="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs"><div class="text-xs font-bold text-slate-900 uppercase tracking-wide mb-3">Thương hiệu</div><div class="flex flex-wrap gap-1.5"><a${addAttribute(`/san-pham${selectedCategory ? `?category=${selectedCategory}` : ""}`, "href")}${addAttribute(`text-[11px] px-2.5 py-1 rounded-lg border transition ${!selectedBrand ? "bg-red-600 text-white font-bold border-red-600" : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"}`, "class")}>Tất cả</a>${availableBrands.map((brand) => {
+		const isSelected = selectedBrand === brand.toLowerCase();
+		return renderTemplate`<a${addAttribute(`/san-pham?brand=${encodeURIComponent(brand.toLowerCase())}${selectedCategory ? `&category=${selectedCategory}` : ""}`, "href")}${addAttribute(`text-[11px] px-2.5 py-1 rounded-lg border transition ${isSelected ? "bg-red-600 text-white font-bold border-red-600" : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"}`, "class")}>${brand}</a>`;
+	})}</div></div></aside><!-- Main Product Grid --><!-- Main Product Grid --><section class="lg:col-span-3"><div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 text-xs"><div class="text-slate-600">Có <span id="product-count-number" class="text-slate-900 font-bold">${filteredProducts.length}</span> sản phẩm${searchKeyword && renderTemplate`<span> cho từ khóa "<span class="text-red-600 font-semibold">${searchKeyword}</span>"</span>`}</div>${(selectedCategory || selectedBrand || searchKeyword) && renderTemplate`<a href="/san-pham" class="text-red-600 hover:underline font-semibold flex items-center gap-1"><span>✕</span><span>Xóa bộ lọc</span></a>`}</div><div id="catalog-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">${filteredProducts.map((prod) => renderTemplate`${renderComponent($$result, "ProductCard", $$ProductCard, {
+		"id": prod.id,
+		"slug": prod.slug,
+		"name": prod.name,
+		"brand": prod.brand,
+		"categoryName": prod.categoryName,
+		"price": prod.price,
+		"salePrice": prod.salePrice,
+		"image": prod.image,
+		"specs": prod.specs,
+		"warrantyMonths": prod.warrantyMonths,
+		"isUniversal": prod.isUniversal
+	})}`)}</div><div id="catalog-empty-state"${addAttribute(`py-16 text-center border border-dashed border-slate-300 rounded-xl bg-white p-6 ${filteredProducts.length === 0 ? "" : "hidden"}`, "class")}><h3 class="text-base font-bold text-slate-800 mb-1">Không tìm thấy sản phẩm</h3><p class="text-xs text-slate-500 max-w-sm mx-auto mb-4">Bạn có thể liên hệ Zalo kỹ thuật viên để chúng tôi kiểm tra kho hàng trực tiếp cho dòng xe của bạn.</p><a${addAttribute(`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}`, "href")} target="_blank" rel="noopener noreferrer" class="shop-zalo-link px-4 py-2 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700">Nhắn Zalo Tư Vấn (<span class="shop-zalo-val">${DEFAULT_SHOP_SETTINGS.zalo}</span>)</a></div></section></div></div><script>
+    (function () {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const q = (urlParams.get('q') || '').toLowerCase().trim();
+        const catFilter = urlParams.get('category') || '';
+        const brandFilter = (urlParams.get('brand') || '').toLowerCase().trim();
+
+        const savedCatsRaw = localStorage.getItem('app_categories');
+        const savedProdsRaw = localStorage.getItem('app_products');
+
+        let products = null;
+        let categories = null;
+
+        if (savedProdsRaw) {
+          try { products = JSON.parse(savedProdsRaw); } catch (e) {}
+        }
+        if (savedCatsRaw) {
+          try { categories = JSON.parse(savedCatsRaw); } catch (e) {}
+        }
+
+        // Cập nhật danh mục sidebar nếu có dữ liệu mới
+        if (categories && Array.isArray(categories) && categories.length > 0) {
+          const catListEl = document.getElementById('sidebar-categories-list');
+          if (catListEl) {
+            const allCount = products ? products.length : 0;
+            let html = '<li><a href="/san-pham" class="block px-2.5 py-1.5 rounded-lg transition ' +
+              (!catFilter ? 'bg-red-50 text-red-600 font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50') +
+              '">Tất cả sản phẩm (' + (allCount || '...') + ')</a></li>';
+
+            categories.forEach(function (cat) {
+              const count = products ? products.filter(function (p) { return p.categorySlug === cat.slug; }).length : '';
+              const isSel = catFilter === cat.slug;
+              html += '<li><a href="/san-pham?category=' + cat.slug + (q ? '&q=' + q : '') + '" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg transition ' +
+                (isSel ? 'bg-red-50 text-red-600 font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50') +
+                '"><span>' + cat.name + '</span>' +
+                (count !== '' ? '<span class="text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">' + count + '</span>' : '') +
+                '</a></li>';
+            });
+            catListEl.innerHTML = html;
+          }
+        }
+
+        // Cập nhật danh sách sản phẩm
+        if (products && Array.isArray(products) && products.length > 0) {
+          const filtered = products.filter(function (p) {
+            if (q) {
+              const matchName = (p.name || '').toLowerCase().includes(q);
+              const matchBrand = (p.brand || '').toLowerCase().includes(q);
+              const matchSku = (p.sku || '').toLowerCase().includes(q);
+              if (!matchName && !matchBrand && !matchSku) return false;
+            }
+            if (catFilter && p.categorySlug !== catFilter) return false;
+            if (brandFilter && (p.brand || '').toLowerCase() !== brandFilter) return false;
+            return true;
+          });
+
+          const countEl = document.getElementById('product-count-number');
+          if (countEl) countEl.textContent = filtered.length;
+
+          const gridEl = document.getElementById('catalog-products-grid');
+          const emptyEl = document.getElementById('catalog-empty-state');
+
+          if (filtered.length === 0) {
+            if (gridEl) gridEl.innerHTML = '';
+            if (emptyEl) emptyEl.classList.remove('hidden');
+          } else {
+            if (emptyEl) emptyEl.classList.add('hidden');
+            if (gridEl) {
+              gridEl.innerHTML = filtered.map(function (prod) {
+                const hasDiscount = prod.salePrice && prod.salePrice < prod.price;
+                const currentPrice = hasDiscount ? prod.salePrice : prod.price;
+                const formattedPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentPrice);
+                const formattedOrig = hasDiscount ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(prod.price) : '';
+                const zaloMsg = encodeURIComponent('Xin chào shop, tôi cần tư vấn sản phẩm: ' + prod.name + ' (' + (prod.brand || '') + '). Cho tôi xin báo giá thi công cho xe.');
+
+                return '<div class="flex flex-col rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md transition overflow-hidden group">' +
+                  '<a href="/san-pham/' + prod.slug + '" class="relative aspect-[4/3] bg-slate-100 overflow-hidden block">' +
+                    '<img src="' + prod.image + '" alt="' + prod.name + '" loading="lazy" class="w-full h-full object-cover group-hover:scale-103 transition duration-300" />' +
+                    (hasDiscount ? '<span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[11px] font-bold bg-red-600 text-white shadow-xs">Giảm giá</span>' : '') +
+                    (prod.isUniversal ? '<span class="absolute bottom-2.5 left-2.5 px-2 py-0.5 rounded text-[10px] bg-white/95 text-slate-700 font-medium border border-slate-200 shadow-xs">Mọi dòng xe</span>' : '') +
+                  '</a>' +
+                  '<div class="p-4 flex-1 flex flex-col justify-between text-xs">' +
+                    '<div>' +
+                      '<div class="flex items-center justify-between text-[11px] text-slate-400 mb-1.5">' +
+                        '<span class="font-bold text-slate-500 uppercase tracking-wider">' + (prod.brand || '') + '</span>' +
+                        '<span>BH ' + (prod.warrantyMonths || 24) + 'T</span>' +
+                      '</div>' +
+                      '<h3 class="font-bold text-sm text-slate-900 group-hover:text-red-600 transition line-clamp-2 mb-2 leading-snug">' +
+                        '<a href="/san-pham/' + prod.slug + '">' + prod.name + '</a>' +
+                      '</h3>' +
+                      (prod.specs && prod.specs.length > 0 ? (
+                        '<div class="space-y-1 mb-3 text-slate-500 text-[11px]">' +
+                          prod.specs.slice(0, 2).map(function (s) { return '<div class="truncate">• ' + s + '</div>'; }).join('') +
+                        '</div>'
+                      ) : '') +
+                    '</div>' +
+                    '<div class="pt-3 border-t border-slate-100 mt-2 flex items-center justify-between gap-2">' +
+                      '<div>' +
+                        '<div class="font-extrabold text-sm text-red-600">' + formattedPrice + '</div>' +
+                        (hasDiscount ? '<div class="text-[11px] text-slate-400 line-through">' + formattedOrig + '</div>' : '') +
+                      '</div>' +
+                      '<div class="flex items-center gap-1.5">' +
+                        '<a href="/san-pham/' + prod.slug + '" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition">Chi tiết</a>' +
+                        '<a href="https://zalo.me/0977694364?text=' + zaloMsg + '" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold transition">Zalo</a>' +
+                      '</div>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>';
+              }).join('');
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error hydrating catalog:', err);
+      }
+    })();
+  <\/script>` })}`;
+}, "C:/Users/gggle/OneDrive/Documents/bababab/src/pages/san-pham/index.astro", void 0);
+var $$file = "C:/Users/gggle/OneDrive/Documents/bababab/src/pages/san-pham/index.astro";
+var $$url = "/san-pham";
+//#endregion
+//#region \0virtual:astro:page:src/pages/san-pham/index@_@astro
+var page = () => san_pham_exports;
+//#endregion
+export { page };
