@@ -1,4 +1,6 @@
 ---
+export const prerender = false;
+
 import Layout from '@/layouts/Layout.astro';
 import CarSelectorWidget from '@/components/CarSelectorWidget';
 import ProductCard from '@/components/ProductCard.astro';
@@ -59,7 +61,7 @@ const latestPosts = MOCK_POSTS.slice(0, 3);
       </a>
     </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+    <div id="home-categories-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
       {CATEGORIES_LIST.map((cat) => (
         <a
           href={`/san-pham?category=${cat.slug}`}
@@ -86,11 +88,11 @@ const latestPosts = MOCK_POSTS.slice(0, 3);
           <p class="text-xs text-slate-500 mt-0.5">Sản phẩm chính hãng, đầy đủ mặt dưỡng zin và canbus theo xe</p>
         </div>
         <a href="/san-pham" class="text-xs font-semibold text-slate-600 hover:text-red-600 transition">
-          Xem toàn bộ ({MOCK_PRODUCTS.length}) →
+          Xem toàn bộ (<span id="home-products-count">{MOCK_PRODUCTS.length}</span>) →
         </a>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div id="home-featured-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {featuredProducts.map((prod) => (
           <ProductCard
             id={prod.id}
@@ -157,7 +159,7 @@ const latestPosts = MOCK_POSTS.slice(0, 3);
         </a>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div id="home-latest-posts-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
         {latestPosts.map((post) => {
           const video = parseVideoUrl(post.videoUrl);
           return (
@@ -247,4 +249,143 @@ const latestPosts = MOCK_POSTS.slice(0, 3);
       </div>
     </div>
   </section>
+
+  <!-- Client-side Hydration Script: Tự động tải sản phẩm, danh mục và bài viết từ localStorage nếu có -->
+  <script is:inline>
+    (function () {
+      try {
+        const formatVND = function (n) {
+          return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n);
+        };
+
+        const parseVideoBadge = function (url) {
+          if (!url) return null;
+          const u = url.toLowerCase();
+          if (u.includes('youtube.com') || u.includes('youtu.be')) return { name: 'YouTube', bg: 'bg-red-600 text-white' };
+          if (u.includes('tiktok.com')) return { name: 'TikTok', bg: 'bg-slate-950 text-white' };
+          if (u.includes('facebook.com') || u.includes('fb.watch')) return { name: 'Facebook', bg: 'bg-blue-600 text-white' };
+          return { name: 'Video', bg: 'bg-slate-800 text-white' };
+        };
+
+        // 1. Hydrate Categories
+        const savedCats = localStorage.getItem('app_categories');
+        if (savedCats) {
+          const cats = JSON.parse(savedCats);
+          if (Array.isArray(cats) && cats.length > 0) {
+            const catGrid = document.getElementById('home-categories-grid');
+            if (catGrid) {
+              catGrid.innerHTML = cats.map(function (c) {
+                return '<a href="/san-pham?category=' + c.slug + '" class="p-4 rounded-xl bg-white border border-slate-200 hover:border-red-500 hover:shadow-md transition flex flex-col justify-between group">' +
+                  '<div class="font-bold text-slate-800 group-hover:text-red-600 transition text-sm">' + c.name + '</div>' +
+                  '<span class="text-[11px] text-slate-400 mt-3 flex items-center gap-1 group-hover:text-red-600 transition">' +
+                  '<span>Xem phụ kiện</span><span>→</span></span></a>';
+              }).join('');
+            }
+          }
+        }
+
+        // 2. Hydrate Featured Products
+        const savedProds = localStorage.getItem('app_products');
+        if (savedProds) {
+          const prods = JSON.parse(savedProds);
+          if (Array.isArray(prods) && prods.length > 0) {
+            const countEl = document.getElementById('home-products-count');
+            if (countEl) countEl.textContent = prods.length;
+
+            const featured = prods.filter(function (p) { return p.isFeatured; }).slice(0, 8);
+            const displayProds = featured.length > 0 ? featured : prods.slice(0, 8);
+            const prodGrid = document.getElementById('home-featured-products-grid');
+            if (prodGrid) {
+              prodGrid.innerHTML = displayProds.map(function (p) {
+                const hasDiscount = p.salePrice && p.salePrice < p.price;
+                const discountPct = hasDiscount ? Math.round(((p.price - p.salePrice) / p.price) * 100) : 0;
+                const specs = Array.isArray(p.specs) ? p.specs.slice(0, 3) : [];
+
+                return '<div class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition flex flex-col justify-between group">' +
+                  '<div>' +
+                    '<a href="/san-pham/' + p.slug + '" class="block relative aspect-4/3 bg-slate-50 overflow-hidden">' +
+                      '<img src="' + p.image + '" alt="' + p.name + '" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src=\'/images/placeholder.jpg\'" />' +
+                      (hasDiscount ? '<span class="absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-bold bg-red-600 text-white shadow-2xs">-' + discountPct + '%</span>' : '') +
+                      '<span class="absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900/80 text-white backdrop-blur-xs">' + (p.warrantyMonths || 24) + 'T BH</span>' +
+                    '</a>' +
+                    '<div class="p-3.5">' +
+                      '<div class="text-[11px] text-slate-400 font-medium mb-1">' + (p.brand || 'Chính hãng') + '</div>' +
+                      '<h3 class="font-bold text-xs text-slate-800 line-clamp-2 min-h-8 mb-2 group-hover:text-red-600 transition">' +
+                        '<a href="/san-pham/' + p.slug + '">' + p.name + '</a>' +
+                      '</h3>' +
+                      (specs.length > 0 ? (
+                        '<div class="space-y-1 py-1.5 mb-2 border-y border-slate-100">' +
+                          specs.map(function (s) {
+                            return '<div class="text-[11px] text-slate-600 truncate flex items-center gap-1.5">' +
+                              '<span class="text-emerald-600 font-bold">✓</span>' +
+                              '<span class="text-slate-400 font-medium">' + s.k + ':</span>' +
+                              '<span class="font-semibold text-slate-700">' + s.v + '</span>' +
+                            '</div>';
+                          }).join('') +
+                        '</div>'
+                      ) : '') +
+                    '</div>' +
+                  '</div>' +
+                  '<div class="p-3.5 pt-0 mt-auto">' +
+                    '<div class="flex items-baseline justify-between mb-3">' +
+                      '<div>' +
+                        '<span class="text-sm font-extrabold text-red-600">' + formatVND(p.salePrice || p.price) + '</span>' +
+                        (hasDiscount ? '<div class="text-[10px] text-slate-400 line-through">' + formatVND(p.price) + '</div>' : '') +
+                      '</div>' +
+                      '<span class="text-[10px] text-slate-400 font-medium">' + (p.categoryName || '') + '</span>' +
+                    '</div>' +
+                    '<a href="/san-pham/' + p.slug + '" class="block w-full text-center py-2 rounded-lg bg-slate-900 hover:bg-red-600 text-white font-bold text-xs transition">' +
+                      'Xem Chi Tiết & Báo Giá' +
+                    '</a>' +
+                  '</div>' +
+                '</div>';
+              }).join('');
+            }
+          }
+        }
+
+        // 3. Hydrate Latest Posts
+        const savedPosts = localStorage.getItem('app_posts');
+        if (savedPosts) {
+          const posts = JSON.parse(savedPosts);
+          if (Array.isArray(posts) && posts.length > 0) {
+            const latest = posts.slice(0, 3);
+            const postGrid = document.getElementById('home-latest-posts-grid');
+            if (postGrid) {
+              postGrid.innerHTML = latest.map(function (post) {
+                const vid = parseVideoBadge(post.videoUrl);
+                const hasRel = post.relatedProductIds && post.relatedProductIds.length > 0;
+
+                return '<article class="flex flex-col rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md transition overflow-hidden group">' +
+                  '<a href="/blog/' + post.slug + '" class="relative aspect-video overflow-hidden bg-slate-100 block">' +
+                    '<img src="' + post.image + '" alt="' + post.title + '" class="w-full h-full object-cover group-hover:scale-103 transition duration-300" onerror="this.src=\'/images/placeholder.jpg\'" />' +
+                    '<span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[11px] font-semibold bg-white/90 text-slate-800 border border-slate-200 shadow-2xs">' + (post.category || 'Chia sẻ') + '</span>' +
+                    (vid ? '<span class="absolute bottom-2.5 left-2.5 px-2 py-0.5 rounded text-[10px] font-bold shadow-xs flex items-center gap-1 ' + vid.bg + '"><span>▶</span><span>Video ' + vid.name + '</span></span>' : '') +
+                  '</a>' +
+                  '<div class="p-4 flex-1 flex flex-col justify-between text-xs">' +
+                    '<div>' +
+                      '<div class="flex items-center justify-between text-[11px] text-slate-400 mb-1.5">' +
+                        '<span>' + (post.publishedAt || '') + '</span>' +
+                        (post.relatedCar ? '<span class="text-slate-600 font-semibold truncate max-w-[140px]">🚗 ' + post.relatedCar + '</span>' : '') +
+                      '</div>' +
+                      '<h3 class="font-bold text-sm text-slate-900 group-hover:text-red-600 transition line-clamp-2 mb-2 leading-snug">' +
+                        '<a href="/blog/' + post.slug + '">' + post.title + '</a>' +
+                      '</h3>' +
+                      '<p class="text-slate-600 line-clamp-2 leading-relaxed">' + (post.excerpt || '') + '</p>' +
+                    '</div>' +
+                    '<div class="pt-3 border-t border-slate-100 mt-4 flex items-center justify-between">' +
+                      (hasRel ? '<span class="text-[11px] text-emerald-700 font-medium">🛠️ ' + post.relatedProductIds.length + ' phụ kiện gắn kèm</span>' : '<span class="text-[11px] text-slate-400">Tư vấn kỹ thuật</span>') +
+                      '<a href="/blog/' + post.slug + '" class="text-red-600 hover:underline font-semibold flex items-center gap-1"><span>Xem dự án</span><span>→</span></a>' +
+                    '</div>' +
+                  '</div>' +
+                '</article>';
+              }).join('');
+            }
+          }
+        }
+      } catch (e) {
+        console.error('Home hydration error:', e);
+      }
+    })();
+  </script>
 </Layout>

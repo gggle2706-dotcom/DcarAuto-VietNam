@@ -1,22 +1,29 @@
 ---
+export const prerender = false;
+
 import Layout from '@/layouts/Layout.astro';
 import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
 import { MOCK_POSTS, type MockPost } from '@/lib/mock-posts';
 import { MOCK_PRODUCTS, type MockProduct } from '@/lib/mock-products';
 import { parseVideoUrl } from '@/lib/video-helpers';
 
-export function getStaticPaths() {
-  return MOCK_POSTS.map((post) => ({
-    params: { slug: post.slug },
-    props: { post },
-  }));
-}
+const { slug } = Astro.params;
+const foundPost = MOCK_POSTS.find((p) => p.slug === slug);
 
-interface Props {
-  post: MockPost;
-}
-
-const { post } = Astro.props;
+const post: MockPost = foundPost || {
+  id: 'post-' + (slug || 'custom'),
+  slug: slug || '',
+  title: 'Đang tải bài viết...',
+  excerpt: '',
+  content: 'Đang tải nội dung bài viết...',
+  category: 'Kinh nghiệm độ xe',
+  author: 'Kỹ thuật viên Dcar Auto',
+  publishedAt: new Date().toISOString().split('T')[0],
+  image: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=800&q=80',
+  videoUrl: '',
+  relatedProductIds: [],
+  relatedCar: '',
+};
 
 const formatCurrency = (val: number) => {
   return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val);

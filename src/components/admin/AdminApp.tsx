@@ -214,6 +214,18 @@ export default function AdminApp() {
     reader.readAsDataURL(files[0]);
   };
 
+  const syncToServer = async (action: string, data: any) => {
+    try {
+      await fetch('/api/admin-save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, data }),
+      });
+    } catch (err) {
+      console.warn('Server sync error, using local fallback:', err);
+    }
+  };
+
   // Mở form sửa / thêm sản phẩm
   const handleOpenProductEdit = (prod?: MockProduct) => {
     if (prod) {
@@ -229,13 +241,13 @@ export default function AdminApp() {
         name: '',
         sku: 'SKU-' + Math.floor(1000 + Math.random() * 9000),
         slug: '',
-        brand: '',
+        brand: 'Zestech',
         categorySlug: categories[0]?.slug || 'man-hinh-android',
         categoryName: categories[0]?.name || 'Màn hình Android',
-        price: 0,
+        price: 5000000,
         salePrice: 0,
         image: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=600&q=80',
-        specsList: ['Cắm giắc zin 100%', 'Bảo hành chính hãng'],
+        specsList: ['100% Giắc cắm zin', 'Bảo hành chính hãng 24T'],
         warrantyMonths: 24,
         isUniversal: false,
         isFeatured: true,
@@ -278,6 +290,7 @@ export default function AdminApp() {
       localStorage.setItem('app_products', JSON.stringify(updated));
       window.dispatchEvent(new Event('app-products-updated'));
       window.dispatchEvent(new Event('storage'));
+      syncToServer('save_products', updated);
       return updated;
     });
 
@@ -293,6 +306,7 @@ export default function AdminApp() {
       localStorage.setItem('app_products', JSON.stringify(updated));
       window.dispatchEvent(new Event('app-products-updated'));
       window.dispatchEvent(new Event('storage'));
+      syncToServer('save_products', updated);
       notify('Đã xóa sản phẩm');
     }
   };
@@ -342,6 +356,8 @@ export default function AdminApp() {
         ? prev.map((c) => (c.id === finalized.id ? finalized : c))
         : [...prev, finalized];
       localStorage.setItem('app_categories', JSON.stringify(updated));
+      window.dispatchEvent(new Event('storage'));
+      syncToServer('save_categories', updated);
       return updated;
     });
     setIsCategoryModalOpen(false);
@@ -354,6 +370,8 @@ export default function AdminApp() {
       const updated = categories.filter((c) => c.id !== id);
       setCategories(updated);
       localStorage.setItem('app_categories', JSON.stringify(updated));
+      window.dispatchEvent(new Event('storage'));
+      syncToServer('save_categories', updated);
       notify('Đã xóa danh mục');
     }
   };
@@ -398,6 +416,7 @@ export default function AdminApp() {
     localStorage.setItem('app_shop_settings', JSON.stringify(settings));
     window.dispatchEvent(new Event('app-settings-updated'));
     window.dispatchEvent(new Event('storage'));
+    syncToServer('save_settings', settings);
     notify('Đã lưu thông tin cửa hàng thành công! Đã tự động cập nhật toàn bộ trang.');
   };
 
@@ -486,6 +505,7 @@ export default function AdminApp() {
     localStorage.setItem('app_posts', JSON.stringify(updatedPosts));
     window.dispatchEvent(new Event('app-posts-updated'));
     window.dispatchEvent(new Event('storage'));
+    syncToServer('save_posts', updatedPosts);
     setIsPostModalOpen(false);
     setEditingPost(null);
     notify('Đã lưu bài viết thành công!');
@@ -498,6 +518,7 @@ export default function AdminApp() {
       localStorage.setItem('app_posts', JSON.stringify(updated));
       window.dispatchEvent(new Event('app-posts-updated'));
       window.dispatchEvent(new Event('storage'));
+      syncToServer('save_posts', updated);
       notify('Đã xóa bài viết');
     }
   };
