@@ -1,0 +1,13 @@
+﻿{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "dcarauto-vietnam",
+  "main": "dist/server/entry.mjs",
+  "compatibility_date": "2024-09-23",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "dist/client"
+  }
+}
