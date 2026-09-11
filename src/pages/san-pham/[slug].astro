@@ -1,10 +1,14 @@
 ---
-export const prerender = false;
-
 import Layout from '@/layouts/Layout.astro';
 import ProductCard from '@/components/ProductCard.astro';
 import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
 import { MOCK_PRODUCTS, type MockProduct } from '@/lib/mock-products';
+
+export async function getStaticPaths() {
+  return MOCK_PRODUCTS.map((p) => ({
+    params: { slug: p.slug },
+  }));
+}
 
 const { slug } = Astro.params;
 const foundProduct = MOCK_PRODUCTS.find((p) => p.slug === slug);

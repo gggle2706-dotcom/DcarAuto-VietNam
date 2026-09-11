@@ -1,11 +1,15 @@
 ---
-export const prerender = false;
-
 import Layout from '@/layouts/Layout.astro';
 import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
 import { MOCK_POSTS, type MockPost } from '@/lib/mock-posts';
 import { MOCK_PRODUCTS, type MockProduct } from '@/lib/mock-products';
 import { parseVideoUrl } from '@/lib/video-helpers';
+
+export async function getStaticPaths() {
+  return MOCK_POSTS.map((post) => ({
+    params: { slug: post.slug },
+  }));
+}
 
 const { slug } = Astro.params;
 const foundPost = MOCK_POSTS.find((p) => p.slug === slug);

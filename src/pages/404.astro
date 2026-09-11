@@ -1,0 +1,45 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
+---
+
+<Layout title={`404 - Không tìm thấy trang | ${DEFAULT_SHOP_SETTINGS.shop_name}`}>
+  <main class="min-h-[70vh] flex items-center justify-center px-4 py-16 bg-gradient-to-b from-slate-50 to-white">
+    <div class="max-w-md w-full text-center space-y-6">
+      <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-red-50 text-red-600 font-extrabold text-4xl shadow-inner">
+        404
+      </div>
+
+      <div class="space-y-2">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          Không tìm thấy trang yêu cầu
+        </h1>
+        <p class="text-sm text-slate-600 leading-relaxed">
+          Địa chỉ bạn truy cập không tồn tại hoặc đã được thay đổi. Quý khách vui lòng chọn các lối đi tắt dưới đây.
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+        <a
+          href="/"
+          class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-sm transition"
+        >
+          Trang chủ
+        </a>
+        <a
+          href="/san-pham"
+          class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-sm transition"
+        >
+          Danh mục sản phẩm
+        </a>
+      </div>
+
+      <div class="pt-6 border-t border-slate-100 text-xs text-slate-500 space-y-1">
+        <div>Hỗ trợ kỹ thuật & tư vấn lắp đặt:</div>
+        <a href={`tel:${DEFAULT_SHOP_SETTINGS.phone}`} class="font-bold text-red-600 hover:underline">
+          Hotline: {DEFAULT_SHOP_SETTINGS.phone}
+        </a>
+      </div>
+    </div>
+  </main>
+</Layout>
