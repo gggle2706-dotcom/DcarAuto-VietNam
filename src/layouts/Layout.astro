@@ -8,14 +8,55 @@ import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
   hideHeaderFooter?: boolean;
 }
 
 const {
   title = DEFAULT_SHOP_SETTINGS.seo_title,
   description = DEFAULT_SHOP_SETTINGS.seo_description,
+  image = 'https://dcarautovietnam.pages.dev/logo.png',
   hideHeaderFooter = false,
 } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://dcarautovietnam.pages.dev');
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "AutoRepair",
+  "name": "Dcar Auto Vietnam",
+  "alternateName": ["Dcar Auto", "DcarAuto Vietnam"],
+  "url": "https://dcarautovietnam.pages.dev",
+  "logo": "https://dcarautovietnam.pages.dev/logo.png",
+  "image": "https://dcarautovietnam.pages.dev/logo.png",
+  "description": description,
+  "telephone": DEFAULT_SHOP_SETTINGS.phone,
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": DEFAULT_SHOP_SETTINGS.address,
+    "addressLocality": "Hồ Chí Minh",
+    "addressCountry": "VN"
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ],
+    "opens": "08:00",
+    "closes": "18:00"
+  },
+  "sameAs": [
+    DEFAULT_SHOP_SETTINGS.facebook_url,
+    DEFAULT_SHOP_SETTINGS.tiktok_url,
+    DEFAULT_SHOP_SETTINGS.youtube_url
+  ].filter(Boolean)
+};
 ---
 
 <!doctype html>
@@ -29,15 +70,29 @@ const {
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 
     <!-- OpenGraph SEO Tags -->
+    <meta property="og:site_name" content="Dcar Auto Vietnam" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={image} />
     <meta property="og:locale" content="vi_VN" />
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+
+    <!-- Schema.org JSON-LD Structured Data for Google -->
+    <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

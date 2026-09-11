@@ -1,5 +1,7 @@
-﻿User-agent: *
+User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /admin
 
 # Sitemap
 Sitemap: https://dcarautovietnam.pages.dev/sitemap.xml
