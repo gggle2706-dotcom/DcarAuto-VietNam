@@ -2,54 +2,58 @@
 import Layout from '@/layouts/Layout.astro';
 import ProductCard from '@/components/ProductCard.astro';
 import { CATEGORIES_LIST, DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
-import { MOCK_PRODUCTS } from '@/lib/mock-products';
+import { MOCK_PRODUCTS, type MockProduct } from '@/lib/mock-products';
 
-// Lấy query parameters từ URL
+// Lấy query parameters từ URL (cho SSG build)
 const url = new URL(Astro.request.url);
 const searchKeyword = (url.searchParams.get('q') || '').toLowerCase().trim();
 const selectedCategory = url.searchParams.get('category') || '';
 const selectedBrand = (url.searchParams.get('brand') || '').toLowerCase();
 
-// Lọc sản phẩm
-const filteredProducts = MOCK_PRODUCTS.filter((product) => {
-  if (searchKeyword) {
-    const matchName = product.name.toLowerCase().includes(searchKeyword);
-    const matchBrand = product.brand.toLowerCase().includes(searchKeyword);
-    const matchSku = product.sku.toLowerCase().includes(searchKeyword);
-    if (!matchName && !matchBrand && !matchSku) return false;
-  }
-
-  if (selectedCategory && product.categorySlug !== selectedCategory) {
-    return false;
-  }
-
-  if (selectedBrand && product.brand.toLowerCase() !== selectedBrand) {
-    return false;
-  }
-
-  return true;
-});
+// Gom nhóm sản phẩm theo danh mục để hiển thị mặc định theo từng mục
+const categoryGroups = CATEGORIES_LIST.map((cat) => {
+  const prods = MOCK_PRODUCTS.filter((p) => p.categorySlug === cat.slug);
+  return {
+    ...cat,
+    products: prods,
+  };
+}).filter((g) => g.products.length > 0);
 
 // Danh sách thương hiệu để lọc
 const availableBrands = Array.from(new Set(MOCK_PRODUCTS.map((p) => p.brand)));
+
+// Icon cho từng nhóm sản phẩm
+const categoryIcons: Record<string, string> = {
+  'man-hinh-android': '📱',
+  'android-box': '📦',
+  'camera-o-to': '📹',
+  'do-den-o-to': '💡',
+  'am-thanh-xe-hoi': '🔊',
+  'den-led-noi-that': '🌈',
+  'cam-bien-o-to': '🛞',
+  'phu-kien-xe-hoi': '🚗',
+};
 ---
 
 <Layout
-  title={`Tất Cả Sản Phẩm Nâng Cấp Ô Tô - ${DEFAULT_SHOP_SETTINGS.shop_name}`}
+  title={`Danh Mục Sản Phẩm Nâng Cấp Ô Tô - ${DEFAULT_SHOP_SETTINGS.shop_name}`}
   description={`Danh mục sản phẩm nâng cấp ô tô chính hãng tại ${DEFAULT_SHOP_SETTINGS.shop_name}: Màn hình Android, Camera 360, Âm thanh, Bi LED, Cảm biến chuẩn giắc zin 100%.`}
 >
+  <!-- Header Banner -->
   <div class="bg-slate-100 border-b border-slate-200 py-8 px-4 sm:px-6">
     <div class="max-w-7xl mx-auto">
       <nav class="text-xs text-slate-500 mb-2 flex items-center gap-2">
-        <a href="/" class="hover:text-slate-900">Trang chủ</a>
+        <a href="/" class="hover:text-slate-900 transition">Trang chủ</a>
         <span>/</span>
-        <span class="text-red-600 font-medium">Sản phẩm</span>
+        <a href="/san-pham" class="hover:text-slate-900 transition">Sản phẩm</a>
+        <span id="breadcrumb-category-sep" class="hidden">/</span>
+        <span id="breadcrumb-category-name" class="text-red-600 font-bold hidden"></span>
       </nav>
-      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+      <h1 id="catalog-page-title" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
         Danh Mục Sản Phẩm & Phụ Kiện Ô Tô
       </h1>
-      <p class="text-slate-600 text-xs sm:text-sm mt-1 max-w-2xl">
-        Toàn bộ sản phẩm được kiểm tra chuẩn giắc cắm theo xe, bảo hành chính hãng từ 12 đến 36 tháng.
+      <p id="catalog-page-subtitle" class="text-slate-600 text-xs sm:text-sm mt-1 max-w-2xl">
+        Toàn bộ sản phẩm được phân loại theo từng nhóm chuyên biệt, chuẩn giắc cắm theo xe, bảo hành chính hãng từ 12 đến 36 tháng.
       </p>
     </div>
   </div>
@@ -63,7 +67,7 @@ const availableBrands = Array.from(new Set(MOCK_PRODUCTS.map((p) => p.brand)));
           <label for="search-input" class="block text-xs font-bold text-slate-900 uppercase tracking-wide mb-2">
             Tìm kiếm sản phẩm
           </label>
-          <form method="GET" action="/san-pham" class="flex gap-2">
+          <form id="catalog-search-form" class="flex gap-2">
             <input
               id="search-input"
               type="text"
@@ -72,48 +76,48 @@ const availableBrands = Array.from(new Set(MOCK_PRODUCTS.map((p) => p.brand)));
               value={searchKeyword}
               class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-red-600 focus:bg-white transition"
             />
-            {selectedCategory && <input type="hidden" name="category" value={selectedCategory} />}
             <button
               type="submit"
-              class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition"
+              class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition cursor-pointer"
             >
               Tìm
             </button>
           </form>
         </div>
 
-        <!-- Lọc theo Danh mục -->
+        <!-- Lọc theo Danh mục / Nhóm sản phẩm -->
         <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs">
-          <div class="text-xs font-bold text-slate-900 uppercase tracking-wide mb-3">
-            Nhóm sản phẩm
+          <div class="text-xs font-bold text-slate-900 uppercase tracking-wide mb-3 flex items-center justify-between">
+            <span>Nhóm sản phẩm</span>
+            <span class="text-[10px] text-slate-400 font-normal">Chọn để lọc</span>
           </div>
           <ul id="sidebar-categories-list" class="space-y-1 text-xs">
             <li>
               <a
                 href="/san-pham"
-                class={`block px-2.5 py-1.5 rounded-lg transition ${
-                  !selectedCategory
-                    ? 'bg-red-50 text-red-600 font-bold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                }`}
+                data-category-slug=""
+                class="sidebar-cat-link flex items-center justify-between px-2.5 py-2 rounded-lg font-bold bg-red-50 text-red-600 border-l-4 border-red-600 transition"
               >
-                Tất cả sản phẩm ({MOCK_PRODUCTS.length})
+                <span>Tất cả sản phẩm</span>
+                <span class="text-[10px] bg-white text-slate-700 px-1.5 py-0.5 rounded shadow-2xs">
+                  {MOCK_PRODUCTS.length}
+                </span>
               </a>
             </li>
             {CATEGORIES_LIST.map((cat) => {
               const count = MOCK_PRODUCTS.filter((p) => p.categorySlug === cat.slug).length;
-              const isSelected = selectedCategory === cat.slug;
+              const icon = categoryIcons[cat.slug] || '🚗';
               return (
                 <li>
                   <a
-                    href={`/san-pham?category=${cat.slug}${searchKeyword ? `&q=${searchKeyword}` : ''}`}
-                    class={`flex items-center justify-between px-2.5 py-1.5 rounded-lg transition ${
-                      isSelected
-                        ? 'bg-red-50 text-red-600 font-bold'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                    }`}
+                    href={`/san-pham?category=${cat.slug}`}
+                    data-category-slug={cat.slug}
+                    class="sidebar-cat-link flex items-center justify-between px-2.5 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition"
                   >
-                    <span>{cat.name}</span>
+                    <span class="flex items-center gap-2">
+                      <span>{icon}</span>
+                      <span>{cat.name}</span>
+                    </span>
                     <span class="text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
                       {count}
                     </span>
@@ -129,200 +133,511 @@ const availableBrands = Array.from(new Set(MOCK_PRODUCTS.map((p) => p.brand)));
           <div class="text-xs font-bold text-slate-900 uppercase tracking-wide mb-3">
             Thương hiệu
           </div>
-          <div class="flex flex-wrap gap-1.5">
-            <a
-              href={`/san-pham${selectedCategory ? `?category=${selectedCategory}` : ''}`}
-              class={`text-[11px] px-2.5 py-1 rounded-lg border transition ${
-                !selectedBrand
-                  ? 'bg-red-600 text-white font-bold border-red-600'
-                  : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
-              }`}
+          <div id="sidebar-brands-list" class="flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              data-brand=""
+              class="brand-filter-btn text-[11px] px-2.5 py-1 rounded-lg border bg-red-600 text-white font-bold border-red-600 transition cursor-pointer"
             >
               Tất cả
-            </a>
-            {availableBrands.map((brand) => {
-              const isSelected = selectedBrand === brand.toLowerCase();
-              return (
-                <a
-                  href={`/san-pham?brand=${encodeURIComponent(brand.toLowerCase())}${selectedCategory ? `&category=${selectedCategory}` : ''}`}
-                  class={`text-[11px] px-2.5 py-1 rounded-lg border transition ${
-                    isSelected
-                      ? 'bg-red-600 text-white font-bold border-red-600'
-                      : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
-                  }`}
-                >
-                  {brand}
-                </a>
-              );
-            })}
+            </button>
+            {availableBrands.map((brand) => (
+              <button
+                type="button"
+                data-brand={brand.toLowerCase()}
+                class="brand-filter-btn text-[11px] px-2.5 py-1 rounded-lg border bg-white text-slate-600 border-slate-200 hover:border-slate-300 transition cursor-pointer"
+              >
+                {brand}
+              </button>
+            ))}
           </div>
         </div>
       </aside>
 
-      <!-- Main Product Grid -->
-      <!-- Main Product Grid -->
+      <!-- Cột Nội Dung Sản Phẩm (Bên Phải) -->
       <section class="lg:col-span-3">
+        <!-- Thanh Cuộn Nhanh Danh Mục (Quick Category Pills / Tabs) -->
+        <div class="mb-5 pb-1 overflow-x-auto scrollbar-none flex items-center gap-2">
+          <button
+            type="button"
+            data-category-slug=""
+            class="pill-cat-btn shrink-0 text-xs px-3.5 py-2 rounded-xl font-bold bg-slate-900 text-white shadow-xs transition cursor-pointer flex items-center gap-1.5"
+          >
+            <span>✨</span>
+            <span>Tất cả mục ({MOCK_PRODUCTS.length})</span>
+          </button>
+          {CATEGORIES_LIST.map((cat) => {
+            const count = MOCK_PRODUCTS.filter((p) => p.categorySlug === cat.slug).length;
+            const icon = categoryIcons[cat.slug] || '🚗';
+            return (
+              <button
+                type="button"
+                data-category-slug={cat.slug}
+                class="pill-cat-btn shrink-0 text-xs px-3.5 py-2 rounded-xl font-medium bg-white text-slate-700 border border-slate-200 hover:border-red-500 hover:text-red-600 shadow-2xs transition cursor-pointer flex items-center gap-1.5"
+              >
+                <span>{icon}</span>
+                <span>{cat.name}</span>
+                <span class="text-[10px] opacity-60">({count})</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <!-- Thanh Trạng Thái Lọc (Hiển thị khi đang lọc theo danh mục / từ khóa) -->
+        <div id="catalog-active-filter-banner" class="hidden mb-5 p-3.5 bg-red-50 border border-red-200 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+            <span class="text-slate-600 font-medium">Đang lọc theo:</span>
+            <span id="catalog-active-filter-label" class="px-2.5 py-1 bg-white text-red-600 font-bold rounded-lg border border-red-200 shadow-2xs">
+              Tất cả
+            </span>
+          </div>
+          <button
+            type="button"
+            id="catalog-reset-filter-btn"
+            class="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-red-200 hover:bg-red-50 transition cursor-pointer"
+          >
+            <span>✕</span>
+            <span>Xem tất cả các mục</span>
+          </button>
+        </div>
+
+        <!-- Thông tin số lượng sản phẩm -->
         <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 text-xs">
           <div class="text-slate-600">
-            Có <span id="product-count-number" class="text-slate-900 font-bold">{filteredProducts.length}</span> sản phẩm
-            {searchKeyword && <span> cho từ khóa "<span class="text-red-600 font-semibold">{searchKeyword}</span>"</span>}
+            Hiển thị: <span id="product-count-number" class="text-slate-900 font-bold">{MOCK_PRODUCTS.length}</span> sản phẩm
+            <span id="search-keyword-display" class="hidden"> cho từ khóa "<span class="text-red-600 font-semibold" id="search-keyword-val"></span>"</span>
           </div>
-
-          {(selectedCategory || selectedBrand || searchKeyword) && (
-            <a href="/san-pham" class="text-red-600 hover:underline font-semibold flex items-center gap-1">
-              <span>✕</span>
-              <span>Xóa bộ lọc</span>
-            </a>
-          )}
+          <div class="text-[11px] text-slate-400">
+            Cắm giắc zin 100% • Bảo hành 12 - 36 tháng
+          </div>
         </div>
 
-        <div id="catalog-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {filteredProducts.map((prod) => (
-            <ProductCard
-              id={prod.id}
-              slug={prod.slug}
-              name={prod.name}
-              brand={prod.brand}
-              categoryName={prod.categoryName}
-              price={prod.price}
-              salePrice={prod.salePrice}
-              image={prod.image}
-              specs={prod.specs}
-              warrantyMonths={prod.warrantyMonths}
-              isUniversal={prod.isUniversal}
-            />
-          ))}
+        <!-- CHẾ ĐỘ 1: HIỂN THỊ CHIA THEO TỪNG MỤC SẢN PHẨM RÕ RÀNG (Mặc định khi xem Tất cả) -->
+        <div id="catalog-grouped-view" class="space-y-10">
+          {categoryGroups.map((group) => {
+            const icon = categoryIcons[group.slug] || '🚗';
+            return (
+              <div class="category-section" data-section-slug={group.slug}>
+                <!-- Tiêu đề Mục Sản Phẩm -->
+                <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-slate-200">
+                  <div class="flex items-center gap-2.5">
+                    <span class="text-xl">{icon}</span>
+                    <h2 class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">
+                      {group.name}
+                    </h2>
+                    <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700">
+                      {group.products.length} sản phẩm
+                    </span>
+                  </div>
+
+                  <a
+                    href={`/san-pham?category=${group.slug}`}
+                    data-category-slug={group.slug}
+                    class="view-group-only-btn text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 hover:underline transition"
+                  >
+                    <span>Xem riêng mục này</span>
+                    <span>→</span>
+                  </a>
+                </div>
+
+                <!-- Lưới sản phẩm của Mục này -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  {group.products.map((prod) => (
+                    <ProductCard
+                      id={prod.id}
+                      slug={prod.slug}
+                      name={prod.name}
+                      brand={prod.brand}
+                      categoryName={prod.categoryName}
+                      price={prod.price}
+                      salePrice={prod.salePrice}
+                      image={prod.image}
+                      specs={prod.specs}
+                      warrantyMonths={prod.warrantyMonths}
+                      isUniversal={prod.isUniversal}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        <div id="catalog-empty-state" class={`py-16 text-center border border-dashed border-slate-300 rounded-xl bg-white p-6 ${filteredProducts.length === 0 ? '' : 'hidden'}`}>
-          <h3 class="text-base font-bold text-slate-800 mb-1">Không tìm thấy sản phẩm</h3>
+        <!-- CHẾ ĐỘ 2: HIỂN THỊ DẠNG LỌC RIÊNG (Dành cho khi người dùng click vào 1 mục cụ thể hoặc tìm kiếm) -->
+        <div id="catalog-filtered-view" class="hidden">
+          <div id="catalog-filtered-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <!-- Sản phẩm được render động bằng JavaScript -->
+          </div>
+        </div>
+
+        <!-- Trạng thái trống khi không tìm thấy kết quả -->
+        <div id="catalog-empty-state" class="hidden py-16 text-center border border-dashed border-slate-300 rounded-xl bg-white p-6">
+          <div class="text-4xl mb-3">🔍</div>
+          <h3 class="text-base font-bold text-slate-800 mb-1">Không tìm thấy sản phẩm phù hợp</h3>
           <p class="text-xs text-slate-500 max-w-sm mx-auto mb-4">
-            Bạn có thể liên hệ Zalo kỹ thuật viên để chúng tôi kiểm tra kho hàng trực tiếp cho dòng xe của bạn.
+            Rất có thể sản phẩm bạn tìm chưa được đăng lên web. Vui lòng liên hệ trực tiếp kỹ thuật viên qua Zalo để được kiểm tra kho hàng.
           </p>
-          <a href={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}`} target="_blank" rel="noopener noreferrer" class="shop-zalo-link px-4 py-2 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700">
-            Nhắn Zalo Tư Vấn (<span class="shop-zalo-val">{DEFAULT_SHOP_SETTINGS.zalo}</span>)
+          <a
+            href={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="shop-zalo-link inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm transition"
+          >
+            <span>Nhắn Zalo Kỹ Thuật Viên:</span>
+            <span class="shop-zalo-val">{DEFAULT_SHOP_SETTINGS.zalo}</span>
           </a>
         </div>
       </section>
     </div>
   </div>
 
-  <!-- Client-side Hydration Script: Tự động tải sản phẩm và danh mục từ localStorage nếu có -->
+  <!-- Dữ liệu nguồn tĩnh nhúng trực tiếp để Client JS luôn hoạt động 100% -->
+  <script id="catalog-initial-products" type="application/json" set:html={JSON.stringify(MOCK_PRODUCTS)}></script>
+  <script id="catalog-initial-categories" type="application/json" set:html={JSON.stringify(CATEGORIES_LIST)}></script>
+
+  <!-- Script xử lý phân chia mục và lọc sản phẩm tương tác mượt mà theo thời gian thực -->
   <script is:inline>
     (function () {
       try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const q = (urlParams.get('q') || '').toLowerCase().trim();
-        const catFilter = urlParams.get('category') || '';
-        const brandFilter = (urlParams.get('brand') || '').toLowerCase().trim();
+        const categoryIconsMap = {
+          'man-hinh-android': '📱',
+          'android-box': '📦',
+          'camera-o-to': '📹',
+          'do-den-o-to': '💡',
+          'am-thanh-xe-hoi': '🔊',
+          'den-led-noi-that': '🌈',
+          'cam-bien-o-to': '🛞',
+          'phu-kien-xe-hoi': '🚗'
+        };
 
-        const savedCatsRaw = localStorage.getItem('app_categories');
-        const savedProdsRaw = localStorage.getItem('app_products');
+        const rawProdsEl = document.getElementById('catalog-initial-products');
+        const rawCatsEl = document.getElementById('catalog-initial-categories');
 
-        let products = null;
-        let categories = null;
+        let defaultProducts = [];
+        let defaultCategories = [];
 
-        if (savedProdsRaw) {
-          try { products = JSON.parse(savedProdsRaw); } catch (e) {}
+        if (rawProdsEl && rawProdsEl.textContent) {
+          try { defaultProducts = JSON.parse(rawProdsEl.textContent); } catch (e) {}
         }
-        if (savedCatsRaw) {
-          try { categories = JSON.parse(savedCatsRaw); } catch (e) {}
+        if (rawCatsEl && rawCatsEl.textContent) {
+          try { defaultCategories = JSON.parse(rawCatsEl.textContent); } catch (e) {}
         }
 
-        // Cập nhật danh mục sidebar nếu có dữ liệu mới
-        if (categories && Array.isArray(categories) && categories.length > 0) {
-          const catListEl = document.getElementById('sidebar-categories-list');
-          if (catListEl) {
-            const allCount = products ? products.length : 0;
-            let html = '<li><a href="/san-pham" class="block px-2.5 py-1.5 rounded-lg transition ' +
-              (!catFilter ? 'bg-red-50 text-red-600 font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50') +
-              '">Tất cả sản phẩm (' + (allCount || '...') + ')</a></li>';
-
-            categories.forEach(function (cat) {
-              const count = products ? products.filter(function (p) { return p.categorySlug === cat.slug; }).length : '';
-              const isSel = catFilter === cat.slug;
-              html += '<li><a href="/san-pham?category=' + cat.slug + (q ? '&q=' + q : '') + '" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg transition ' +
-                (isSel ? 'bg-red-50 text-red-600 font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50') +
-                '"><span>' + cat.name + '</span>' +
-                (count !== '' ? '<span class="text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">' + count + '</span>' : '') +
-                '</a></li>';
-            });
-            catListEl.innerHTML = html;
+        function getActiveProducts() {
+          const saved = localStorage.getItem('app_products');
+          if (saved) {
+            try {
+              const parsed = JSON.parse(saved);
+              if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+            } catch (e) {}
           }
+          return defaultProducts;
         }
 
-        // Cập nhật danh sách sản phẩm
-        if (products && Array.isArray(products) && products.length > 0) {
-          const filtered = products.filter(function (p) {
-            if (q) {
-              const matchName = (p.name || '').toLowerCase().includes(q);
-              const matchBrand = (p.brand || '').toLowerCase().includes(q);
-              const matchSku = (p.sku || '').toLowerCase().includes(q);
+        function getActiveCategories() {
+          const saved = localStorage.getItem('app_categories');
+          if (saved) {
+            try {
+              const parsed = JSON.parse(saved);
+              if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+            } catch (e) {}
+          }
+          return defaultCategories;
+        }
+
+        function renderProductCardHTML(prod) {
+          const hasDiscount = prod.salePrice && prod.salePrice < prod.price;
+          const currentPrice = hasDiscount ? prod.salePrice : prod.price;
+          const formattedPrice = currentPrice > 0
+            ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentPrice)
+            : 'Liên hệ báo giá';
+          const formattedOrig = hasDiscount
+            ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(prod.price)
+            : '';
+          const zaloMsg = encodeURIComponent('Xin chào shop, tôi cần tư vấn sản phẩm: ' + prod.name + ' (' + (prod.brand || '') + '). Cho tôi xin báo giá thi công cho xe.');
+
+          let specsHTML = '';
+          if (Array.isArray(prod.specs) && prod.specs.length > 0) {
+            specsHTML = '<div class="flex flex-wrap gap-1 mb-3">' +
+              prod.specs.slice(0, 2).map(function (s) {
+                const text = typeof s === 'string' ? s : (s.k + ': ' + s.v);
+                return '<span class="text-[11px] px-2 py-0.5 rounded bg-slate-100 text-slate-600">' + text + '</span>';
+              }).join('') +
+              '</div>';
+          }
+
+          return '<div class="flex flex-col rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md transition overflow-hidden group">' +
+            '<a href="/san-pham/' + prod.slug + '" class="relative aspect-[4/3] bg-slate-100 overflow-hidden block">' +
+              '<img src="' + prod.image + '" alt="' + prod.name + '" loading="lazy" class="w-full h-full object-cover group-hover:scale-103 transition duration-300" />' +
+              (hasDiscount ? '<span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[11px] font-bold bg-red-600 text-white shadow-xs">Giảm giá</span>' : '') +
+              (prod.isUniversal ? '<span class="absolute bottom-2.5 left-2.5 px-2 py-0.5 rounded text-[10px] bg-white/95 text-slate-700 font-medium border border-slate-200 shadow-xs">Mọi dòng xe</span>' : '') +
+            '</a>' +
+            '<div class="p-4 flex-1 flex flex-col justify-between text-xs">' +
+              '<div>' +
+                '<div class="text-[11px] text-slate-500 mb-1.5 flex items-center justify-between">' +
+                  '<span class="font-bold text-slate-700 uppercase tracking-wide">' + (prod.brand || '') + '</span>' +
+                  '<span class="text-slate-400">' + (prod.categoryName || '') + '</span>' +
+                '</div>' +
+                '<h3 class="font-bold text-slate-900 text-sm line-clamp-2 group-hover:text-red-600 transition mb-2.5 leading-snug">' +
+                  '<a href="/san-pham/' + prod.slug + '">' + prod.name + '</a>' +
+                '</h3>' +
+                specsHTML +
+              '</div>' +
+              '<div class="pt-3 border-t border-slate-100 mt-auto">' +
+                '<div class="mb-3">' +
+                  '<div class="flex items-baseline gap-2">' +
+                    '<span class="text-base sm:text-lg font-extrabold text-red-600">' + formattedPrice + '</span>' +
+                    (hasDiscount ? '<span class="text-xs text-slate-400 line-through">' + formattedOrig + '</span>' : '') +
+                  '</div>' +
+                '</div>' +
+                '<div class="grid grid-cols-2 gap-2 text-xs">' +
+                  '<a href="/san-pham/' + prod.slug + '" class="py-2 text-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold transition">Xem chi tiết</a>' +
+                  '<a href="https://zalo.me/0858382468?text=' + zaloMsg + '" target="_blank" rel="noopener noreferrer" class="py-2 text-center rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition shadow-xs">Nhắn Zalo</a>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+        }
+
+        function applyFilterFromURL(pushState) {
+          const urlParams = new URLSearchParams(window.location.search);
+          const currentCategory = (urlParams.get('category') || '').trim();
+          const currentBrand = (urlParams.get('brand') || '').trim().toLowerCase();
+          const currentQ = (urlParams.get('q') || '').trim().toLowerCase();
+
+          const allProducts = getActiveProducts();
+          const allCategories = getActiveCategories();
+
+          const groupedViewEl = document.getElementById('catalog-grouped-view');
+          const filteredViewEl = document.getElementById('catalog-filtered-view');
+          const filteredGridEl = document.getElementById('catalog-filtered-grid');
+          const emptyStateEl = document.getElementById('catalog-empty-state');
+          const countNumEl = document.getElementById('product-count-number');
+          const pageTitleEl = document.getElementById('catalog-page-title');
+          const pageSubTitleEl = document.getElementById('catalog-page-subtitle');
+          const breadcrumbSepEl = document.getElementById('breadcrumb-category-sep');
+          const breadcrumbNameEl = document.getElementById('breadcrumb-category-name');
+          const filterBannerEl = document.getElementById('catalog-active-filter-banner');
+          const filterLabelEl = document.getElementById('catalog-active-filter-label');
+          const searchInputEl = document.getElementById('search-input');
+          const keywordDisplayEl = document.getElementById('search-keyword-display');
+          const keywordValEl = document.getElementById('search-keyword-val');
+
+          if (searchInputEl && currentQ) {
+            searchInputEl.value = currentQ;
+          }
+
+          // 1. Cập nhật Sidebar Active State
+          document.querySelectorAll('.sidebar-cat-link').forEach(function (link) {
+            const catSlug = link.getAttribute('data-category-slug') || '';
+            if (catSlug === currentCategory) {
+              link.className = 'sidebar-cat-link flex items-center justify-between px-2.5 py-2 rounded-lg font-bold bg-red-50 text-red-600 border-l-4 border-red-600 shadow-2xs transition';
+            } else {
+              link.className = 'sidebar-cat-link flex items-center justify-between px-2.5 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition';
+            }
+          });
+
+          // 2. Cập nhật Quick Pills Active State
+          document.querySelectorAll('.pill-cat-btn').forEach(function (btn) {
+            const catSlug = btn.getAttribute('data-category-slug') || '';
+            if (catSlug === currentCategory) {
+              btn.className = 'pill-cat-btn shrink-0 text-xs px-3.5 py-2 rounded-xl font-bold bg-red-600 text-white shadow-xs transition cursor-pointer flex items-center gap-1.5';
+            } else {
+              btn.className = 'pill-cat-btn shrink-0 text-xs px-3.5 py-2 rounded-xl font-medium bg-white text-slate-700 border border-slate-200 hover:border-red-500 hover:text-red-600 shadow-2xs transition cursor-pointer flex items-center gap-1.5';
+            }
+          });
+
+          // 3. Cập nhật Brand Filter Buttons
+          document.querySelectorAll('.brand-filter-btn').forEach(function (btn) {
+            const b = (btn.getAttribute('data-brand') || '').toLowerCase();
+            if (b === currentBrand) {
+              btn.className = 'brand-filter-btn text-[11px] px-2.5 py-1 rounded-lg border bg-red-600 text-white font-bold border-red-600 transition cursor-pointer';
+            } else {
+              btn.className = 'brand-filter-btn text-[11px] px-2.5 py-1 rounded-lg border bg-white text-slate-600 border-slate-200 hover:border-slate-300 transition cursor-pointer';
+            }
+          });
+
+          // 4. Kiểm tra xem người dùng đang xem "Tất cả các mục" hay đang lọc
+          const isFiltering = Boolean(currentCategory || currentBrand || currentQ);
+
+          if (!isFiltering) {
+            // Hiển thị Chế độ 1: Từng mục sản phẩm rõ ràng
+            if (groupedViewEl) groupedViewEl.classList.remove('hidden');
+            if (filteredViewEl) filteredViewEl.classList.add('hidden');
+            if (emptyStateEl) emptyStateEl.classList.add('hidden');
+            if (filterBannerEl) filterBannerEl.classList.add('hidden');
+            if (breadcrumbSepEl) breadcrumbSepEl.classList.add('hidden');
+            if (breadcrumbNameEl) breadcrumbNameEl.classList.add('hidden');
+            if (keywordDisplayEl) keywordDisplayEl.classList.add('hidden');
+
+            if (pageTitleEl) pageTitleEl.textContent = 'Danh Mục Sản Phẩm & Phụ Kiện Ô Tô';
+            if (pageSubTitleEl) pageSubTitleEl.textContent = 'Toàn bộ sản phẩm được phân loại theo từng nhóm chuyên biệt, chuẩn giắc cắm theo xe, bảo hành chính hãng từ 12 đến 36 tháng.';
+            if (countNumEl) countNumEl.textContent = allProducts.length;
+
+            return;
+          }
+
+          // Chế độ 2: Đang lọc theo danh mục / từ khóa / thương hiệu
+          if (groupedViewEl) groupedViewEl.classList.add('hidden');
+          if (filteredViewEl) filteredViewEl.classList.remove('hidden');
+
+          // Lọc danh sách sản phẩm
+          const filtered = allProducts.filter(function (p) {
+            if (currentCategory && p.categorySlug !== currentCategory) return false;
+            if (currentBrand && (p.brand || '').toLowerCase() !== currentBrand) return false;
+            if (currentQ) {
+              const matchName = (p.name || '').toLowerCase().includes(currentQ);
+              const matchBrand = (p.brand || '').toLowerCase().includes(currentQ);
+              const matchSku = (p.sku || '').toLowerCase().includes(currentQ);
               if (!matchName && !matchBrand && !matchSku) return false;
             }
-            if (catFilter && p.categorySlug !== catFilter) return false;
-            if (brandFilter && (p.brand || '').toLowerCase() !== brandFilter) return false;
             return true;
           });
 
-          const countEl = document.getElementById('product-count-number');
-          if (countEl) countEl.textContent = filtered.length;
+          // Cập nhật số lượng
+          if (countNumEl) countNumEl.textContent = filtered.length;
 
-          const gridEl = document.getElementById('catalog-products-grid');
-          const emptyEl = document.getElementById('catalog-empty-state');
+          // Tìm tên danh mục đang chọn
+          const matchedCategory = allCategories.find(function (c) { return c.slug === currentCategory; });
+          const catName = matchedCategory ? matchedCategory.name : currentCategory;
+          const catIcon = categoryIconsMap[currentCategory] || '🚗';
 
-          if (filtered.length === 0) {
-            if (gridEl) gridEl.innerHTML = '';
-            if (emptyEl) emptyEl.classList.remove('hidden');
+          // Cập nhật Tiêu đề và Breadcrumb
+          if (currentCategory) {
+            if (pageTitleEl) pageTitleEl.textContent = catIcon + ' ' + catName;
+            if (pageSubTitleEl) pageSubTitleEl.textContent = 'Danh sách các sản phẩm và phụ kiện thuộc nhóm ' + catName + ' chính hãng.';
+            if (breadcrumbSepEl) breadcrumbSepEl.classList.remove('hidden');
+            if (breadcrumbNameEl) {
+              breadcrumbNameEl.classList.remove('hidden');
+              breadcrumbNameEl.textContent = catName;
+            }
           } else {
-            if (emptyEl) emptyEl.classList.add('hidden');
-            if (gridEl) {
-              gridEl.innerHTML = filtered.map(function (prod) {
-                const hasDiscount = prod.salePrice && prod.salePrice < prod.price;
-                const currentPrice = hasDiscount ? prod.salePrice : prod.price;
-                const formattedPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentPrice);
-                const formattedOrig = hasDiscount ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(prod.price) : '';
-                const zaloMsg = encodeURIComponent('Xin chào shop, tôi cần tư vấn sản phẩm: ' + prod.name + ' (' + (prod.brand || '') + '). Cho tôi xin báo giá thi công cho xe.');
+            if (pageTitleEl) pageTitleEl.textContent = 'Kết Quả Lọc Sản Phẩm';
+            if (breadcrumbSepEl) breadcrumbSepEl.classList.add('hidden');
+            if (breadcrumbNameEl) breadcrumbNameEl.classList.add('hidden');
+          }
 
-                return '<div class="flex flex-col rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md transition overflow-hidden group">' +
-                  '<a href="/san-pham/' + prod.slug + '" class="relative aspect-[4/3] bg-slate-100 overflow-hidden block">' +
-                    '<img src="' + prod.image + '" alt="' + prod.name + '" loading="lazy" class="w-full h-full object-cover group-hover:scale-103 transition duration-300" />' +
-                    (hasDiscount ? '<span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[11px] font-bold bg-red-600 text-white shadow-xs">Giảm giá</span>' : '') +
-                    (prod.isUniversal ? '<span class="absolute bottom-2.5 left-2.5 px-2 py-0.5 rounded text-[10px] bg-white/95 text-slate-700 font-medium border border-slate-200 shadow-xs">Mọi dòng xe</span>' : '') +
-                  '</a>' +
-                  '<div class="p-4 flex-1 flex flex-col justify-between text-xs">' +
-                    '<div>' +
-                      '<div class="flex items-center justify-between text-[11px] text-slate-400 mb-1.5">' +
-                        '<span class="font-bold text-slate-500 uppercase tracking-wider">' + (prod.brand || '') + '</span>' +
-                        '<span>BH ' + (prod.warrantyMonths || 24) + 'T</span>' +
-                      '</div>' +
-                      '<h3 class="font-bold text-sm text-slate-900 group-hover:text-red-600 transition line-clamp-2 mb-2 leading-snug">' +
-                        '<a href="/san-pham/' + prod.slug + '">' + prod.name + '</a>' +
-                      '</h3>' +
-                      (prod.specs && prod.specs.length > 0 ? (
-                        '<div class="space-y-1 mb-3 text-slate-500 text-[11px]">' +
-                          prod.specs.slice(0, 2).map(function (s) { return '<div class="truncate">• ' + s + '</div>'; }).join('') +
-                        '</div>'
-                      ) : '') +
-                    '</div>' +
-                    '<div class="pt-3 border-t border-slate-100 mt-2 flex items-center justify-between gap-2">' +
-                      '<div>' +
-                        '<div class="font-extrabold text-sm text-red-600">' + formattedPrice + '</div>' +
-                        (hasDiscount ? '<div class="text-[11px] text-slate-400 line-through">' + formattedOrig + '</div>' : '') +
-                      '</div>' +
-                      '<div class="flex items-center gap-1.5">' +
-                        '<a href="/san-pham/' + prod.slug + '" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition">Chi tiết</a>' +
-                        '<a href="https://zalo.me/0977694364?text=' + zaloMsg + '" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold transition">Zalo</a>' +
-                      '</div>' +
-                    '</div>' +
-                  '</div>' +
-                '</div>';
-              }).join('');
+          // Cập nhật Banner lọc
+          if (filterBannerEl && filterLabelEl) {
+            filterBannerEl.classList.remove('hidden');
+            let labelText = '';
+            if (currentCategory) labelText += (matchedCategory ? matchedCategory.name : currentCategory);
+            if (currentBrand) labelText += (labelText ? ' • ' : '') + 'Hãng ' + currentBrand.toUpperCase();
+            if (currentQ) labelText += (labelText ? ' • ' : '') + 'Từ khóa: "' + currentQ + '"';
+            filterLabelEl.textContent = labelText || 'Tất cả';
+          }
+
+          if (keywordDisplayEl && keywordValEl) {
+            if (currentQ) {
+              keywordDisplayEl.classList.remove('hidden');
+              keywordValEl.textContent = currentQ;
+            } else {
+              keywordDisplayEl.classList.add('hidden');
+            }
+          }
+
+          // Render lưới sản phẩm
+          if (filtered.length === 0) {
+            if (filteredGridEl) filteredGridEl.innerHTML = '';
+            if (emptyStateEl) emptyStateEl.classList.remove('hidden');
+          } else {
+            if (emptyStateEl) emptyStateEl.classList.add('hidden');
+            if (filteredGridEl) {
+              filteredGridEl.innerHTML = filtered.map(renderProductCardHTML).join('');
             }
           }
         }
+
+        // Chuyển đổi bộ lọc và cập nhật URL
+        function setFilter(newCat, newBrand, newQ) {
+          const params = new URLSearchParams();
+          if (newCat) params.set('category', newCat);
+          if (newBrand) params.set('brand', newBrand);
+          if (newQ) params.set('q', newQ);
+
+          const newUrl = '/san-pham' + (params.toString() ? '?' + params.toString() : '');
+          window.history.pushState(null, '', newUrl);
+          applyFilterFromURL();
+          window.scrollTo({ top: 180, behavior: 'smooth' });
+        }
+
+        // Bắt sự kiện click vào Sidebar Danh Mục
+        document.querySelectorAll('.sidebar-cat-link').forEach(function (el) {
+          el.addEventListener('click', function (e) {
+            e.preventDefault();
+            const cat = el.getAttribute('data-category-slug') || '';
+            const urlParams = new URLSearchParams(window.location.search);
+            const brand = urlParams.get('brand') || '';
+            const q = urlParams.get('q') || '';
+            setFilter(cat, brand, q);
+          });
+        });
+
+        // Bắt sự kiện click vào Quick Pills
+        document.querySelectorAll('.pill-cat-btn').forEach(function (btn) {
+          btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const cat = btn.getAttribute('data-category-slug') || '';
+            const urlParams = new URLSearchParams(window.location.search);
+            const brand = urlParams.get('brand') || '';
+            const q = urlParams.get('q') || '';
+            setFilter(cat, brand, q);
+          });
+        });
+
+        // Bắt sự kiện click vào nút "Xem riêng mục này" trong Grouped View
+        document.querySelectorAll('.view-group-only-btn').forEach(function (btn) {
+          btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const cat = btn.getAttribute('data-category-slug') || '';
+            setFilter(cat, '', '');
+          });
+        });
+
+        // Bắt sự kiện click vào nút Thương hiệu
+        document.querySelectorAll('.brand-filter-btn').forEach(function (btn) {
+          btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const b = btn.getAttribute('data-brand') || '';
+            const urlParams = new URLSearchParams(window.location.search);
+            const cat = urlParams.get('category') || '';
+            const q = urlParams.get('q') || '';
+            setFilter(cat, b, q);
+          });
+        });
+
+        // Bắt sự kiện Form Tìm kiếm
+        const searchForm = document.getElementById('catalog-search-form');
+        if (searchForm) {
+          searchForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const q = (document.getElementById('search-input').value || '').trim();
+            const urlParams = new URLSearchParams(window.location.search);
+            const cat = urlParams.get('category') || '';
+            const brand = urlParams.get('brand') || '';
+            setFilter(cat, brand, q);
+          });
+        }
+
+        // Bắt sự kiện Reset Filter
+        const resetBtn = document.getElementById('catalog-reset-filter-btn');
+        if (resetBtn) {
+          resetBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            setFilter('', '', '');
+          });
+        }
+
+        // Hỗ trợ nút Back / Forward trên trình duyệt
+        window.addEventListener('popstate', function () {
+          applyFilterFromURL();
+        });
+
+        // Thực thi ngay lập tức khi tải trang
+        applyFilterFromURL();
       } catch (err) {
-        console.error('Error hydrating catalog:', err);
+        console.error('Lỗi khởi tạo bộ lọc danh mục:', err);
       }
     })();
   </script>

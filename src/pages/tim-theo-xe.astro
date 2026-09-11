@@ -42,7 +42,7 @@ const carTitle = [
         <span class="text-red-600 font-medium">Tìm theo xe</span>
       </nav>
 
-      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-1.5">
+      <h1 id="car-header-title" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-1.5">
         {carTitle ? `Phụ Kiện Tương Thích: ${carTitle}` : 'Tra Cứu Phụ Kiện Chuẩn Theo Dòng Xe'}
       </h1>
       <p class="text-slate-600 text-xs sm:text-sm max-w-xl mx-auto mb-6">
@@ -56,105 +56,202 @@ const carTitle = [
   </div>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-    {brandParam || modelParam ? (
-      <div class="space-y-10">
-        <!-- 1. Sản phẩm chuyên biệt theo xe -->
-        <div>
-          <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200">
-            <div>
-              <h2 class="text-lg font-bold text-slate-900">
-                Sản Phẩm Theo Dòng Xe {carTitle}
-              </h2>
-              <p class="text-xs text-slate-500 mt-0.5">
-                Kèm mặt dưỡng theo xe và canbus giải mã nút bấm vô lăng
-              </p>
-            </div>
-            <span class="text-xs font-semibold px-2.5 py-1 rounded bg-slate-100 text-slate-700">
-              {dedicatedProducts.length} sản phẩm
-            </span>
+    <!-- Vùng hiển thị danh sách sản phẩm xe -->
+    <div id="car-results-container" class="space-y-10 hidden">
+      <!-- 1. Sản phẩm chuyên biệt theo xe -->
+      <div>
+        <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200">
+          <div>
+            <h2 id="car-dedicated-heading" class="text-lg font-bold text-slate-900">
+              Sản Phẩm Theo Dòng Xe
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Kèm mặt dưỡng theo xe và canbus giải mã nút bấm vô lăng
+            </p>
           </div>
-
-          {dedicatedProducts.length > 0 ? (
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-              {dedicatedProducts.map((prod) => (
-                <ProductCard
-                  id={prod.id}
-                  slug={prod.slug}
-                  name={prod.name}
-                  brand={prod.brand}
-                  categoryName={prod.categoryName}
-                  price={prod.price}
-                  salePrice={prod.salePrice}
-                  image={prod.image}
-                  specs={prod.specs}
-                  warrantyMonths={prod.warrantyMonths}
-                  isUniversal={prod.isUniversal}
-                />
-              ))}
-            </div>
-          ) : (
-            <div class="p-6 text-center bg-white rounded-xl border border-slate-200 text-xs text-slate-500">
-              Chưa có sản phẩm chuyên biệt nào được đăng cho dòng xe này. Vui lòng chat Zalo với kỹ thuật viên để chúng tôi kiểm tra mặt dưỡng trong kho.
-            </div>
-          )}
+          <span id="car-dedicated-count" class="text-xs font-semibold px-2.5 py-1 rounded bg-slate-100 text-slate-700">
+            0 sản phẩm
+          </span>
         </div>
 
-        <!-- 2. Sản phẩm phổ thông -->
-        <div>
-          <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200">
-            <div>
-              <h2 class="text-lg font-bold text-slate-900">
-                Phụ Kiện Nâng Cấp Phổ Thông (Lắp Được Mọi Xe)
-              </h2>
-              <p class="text-xs text-slate-500 mt-0.5">
-                Android Box cắm USB, Camera hành trình, Bi LED, Loa Sub gầm ghế, Đèn LED nội thất...
-              </p>
-            </div>
-            <span class="text-xs font-semibold px-2.5 py-1 rounded bg-slate-100 text-slate-700">
-              {universalProducts.length} sản phẩm
-            </span>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {universalProducts.map((prod) => (
-              <ProductCard
-                id={prod.id}
-                slug={prod.slug}
-                name={prod.name}
-                brand={prod.brand}
-                categoryName={prod.categoryName}
-                price={prod.price}
-                salePrice={prod.salePrice}
-                image={prod.image}
-                specs={prod.specs}
-                warrantyMonths={prod.warrantyMonths}
-                isUniversal={prod.isUniversal}
-              />
-            ))}
-          </div>
+        <div id="car-dedicated-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"></div>
+        <div id="car-dedicated-empty" class="hidden p-6 text-center bg-white rounded-xl border border-slate-200 text-xs text-slate-500">
+          Chưa có sản phẩm chuyên biệt nào được đăng cho dòng xe này. Vui lòng chat Zalo với kỹ thuật viên để chúng tôi kiểm tra mặt dưỡng trong kho.
         </div>
       </div>
-    ) : (
-      <div class="py-12 text-center border border-slate-200 rounded-xl bg-white max-w-xl mx-auto p-6 shadow-2xs">
-        <h2 class="text-base font-bold text-slate-900 mb-2">Vui lòng chọn dòng xe của bạn ở phía trên</h2>
-        <p class="text-xs text-slate-500 leading-relaxed mb-4">
-          Hệ thống sẽ đối chiếu để tìm đúng các bộ màn hình có sẵn dưỡng zin và phụ kiện chuẩn xác nhất.
-        </p>
-        <div class="flex flex-wrap items-center justify-center gap-2">
-          <a href="/tim-theo-xe?brand=toyota&model=vios" class="text-xs px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:text-red-600 border border-slate-200">
-            Toyota Vios
-          </a>
-          <a href="/tim-theo-xe?brand=toyota&model=camry" class="text-xs px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:text-red-600 border border-slate-200">
-            Toyota Camry
-          </a>
-          <a href="/tim-theo-xe?brand=hyundai&model=accent" class="text-xs px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:text-red-600 border border-slate-200">
-            Hyundai Accent
-          </a>
-          <a href="/tim-theo-xe?brand=mitsubishi&model=xpander" class="text-xs px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:text-red-600 border border-slate-200">
-            Mitsubishi Xpander
-          </a>
+
+      <!-- 2. Sản phẩm phổ thông -->
+      <div>
+        <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">
+              Phụ Kiện Nâng Cấp Phổ Thông (Lắp Được Mọi Xe)
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Android Box cắm USB, Camera hành trình, Bi LED, Loa Sub gầm ghế, Đèn LED nội thất...
+            </p>
+          </div>
+          <span id="car-universal-count" class="text-xs font-semibold px-2.5 py-1 rounded bg-slate-100 text-slate-700">
+            {universalProducts.length} sản phẩm
+          </span>
+        </div>
+
+        <div id="car-universal-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {universalProducts.map((prod) => (
+            <ProductCard
+              id={prod.id}
+              slug={prod.slug}
+              name={prod.name}
+              brand={prod.brand}
+              categoryName={prod.categoryName}
+              price={prod.price}
+              salePrice={prod.salePrice}
+              image={prod.image}
+              specs={prod.specs}
+              warrantyMonths={prod.warrantyMonths}
+              isUniversal={prod.isUniversal}
+            />
+          ))}
         </div>
       </div>
-    )}
+    </div>
+
+    <!-- Khung gợi ý khi chưa chọn xe -->
+    <div id="car-prompt-container" class="py-12 text-center border border-slate-200 rounded-xl bg-white max-w-xl mx-auto p-6 shadow-2xs">
+      <h2 class="text-base font-bold text-slate-900 mb-2">Vui lòng chọn dòng xe của bạn ở phía trên</h2>
+      <p class="text-xs text-slate-500 leading-relaxed mb-4">
+        Hệ thống sẽ đối chiếu để tìm đúng các bộ màn hình có sẵn dưỡng zin và phụ kiện chuẩn xác nhất.
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-2">
+        <a href="/tim-theo-xe?brand=toyota&model=vios" class="text-xs px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:text-red-600 border border-slate-200">
+          Toyota Vios
+        </a>
+        <a href="/tim-theo-xe?brand=toyota&model=camry" class="text-xs px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:text-red-600 border border-slate-200">
+          Toyota Camry
+        </a>
+        <a href="/tim-theo-xe?brand=hyundai&model=accent" class="text-xs px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:text-red-600 border border-slate-200">
+          Hyundai Accent
+        </a>
+        <a href="/tim-theo-xe?brand=mitsubishi&model=xpander" class="text-xs px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:text-red-600 border border-slate-200">
+          Mitsubishi Xpander
+        </a>
+      </div>
+    </div>
   </div>
+
+  <script id="car-initial-products" type="application/json" set:html={JSON.stringify(MOCK_PRODUCTS)}></script>
+
+  <script is:inline>
+    (function () {
+      try {
+        const rawEl = document.getElementById('car-initial-products');
+        let products = [];
+        if (rawEl && rawEl.textContent) {
+          try { products = JSON.parse(rawEl.textContent); } catch (e) {}
+        }
+
+        const saved = localStorage.getItem('app_products');
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed) && parsed.length > 0) products = parsed;
+          } catch (e) {}
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const b = (params.get('brand') || '').trim().toLowerCase();
+        const m = (params.get('model') || '').trim().toLowerCase();
+        const y = (params.get('year') || '').trim();
+
+        const resultsEl = document.getElementById('car-results-container');
+        const promptEl = document.getElementById('car-prompt-container');
+        const titleEl = document.getElementById('car-header-title');
+        const dedicatedGridEl = document.getElementById('car-dedicated-grid');
+        const dedicatedHeadingEl = document.getElementById('car-dedicated-heading');
+        const dedicatedCountEl = document.getElementById('car-dedicated-count');
+        const dedicatedEmptyEl = document.getElementById('car-dedicated-empty');
+        const universalCountEl = document.getElementById('car-universal-count');
+
+        if (!b && !m) {
+          if (resultsEl) resultsEl.classList.add('hidden');
+          if (promptEl) promptEl.classList.remove('hidden');
+          return;
+        }
+
+        if (resultsEl) resultsEl.classList.remove('hidden');
+        if (promptEl) promptEl.classList.add('hidden');
+
+        const carNameParts = [b.toUpperCase(), m.toUpperCase(), y ? ('(Năm ' + y + ')') : ''].filter(Boolean);
+        const carStr = carNameParts.join(' ');
+        if (titleEl && carStr) {
+          titleEl.textContent = 'Phụ Kiện Tương Thích: ' + carStr;
+        }
+        if (dedicatedHeadingEl && carStr) {
+          dedicatedHeadingEl.textContent = 'Sản Phẩm Theo Dòng Xe ' + carStr;
+        }
+
+        const dedicated = products.filter(function (p) {
+          if (p.isUniversal) return false;
+          const matchB = !b || (Array.isArray(p.compatibleBrands) && p.compatibleBrands.includes(b));
+          const matchM = !m || (Array.isArray(p.compatibleModels) && p.compatibleModels.includes(m));
+          return matchB && matchM;
+        });
+
+        const universal = products.filter(function (p) { return p.isUniversal; });
+
+        if (dedicatedCountEl) dedicatedCountEl.textContent = dedicated.length + ' sản phẩm';
+        if (universalCountEl) universalCountEl.textContent = universal.length + ' sản phẩm';
+
+        if (dedicated.length === 0) {
+          if (dedicatedGridEl) dedicatedGridEl.innerHTML = '';
+          if (dedicatedEmptyEl) dedicatedEmptyEl.classList.remove('hidden');
+        } else {
+          if (dedicatedEmptyEl) dedicatedEmptyEl.classList.add('hidden');
+          if (dedicatedGridEl) {
+            dedicatedGridEl.innerHTML = dedicated.map(function (prod) {
+              const hasDiscount = prod.salePrice && prod.salePrice < prod.price;
+              const currentPrice = hasDiscount ? prod.salePrice : prod.price;
+              const formattedPrice = currentPrice > 0
+                ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentPrice)
+                : 'Liên hệ báo giá';
+              const formattedOrig = hasDiscount
+                ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(prod.price)
+                : '';
+              const zaloMsg = encodeURIComponent('Xin chào shop, tôi cần tư vấn sản phẩm: ' + prod.name + ' cho xe ' + carStr);
+
+              return '<div class="flex flex-col rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md transition overflow-hidden group">' +
+                '<a href="/san-pham/' + prod.slug + '" class="relative aspect-[4/3] bg-slate-100 overflow-hidden block">' +
+                  '<img src="' + prod.image + '" alt="' + prod.name + '" loading="lazy" class="w-full h-full object-cover group-hover:scale-103 transition duration-300" />' +
+                  (hasDiscount ? '<span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[11px] font-bold bg-red-600 text-white shadow-xs">Giảm giá</span>' : '') +
+                '</a>' +
+                '<div class="p-4 flex-1 flex flex-col justify-between text-xs">' +
+                  '<div>' +
+                    '<div class="text-[11px] text-slate-500 mb-1.5 flex items-center justify-between">' +
+                      '<span class="font-bold text-slate-700 uppercase tracking-wide">' + (prod.brand || '') + '</span>' +
+                      '<span class="text-slate-400">' + (prod.categoryName || '') + '</span>' +
+                    '</div>' +
+                    '<h3 class="font-bold text-slate-900 text-sm line-clamp-2 group-hover:text-red-600 transition mb-2.5 leading-snug">' +
+                      '<a href="/san-pham/' + prod.slug + '">' + prod.name + '</a>' +
+                    '</h3>' +
+                  '</div>' +
+                  '<div class="pt-3 border-t border-slate-100 mt-auto">' +
+                    '<div class="mb-3">' +
+                      '<span class="text-base font-extrabold text-red-600">' + formattedPrice + '</span>' +
+                      (hasDiscount ? ' <span class="text-xs text-slate-400 line-through">' + formattedOrig + '</span>' : '') +
+                    '</div>' +
+                    '<div class="grid grid-cols-2 gap-2 text-xs">' +
+                      '<a href="/san-pham/' + prod.slug + '" class="py-2 text-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold transition">Xem chi tiết</a>' +
+                      '<a href="https://zalo.me/0858382468?text=' + zaloMsg + '" target="_blank" rel="noopener noreferrer" class="py-2 text-center rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition shadow-xs">Nhắn Zalo</a>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+              '</div>';
+            }).join('');
+          }
+        }
+      } catch (err) {
+        console.error('Lỗi tải phụ kiện theo xe:', err);
+      }
+    })();
+  </script>
 </Layout>
