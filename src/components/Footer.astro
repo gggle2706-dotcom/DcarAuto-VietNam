@@ -24,13 +24,13 @@ const currentYear = new Date().getFullYear();
     <div class="space-y-3">
       <div class="flex items-center gap-3">
         <div class="shop-logo-container flex items-center justify-center">
-          <span class="shop-logo-fallback w-10 h-10 rounded-lg bg-red-600 flex items-center justify-center text-white font-black text-lg shadow-2xs">
+          <span class={`shop-logo-fallback w-10 h-10 rounded-lg bg-red-600 flex items-center justify-center text-white font-black text-lg shadow-2xs ${DEFAULT_SHOP_SETTINGS.logo_url ? 'hidden' : ''}`}>
             {shopName.charAt(0).toUpperCase()}
           </span>
           <img
-            src=""
+            src={DEFAULT_SHOP_SETTINGS.logo_url || '/logo.png'}
             alt={shopName}
-            class="shop-logo-img h-12 w-auto max-w-[180px] object-contain hidden"
+            class={`shop-logo-img h-12 w-auto max-w-[180px] object-contain ${DEFAULT_SHOP_SETTINGS.logo_url ? '' : 'hidden'}`}
           />
         </div>
         <div class="shop-text-brand shop-name-val font-extrabold text-base text-slate-900 leading-tight">

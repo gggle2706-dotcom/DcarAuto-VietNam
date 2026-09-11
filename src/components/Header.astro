@@ -76,13 +76,13 @@ const cleanPhone = phone.replace(/[^0-9]/g, '');
     <!-- Logo & Tên shop -->
     <a href="/" class="flex items-center gap-3 sm:gap-4 py-1 group">
       <div class="shop-logo-container flex items-center justify-center">
-        <span class="shop-logo-fallback w-12 h-12 rounded-xl bg-red-600 flex items-center justify-center text-white font-black text-2xl shadow-sm">
+        <span class={`shop-logo-fallback w-12 h-12 rounded-xl bg-red-600 flex items-center justify-center text-white font-black text-2xl shadow-sm ${DEFAULT_SHOP_SETTINGS.logo_url ? 'hidden' : ''}`}>
           {DEFAULT_SHOP_SETTINGS.shop_name.charAt(0).toUpperCase()}
         </span>
         <img
-          src=""
+          src={DEFAULT_SHOP_SETTINGS.logo_url || '/logo.png'}
           alt={DEFAULT_SHOP_SETTINGS.shop_name}
-          class="shop-logo-img h-14 sm:h-16 md:h-18 w-auto max-w-[240px] sm:max-w-[340px] object-contain hidden drop-shadow-xs transition transform group-hover:scale-102"
+          class={`shop-logo-img h-14 sm:h-16 md:h-18 w-auto max-w-[240px] sm:max-w-[340px] object-contain drop-shadow-xs transition transform group-hover:scale-102 ${DEFAULT_SHOP_SETTINGS.logo_url ? '' : 'hidden'}`}
         />
       </div>
       <div class="shop-text-brand flex flex-col justify-center">
