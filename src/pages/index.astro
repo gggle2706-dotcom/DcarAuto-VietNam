@@ -2,161 +2,71 @@
 import Layout from '@/layouts/Layout.astro';
 import AutoModStudio from '@/components/AutoModStudio';
 import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
-import { MOCK_POSTS } from '@/lib/mock-posts';
-import { parseVideoUrl } from '@/lib/video-helpers';
-
-const latestPosts = MOCK_POSTS.slice(0, 3);
 ---
 
 <Layout
   title={`Dcar Auto Vietnam - Trung Tâm Phối Đồ & Cấu Hình Độ Xe Chuyên Nghiệp`}
   description={`Tự chọn màn hình android, camera 360, độ đèn bi LED, âm thanh và phụ kiện chuẩn giắc zin 100% theo xe. Nhận báo giá trọn gói trực tiếp qua Zalo kỹ thuật viên.`}
 >
-  <!-- 1. AUTO MOD STUDIO: TRUNG TÂM CẤU HÌNH & INBOX ZALO 3 CỘT (HERO CENTERPIECE) -->
-  <section class="bg-slate-950 border-b border-slate-800">
+  <!-- 1. AUTO MOD STUDIO: TRUNG TÂM CẤU HÌNH & INBOX ZALO 3 CỘT (GIAO DIỆN SÁNG CHỦ ĐẠO) -->
+  <section class="bg-slate-100/70 border-b border-slate-200">
     <AutoModStudio client:load />
   </section>
 
-  <!-- 2. CAM KẾT VÀNG TỪ DCAR AUTO VIETNAM -->
-  <section class="py-10 px-4 sm:px-6 bg-slate-900 border-b border-slate-800 text-slate-200">
+  <!-- 2. CAM KẾT VÀNG TỪ DCAR AUTO VIETNAM (GIAO DIỆN SÁNG, TINH TẾ) -->
+  <section class="py-10 px-4 sm:px-6 bg-white border-b border-slate-200 text-slate-800">
     <div class="max-w-7xl mx-auto">
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-start gap-3">
-          <div class="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 font-black text-lg flex items-center justify-center shrink-0 border border-emerald-500/30">
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3 hover:border-emerald-300 transition">
+          <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-700 font-black text-lg flex items-center justify-center shrink-0 border border-emerald-200">
             ✓
           </div>
           <div>
-            <h3 class="font-bold text-white text-xs sm:text-sm">100% Giắc Zin Theo Xe</h3>
-            <p class="text-[11px] text-slate-400 mt-0.5">Không cắt trích 1 sợi dây điện, giữ trọn bảo hành hãng.</p>
+            <h3 class="font-bold text-slate-900 text-xs sm:text-sm">100% Giắc Zin Theo Xe</h3>
+            <p class="text-[11px] text-slate-500 mt-0.5">Không cắt trích 1 sợi dây điện, giữ trọn bảo hành hãng.</p>
           </div>
         </div>
 
-        <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-start gap-3">
-          <div class="w-10 h-10 rounded-lg bg-blue-500/20 text-blue-400 font-black text-lg flex items-center justify-center shrink-0 border border-blue-500/30">
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3 hover:border-blue-300 transition">
+          <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-700 font-black text-lg flex items-center justify-center shrink-0 border border-blue-200">
             🛡️
           </div>
           <div>
-            <h3 class="font-bold text-white text-xs sm:text-sm">Bảo Hành 12 - 36 Tháng</h3>
-            <p class="text-[11px] text-slate-400 mt-0.5">Lỗi 1 đổi 1 nhanh chóng, kích hoạt bảo hành điện tử chính hãng.</p>
+            <h3 class="font-bold text-slate-900 text-xs sm:text-sm">Bảo Hành 12 - 36 Tháng</h3>
+            <p class="text-[11px] text-slate-500 mt-0.5">Lỗi 1 đổi 1 nhanh chóng, kích hoạt bảo hành điện tử chính hãng.</p>
           </div>
         </div>
 
-        <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-start gap-3">
-          <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 font-black text-lg flex items-center justify-center shrink-0 border border-amber-500/30">
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3 hover:border-amber-300 transition">
+          <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-700 font-black text-lg flex items-center justify-center shrink-0 border border-amber-200">
             🚗
           </div>
           <div>
-            <h3 class="font-bold text-white text-xs sm:text-sm">Lắp Đặt Tận Nơi</h3>
-            <p class="text-[11px] text-slate-400 mt-0.5">Hỗ trợ kỹ thuật viên thi công tại nhà hoặc tại xưởng chuyên nghiệp.</p>
+            <h3 class="font-bold text-slate-900 text-xs sm:text-sm">Lắp Đặt Tận Nơi</h3>
+            <p class="text-[11px] text-slate-500 mt-0.5">Hỗ trợ kỹ thuật viên thi công tại nhà hoặc tại xưởng chuyên nghiệp.</p>
           </div>
         </div>
 
-        <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-start gap-3">
-          <div class="w-10 h-10 rounded-lg bg-red-500/20 text-red-400 font-black text-lg flex items-center justify-center shrink-0 border border-red-500/30">
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3 hover:border-red-300 transition">
+          <div class="w-10 h-10 rounded-lg bg-red-100 text-red-600 font-black text-lg flex items-center justify-center shrink-0 border border-red-200">
             💬
           </div>
           <div>
-            <h3 class="font-bold text-white text-xs sm:text-sm">Tư Vấn Zalo 24/7</h3>
-            <p class="text-[11px] text-slate-400 mt-0.5">Kỹ thuật viên trực tiếp phản hồi, báo giá minh bạch trọn gói.</p>
+            <h3 class="font-bold text-slate-900 text-xs sm:text-sm">Tư Vấn Zalo 24/7</h3>
+            <p class="text-[11px] text-slate-500 mt-0.5">Kỹ thuật viên trực tiếp phản hồi, báo giá minh bạch trọn gói.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 3. DỰ ÁN THI CÔNG THỰC TẾ & VIDEO REVIEW -->
-  <section class="py-14 px-4 sm:px-6 bg-slate-900 border-b border-slate-800">
-    <div class="max-w-7xl mx-auto">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
-        <div>
-          <div class="flex items-center gap-2 mb-1">
-            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
-            <span class="text-xs font-bold text-red-400 uppercase tracking-wider">Hình Ảnh & Video Thực Tế</span>
-          </div>
-          <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">
-            Kinh Nghiệm & Dự Án Đã Thi Công
-          </h2>
-          <p class="text-xs text-slate-400 mt-0.5">
-            Xem thực tế các xe Vios, Accent, Xpander, Ranger, SantaFe... vừa hoàn thiện lắp đặt tại Dcar Auto
-          </p>
-        </div>
-
-        <a
-          href="/blog"
-          class="text-xs font-bold text-red-400 hover:text-red-300 flex items-center gap-1.5 transition shrink-0"
-        >
-          <span>Xem tất cả bài viết & video</span>
-          <span>→</span>
-        </a>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {latestPosts.map((post) => {
-          const video = parseVideoUrl(post.videoUrl);
-          return (
-            <article class="flex flex-col rounded-2xl bg-slate-800/80 border border-slate-700/80 hover:border-slate-600 hover:shadow-xl transition overflow-hidden group">
-              <a href={`/blog/${post.slug}`} class="relative aspect-video overflow-hidden bg-slate-950 block">
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                  loading="lazy"
-                />
-                <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[11px] font-bold bg-slate-950/80 text-white backdrop-blur-xs border border-slate-700">
-                  {post.category}
-                </span>
-
-                {video && (
-                  <span class={`absolute bottom-2.5 left-2.5 px-2 py-0.5 rounded text-[10px] font-bold shadow-xs flex items-center gap-1 ${video.badgeBg}`}>
-                    <span>▶</span>
-                    <span>Video {video.platformName}</span>
-                  </span>
-                )}
-              </a>
-
-              <div class="p-4 flex-1 flex flex-col justify-between text-xs">
-                <div>
-                  <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1.5">
-                    <span>{post.publishedAt}</span>
-                    {post.relatedCar && (
-                      <span class="text-red-400 font-semibold truncate max-w-[140px]">
-                        🚗 {post.relatedCar}
-                      </span>
-                    )}
-                  </div>
-
-                  <h3 class="font-bold text-sm text-white group-hover:text-red-400 transition line-clamp-2 mb-2 leading-snug">
-                    <a href={`/blog/${post.slug}`}>{post.title}</a>
-                  </h3>
-                  <p class="text-slate-400 line-clamp-2 leading-relaxed">
-                    {post.excerpt}
-                  </p>
-                </div>
-
-                <div class="pt-3 border-t border-slate-700/70 mt-4 flex items-center justify-between">
-                  <span class="text-[11px] text-emerald-400 font-medium">
-                    🛠️ Kèm giắc zin theo xe
-                  </span>
-                  <a href={`/blog/${post.slug}`} class="text-red-400 hover:underline font-bold flex items-center gap-1">
-                    <span>Xem chi tiết</span>
-                    <span>→</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-          );
-        })}
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. KHUNG LIÊN HỆ & BÁO GIÁ TRỰC TIẾP -->
-  <section class="py-12 px-4 sm:px-6 bg-slate-950 text-center">
+  <!-- 3. KHUNG LIÊN HỆ & BÁO GIÁ TRỰC TIẾP (SÁNG SỦA, CAO CẤP) -->
+  <section class="py-12 px-4 sm:px-6 bg-slate-50 text-center">
     <div class="max-w-3xl mx-auto space-y-4">
-      <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">
+      <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
         Bạn Cần Tư Vấn Riêng Cho Dòng Xe Của Mình?
       </h2>
-      <p class="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
+      <p class="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
         Hãy chụp ảnh bảng điều khiển taplo xe hoặc nhắn tên xe qua Zalo, kỹ thuật viên Dcar Auto sẽ gửi ảnh mặt dưỡng thực tế và báo giá trọn gói cắm giắc zin.
       </p>
       <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
@@ -164,14 +74,14 @@ const latestPosts = MOCK_POSTS.slice(0, 3);
           href={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo.replace(/[^0-9]/g, '')}`}
           target="_blank"
           rel="noopener noreferrer"
-          class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs shadow-lg shadow-blue-600/30 transition flex items-center gap-2 active:scale-95"
+          class="px-6 py-3 rounded-xl bg-[#0068FF] hover:bg-[#0054cc] text-white font-extrabold text-xs shadow-lg shadow-blue-500/20 transition flex items-center gap-2 active:scale-95"
         >
           <span>Nhắn Zalo Kỹ Thuật Viên:</span>
           <span>{DEFAULT_SHOP_SETTINGS.zalo}</span>
         </a>
         <a
           href={`tel:${DEFAULT_SHOP_SETTINGS.phone.replace(/[^0-9]/g, '')}`}
-          class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-extrabold text-xs border border-slate-700 transition flex items-center gap-2 active:scale-95"
+          class="px-6 py-3 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-extrabold text-xs border border-slate-300 transition flex items-center gap-2 active:scale-95 shadow-xs"
         >
           <span>Gọi Hotline:</span>
           <span>{DEFAULT_SHOP_SETTINGS.phone}</span>

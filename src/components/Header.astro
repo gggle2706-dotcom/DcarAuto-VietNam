@@ -74,7 +74,7 @@ const cleanPhone = phone.replace(/[^0-9]/g, '');
   <!-- Main Navigation Bar -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
     <!-- Logo & Tên shop -->
-    <a href="/" class="flex items-center gap-3 sm:gap-4 py-1 group">
+    <a href="/" class="flex items-center gap-3 py-1 group" title={DEFAULT_SHOP_SETTINGS.shop_name}>
       <div class="shop-logo-container flex items-center justify-center">
         <span class={`shop-logo-fallback w-12 h-12 rounded-xl bg-red-600 flex items-center justify-center text-white font-black text-2xl shadow-sm ${DEFAULT_SHOP_SETTINGS.logo_url ? 'hidden' : ''}`}>
           {DEFAULT_SHOP_SETTINGS.shop_name.charAt(0).toUpperCase()}
@@ -82,17 +82,18 @@ const cleanPhone = phone.replace(/[^0-9]/g, '');
         <img
           src={DEFAULT_SHOP_SETTINGS.logo_url || '/logo.png'}
           alt={DEFAULT_SHOP_SETTINGS.shop_name}
-          class={`shop-logo-img h-14 sm:h-16 md:h-18 w-auto max-w-[240px] sm:max-w-[340px] object-contain drop-shadow-xs transition transform group-hover:scale-102 ${DEFAULT_SHOP_SETTINGS.logo_url ? '' : 'hidden'}`}
+          class={`shop-logo-img h-12 sm:h-14 md:h-16 w-auto max-w-[280px] sm:max-w-[360px] object-contain drop-shadow-xs transition transform group-hover:scale-102 ${DEFAULT_SHOP_SETTINGS.logo_url ? '' : 'hidden'}`}
         />
       </div>
-      <div class="shop-text-brand flex flex-col justify-center">
-        <div class="shop-name-val font-black text-xl sm:text-2xl md:text-3xl tracking-tight text-slate-900 leading-tight group-hover:text-red-600 transition">
+      <div class={`shop-text-brand flex-col justify-center ${DEFAULT_SHOP_SETTINGS.hide_text_logo ? 'hidden' : 'flex'}`}>
+        <div class="shop-name-val font-black text-lg sm:text-xl md:text-2xl tracking-tight text-slate-900 leading-tight group-hover:text-red-600 transition">
           {DEFAULT_SHOP_SETTINGS.shop_name}
         </div>
         <div class="shop-tagline-val text-[11px] sm:text-xs text-slate-500 font-semibold tracking-wide mt-0.5 hidden sm:block">
           {DEFAULT_SHOP_SETTINGS.shop_tagline}
         </div>
       </div>
+      <h1 class="sr-only">Dcar Auto Vietnam - Phụ Kiện & Đồ Chơi Xe Hơi Chính Hãng</h1>
     </a>
 
     <!-- Menu Điều Hướng Desktop -->

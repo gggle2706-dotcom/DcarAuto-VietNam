@@ -15,7 +15,7 @@ export const DEFAULT_SHOP_SETTINGS = {
   "google_maps_url": "https://share.google/yB0ReZSNzvhgdptox",
   "operating_hours": "08:00 - 18:30 (Thứ 2 - Chủ Nhật)",
   "logo_url": "/logo.png",
-  "hide_text_logo": false,
+  "hide_text_logo": true,
   "seo_title": "Dcar Auto Vietnam - Phụ Kiện & Đồ Chơi Xe Hơi Chính Hãng",
   "seo_description": "Dcar Auto Vietnam chuyên màn hình Android, camera 360, độ đèn, loa ô tô chính hãng tại motel Thành Nam."
 };
