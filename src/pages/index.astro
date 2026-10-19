@@ -1,90 +1,132 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import AutoModStudio from '@/components/AutoModStudio';
+import ProductCard from '@/components/ProductCard.astro';
 import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
+import { MOCK_PRODUCTS } from '@/lib/mock-products';
+
+// Lấy 4 sản phẩm nổi bật tiêu biểu
+const featuredProducts = MOCK_PRODUCTS.slice(0, 4);
 ---
 
 <Layout
-  title={`Dcar Auto Vietnam - Trung Tâm Phối Đồ & Cấu Hình Độ Xe Chuyên Nghiệp`}
-  description={`Tự chọn màn hình android, camera 360, độ đèn bi LED, âm thanh và phụ kiện chuẩn giắc zin 100% theo xe. Nhận báo giá trọn gói trực tiếp qua Zalo kỹ thuật viên.`}
+  title={`Dcar Auto Vietnam - Phụ Kiện & Đồ Chơi Xe Hơi Chính Hãng`}
+  description={`Chuyên màn hình Android, camera 360, độ đèn bi LED và phụ kiện chuẩn giắc zin 100% theo từng dòng xe. Nhận báo giá trọn gói trực tiếp qua Zalo kỹ thuật viên.`}
 >
-  <!-- 1. AUTO MOD STUDIO: TRUNG TÂM CẤU HÌNH & INBOX ZALO 3 CỘT (GIAO DIỆN SÁNG CHỦ ĐẠO) -->
-  <section class="bg-slate-100/70 border-b border-slate-200">
+  <!-- 1. AUTO MOD STUDIO: TRUNG TÂM PHỐI THIẾT BỊ 3 BƯỚC (HERO CENTERPIECE) -->
+  <section id="studio" class="bg-slate-100/70 border-b border-slate-200">
     <AutoModStudio client:load />
   </section>
 
-  <!-- 2. CAM KẾT VÀNG TỪ DCAR AUTO VIETNAM (GIAO DIỆN SÁNG, TINH TẾ) -->
-  <section class="py-10 px-4 sm:px-6 bg-white border-b border-slate-200 text-slate-800">
+  <!-- 2. 3 CAM KẾT VÀNG TỪ DCAR AUTO (TINH GỌN, CÂU NGẮN RÕ RÀNG) -->
+  <section class="py-8 px-4 sm:px-6 bg-white border-b border-slate-200 text-slate-800">
     <div class="max-w-7xl mx-auto">
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3 hover:border-emerald-300 transition">
-          <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-700 font-black text-lg flex items-center justify-center shrink-0 border border-emerald-200">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <!-- Cam kết 1 -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 font-black text-base flex items-center justify-center shrink-0 border border-emerald-200 shadow-2xs">
             ✓
           </div>
           <div>
-            <h3 class="font-bold text-slate-900 text-xs sm:text-sm">100% Giắc Zin Theo Xe</h3>
-            <p class="text-[11px] text-slate-500 mt-0.5">Không cắt trích 1 sợi dây điện, giữ trọn bảo hành hãng.</p>
+            <h3 class="font-bold text-slate-900 text-xs sm:text-sm">100% Cắm Giắc Zin Theo Xe</h3>
+            <p class="text-[11px] text-slate-500 mt-0.5">Không cắt trích dây, giữ trọn vẹn bảo hành hãng.</p>
           </div>
         </div>
 
-        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3 hover:border-blue-300 transition">
-          <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-700 font-black text-lg flex items-center justify-center shrink-0 border border-blue-200">
+        <!-- Cam kết 2 -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 font-black text-base flex items-center justify-center shrink-0 border border-blue-200 shadow-2xs">
             🛡️
           </div>
           <div>
-            <h3 class="font-bold text-slate-900 text-xs sm:text-sm">Bảo Hành 12 - 36 Tháng</h3>
-            <p class="text-[11px] text-slate-500 mt-0.5">Lỗi 1 đổi 1 nhanh chóng, kích hoạt bảo hành điện tử chính hãng.</p>
+            <h3 class="font-bold text-slate-900 text-xs sm:text-sm">Bảo Hành Chính Hãng 12 - 36T</h3>
+            <p class="text-[11px] text-slate-500 mt-0.5">Kích hoạt bảo hành điện tử, lỗi 1 đổi 1 nhanh chóng.</p>
           </div>
         </div>
 
-        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3 hover:border-amber-300 transition">
-          <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-700 font-black text-lg flex items-center justify-center shrink-0 border border-amber-200">
+        <!-- Cam kết 3 -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-red-100 text-red-600 font-black text-base flex items-center justify-center shrink-0 border border-red-200 shadow-2xs">
             🚗
           </div>
           <div>
-            <h3 class="font-bold text-slate-900 text-xs sm:text-sm">Lắp Đặt Tận Nơi</h3>
-            <p class="text-[11px] text-slate-500 mt-0.5">Hỗ trợ kỹ thuật viên thi công tại nhà hoặc tại xưởng chuyên nghiệp.</p>
-          </div>
-        </div>
-
-        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3 hover:border-red-300 transition">
-          <div class="w-10 h-10 rounded-lg bg-red-100 text-red-600 font-black text-lg flex items-center justify-center shrink-0 border border-red-200">
-            💬
-          </div>
-          <div>
-            <h3 class="font-bold text-slate-900 text-xs sm:text-sm">Tư Vấn Zalo 24/7</h3>
-            <p class="text-[11px] text-slate-500 mt-0.5">Kỹ thuật viên trực tiếp phản hồi, báo giá minh bạch trọn gói.</p>
+            <h3 class="font-bold text-slate-900 text-xs sm:text-sm">Thi Công Xưởng & Tận Nơi</h3>
+            <p class="text-[11px] text-slate-500 mt-0.5">Đội thợ tay nghề cao, lắp đặt nhanh gọn và thẩm mỹ.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 3. KHUNG LIÊN HỆ & BÁO GIÁ TRỰC TIẾP (SÁNG SỦA, CAO CẤP) -->
-  <section class="py-12 px-4 sm:px-6 bg-slate-50 text-center">
-    <div class="max-w-3xl mx-auto space-y-4">
-      <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-        Bạn Cần Tư Vấn Riêng Cho Dòng Xe Của Mình?
+  <!-- 3. DANH MỤC SẢN PHẨM TIÊU BIỂU (THẺ SẢN PHẨM RÕ NÉT, GIÁ RÕ RÀNG) -->
+  <section class="py-12 px-4 sm:px-6 bg-slate-50 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+        <div>
+          <div class="text-[11px] font-bold text-red-600 uppercase tracking-wider mb-1">
+            Sản Phẩm Được Tin Dùng Nhất
+          </div>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+            Thiết Bị Nâng Cấp Tiêu Biểu
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">
+            Dòng sản phẩm chính hãng có sẵn phụ kiện và mặt dưỡng tương thích các đời xe.
+          </p>
+        </div>
+
+        <a
+          href="/san-pham"
+          class="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1.5 transition shrink-0"
+        >
+          <span>Xem tất cả sản phẩm</span>
+          <span>→</span>
+        </a>
+      </div>
+
+      <!-- Grid 4 thẻ sản phẩm chuẩn Premium Automotive -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {featuredProducts.map((prod) => (
+          <ProductCard
+            id={prod.id}
+            slug={prod.slug}
+            name={prod.name}
+            brand={prod.brand}
+            categoryName={prod.categoryName}
+            price={prod.price}
+            salePrice={prod.salePrice}
+            image={prod.image}
+            specs={prod.specs}
+            warrantyMonths={prod.warrantyMonths}
+            isUniversal={prod.isUniversal}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. KHU VỰC TƯ VẤN NHANH & BÁO GIÁ ZALO (THU GỌN HỮU ÍCH) -->
+  <section class="py-10 px-4 sm:px-6 bg-white text-center">
+    <div class="max-w-2xl mx-auto space-y-3">
+      <h2 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
+        Cần Tư Vấn Riêng Cho Chiếc Xe Của Bạn?
       </h2>
-      <p class="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
-        Hãy chụp ảnh bảng điều khiển taplo xe hoặc nhắn tên xe qua Zalo, kỹ thuật viên Dcar Auto sẽ gửi ảnh mặt dưỡng thực tế và báo giá trọn gói cắm giắc zin.
+      <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+        Gửi tên xe hoặc ảnh chụp taplo qua Zalo, kỹ thuật viên Dcar Auto sẽ gửi ảnh mặt dưỡng thực tế và báo giá lắp đặt trọn gói không phát sinh.
       </p>
       <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
         <a
           href={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo.replace(/[^0-9]/g, '')}`}
           target="_blank"
           rel="noopener noreferrer"
-          class="px-6 py-3 rounded-xl bg-[#0068FF] hover:bg-[#0054cc] text-white font-extrabold text-xs shadow-lg shadow-blue-500/20 transition flex items-center gap-2 active:scale-95"
+          class="px-5 py-2.5 rounded-xl bg-[#0068FF] hover:bg-[#0052cc] text-white font-extrabold text-xs shadow-sm transition flex items-center gap-2 active:scale-95"
         >
-          <span>Nhắn Zalo Kỹ Thuật Viên:</span>
-          <span>{DEFAULT_SHOP_SETTINGS.zalo}</span>
+          <span>Nhắn Zalo Kỹ Thuật: {DEFAULT_SHOP_SETTINGS.zalo}</span>
         </a>
         <a
           href={`tel:${DEFAULT_SHOP_SETTINGS.phone.replace(/[^0-9]/g, '')}`}
-          class="px-6 py-3 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-extrabold text-xs border border-slate-300 transition flex items-center gap-2 active:scale-95 shadow-xs"
+          class="px-5 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-extrabold text-xs border border-slate-300 transition flex items-center gap-2 active:scale-95 shadow-2xs"
         >
-          <span>Gọi Hotline:</span>
-          <span>{DEFAULT_SHOP_SETTINGS.phone}</span>
+          <span>Gọi Hotline: {DEFAULT_SHOP_SETTINGS.phone}</span>
         </a>
       </div>
     </div>

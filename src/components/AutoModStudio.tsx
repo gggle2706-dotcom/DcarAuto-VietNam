@@ -15,13 +15,13 @@ interface SelectedAccessoryItem {
 
 // Danh mục phụ kiện lọc cho Cột 2
 const ACCESSORY_CATEGORIES = [
-  { id: 'all', name: 'Tất cả linh kiện' },
+  { id: 'all', name: 'Tất cả' },
   { id: 'mat-duong', name: 'Mặt dưỡng taplo' },
   { id: 'canbus', name: 'Canbus giải mã' },
   { id: 'giac-nguon', name: 'Giắc nguồn zin' },
   { id: 'pat-den', name: 'Pát Bi LED' },
   { id: 'day-dien', name: 'Dây sub & relay' },
-  { id: 'phu-kien-khac', name: 'Phụ kiện camera & LED' },
+  { id: 'phu-kien-khac', name: 'Phụ kiện camera' },
 ];
 
 export default function AutoModStudio() {
@@ -57,7 +57,6 @@ export default function AutoModStudio() {
       if (car) setCarInput(car);
     }
 
-    // Chọn sẵn 1 màn hình và phụ kiện mẫu để giao diện sinh động khi mở lên
     const defaultGear = MOCK_PRODUCTS.find((p) => p.slug === 'man-hinh-android-zestech-zx10-tieu-chuan') || MOCK_PRODUCTS[0];
     if (defaultGear) {
       setSelectedGears([{ product: defaultGear, quantity: 1 }]);
@@ -153,13 +152,13 @@ export default function AutoModStudio() {
 
   const totalItemsCount = selectedGears.length + selectedAccessories.length;
 
-  // Tạo nội dung gửi Zalo
+  // Tạo nội dung gửi Zalo có cấu trúc
   const zaloMessage = useMemo(() => {
-    let msg = `Xin chào Dcar Auto, tôi muốn tư vấn & nhận báo giá gói độ xe:\n`;
+    let msg = `Xin chào Dcar Auto, tôi muốn tư vấn & nhận báo giá gói nâng cấp:\n`;
     if (carInput.trim()) {
-      msg += `🚗 Xe của tôi: ${carInput.trim()}\n\n`;
+      msg += `🚗 Dòng xe của tôi: ${carInput.trim()}\n\n`;
     } else {
-      msg += `🚗 Dòng xe: (Chưa cung cấp tên xe, nhờ shop tư vấn theo xe của tôi)\n\n`;
+      msg += `🚗 Dòng xe: (Chưa nhập dòng xe, nhờ shop tư vấn theo phom xe của tôi)\n\n`;
     }
 
     msg += `📦 CÁC THIẾT BỊ ĐÃ CHỌN:\n`;
@@ -179,11 +178,11 @@ export default function AutoModStudio() {
       });
     }
 
-    msg += `\n💰 TỔNG TẠM TÍNH: ${totalPrice.toLocaleString('vi-VN')} đ\n`;
+    msg += `\n💰 TỔNG TIỀN TẠM TÍNH: ${totalPrice.toLocaleString('vi-VN')} đ\n`;
     if (customNote.trim()) {
-      msg += `💬 Câu hỏi / Yêu cầu thêm: ${customNote.trim()}\n`;
+      msg += `💬 Ghi chú thêm: ${customNote.trim()}\n`;
     }
-    msg += `\nNhờ kỹ thuật viên kiểm tra giắc zin chuẩn form xe và báo giá thi công trọn gói cho tôi nhé!`;
+    msg += `\nNhờ kỹ thuật viên kiểm tra phom mặt dưỡng, giắc zin và báo giá thi công trọn gói cho tôi nhé!`;
     return msg;
   }, [carInput, selectedGears, selectedAccessories, totalPrice, customNote]);
 
@@ -194,48 +193,52 @@ export default function AutoModStudio() {
     <div className="w-full bg-slate-100/70 text-slate-800 py-6 sm:py-8 px-3 sm:px-6">
       <div className="max-w-[1440px] mx-auto">
         {/* =========================================================================
-            STUDIO HEADER BANNER SÁNG SỦA, TINH TẾ
+            STUDIO HEADER: HƯỚNG DẪN 3 BƯỚC RÕ RÀNG
         ========================================================================== */}
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 mb-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-ping"></span>
-              <span className="text-xs font-black text-red-600 uppercase tracking-wider">
-                Dcar Auto Studio • Phối Đồ & Cấu Hình Trực Tiếp
-              </span>
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 mb-5 shadow-xs">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-ping"></span>
+                <span className="text-xs font-black text-red-600 uppercase tracking-wider">
+                  Dcar Auto Studio • Quy Trình 3 Bước Tự Phối Đồ
+                </span>
+              </div>
+              <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-1">
+                Tự Chọn Thiết Bị & Nhận Báo Giá Giắc Zin Trọn Gói
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+                Chủ động chọn thiết bị chính, linh kiện phụ trợ và gửi cấu hình trực tiếp qua Zalo kỹ thuật viên.
+              </p>
             </div>
-            <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-1">
-              Trung Tâm Tự Phối Thiết Bị & Giắc Cắm Zin Ô Tô
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Tự chọn thiết bị chính, linh kiện kết nối và gửi trực tiếp qua Zalo để Kỹ thuật viên kiểm tra chuẩn form xe và báo giá trọn gói.
-            </p>
-          </div>
 
-          {/* Các cam kết nhanh dạng pill nổi bật */}
-          <div className="flex flex-wrap items-center gap-2 text-xs shrink-0">
-            <span className="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 font-bold border border-emerald-200 flex items-center gap-1.5">
-              <span>✓</span>
-              <span>100% Cắm Giắc Zin</span>
-            </span>
-            <span className="px-3 py-1.5 rounded-xl bg-blue-50 text-blue-700 font-bold border border-blue-200 flex items-center gap-1.5">
-              <span>🛡️</span>
-              <span>Giữ Bảo Hành Hãng</span>
-            </span>
-            <span className="px-3 py-1.5 rounded-xl bg-amber-50 text-amber-700 font-bold border border-amber-200 flex items-center gap-1.5">
-              <span>⏱️</span>
-              <span>Báo Giá Zalo Sau 2 Phút</span>
-            </span>
+            {/* 3 Bước chỉ dẫn nhanh */}
+            <div className="flex items-center gap-2 sm:gap-3 text-xs shrink-0 bg-slate-50 p-2 rounded-xl border border-slate-200">
+              <div className="flex items-center gap-1.5 font-bold text-slate-800">
+                <span className="w-5 h-5 rounded-full bg-red-600 text-white font-black text-[11px] flex items-center justify-center">1</span>
+                <span>Chọn Thiết Bị</span>
+              </div>
+              <span className="text-slate-300">→</span>
+              <div className="flex items-center gap-1.5 font-bold text-slate-800">
+                <span className="w-5 h-5 rounded-full bg-blue-600 text-white font-black text-[11px] flex items-center justify-center">2</span>
+                <span>Chọn Giắc Zin</span>
+              </div>
+              <span className="text-slate-300">→</span>
+              <div className="flex items-center gap-1.5 font-bold text-slate-800">
+                <span className="w-5 h-5 rounded-full bg-[#0068FF] text-white font-black text-[11px] flex items-center justify-center">3</span>
+                <span>Báo Giá Zalo</span>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* NÚT CHUYỂN TAB TRÊN MOBILE & TABLET */}
-        <div className="lg:hidden flex items-center gap-1.5 mb-4 bg-white p-1.5 rounded-xl border border-slate-200 sticky top-16 z-30 shadow-sm">
+        <div className="lg:hidden flex items-center gap-1.5 mb-4 bg-white p-1.5 rounded-xl border border-slate-200 sticky top-16 z-30 shadow-xs">
           <button
             onClick={() => setActiveMobileTab('gears')}
             className={`flex-1 py-2 text-xs font-bold rounded-lg transition ${
               activeMobileTab === 'gears'
-                ? 'bg-red-600 text-white shadow-xs'
+                ? 'bg-red-600 text-white shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -245,7 +248,7 @@ export default function AutoModStudio() {
             onClick={() => setActiveMobileTab('accessories')}
             className={`flex-1 py-2 text-xs font-bold rounded-lg transition ${
               activeMobileTab === 'accessories'
-                ? 'bg-blue-600 text-white shadow-xs'
+                ? 'bg-blue-600 text-white shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -255,7 +258,7 @@ export default function AutoModStudio() {
             onClick={() => setActiveMobileTab('inbox')}
             className={`flex-1 py-2 text-xs font-bold rounded-lg transition flex items-center justify-center gap-1 ${
               activeMobileTab === 'inbox'
-                ? 'bg-[#0068FF] text-white shadow-xs'
+                ? 'bg-[#0068FF] text-white shadow-2xs'
                 : 'text-[#0068FF] hover:bg-blue-50'
             }`}
           >
@@ -265,32 +268,32 @@ export default function AutoModStudio() {
         </div>
 
         {/* =========================================================================
-            BỐ CỤC 3 CỘT SÁNG SỦA, SẮC NÉT (DESKTOP GRID)
+            BỐ CỤC 3 CỘT (DESKTOP GRID) - CHUẨN PREMIUM AUTOMOTIVE
         ========================================================================== */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
           {/* =========================================================================
-              CỘT 1: KHO THIẾT BỊ CHÍNH (Chiếm 4/12 cột ~ 35%)
+              BƯỚC 1: KHO THIẾT BỊ CHÍNH (Chiếm 4/12 cột ~ 35%)
           ========================================================================== */}
           <div
-            className={`lg:col-span-4 bg-white border-2 border-slate-200/90 rounded-2xl p-4 flex flex-col h-[760px] shadow-sm hover:shadow-md transition ${
+            className={`lg:col-span-4 bg-white border-2 border-slate-200/90 rounded-2xl p-4 flex flex-col h-[760px] shadow-xs hover:shadow-sm transition ${
               activeMobileTab === 'gears' ? 'block' : 'hidden lg:flex'
             }`}
           >
-            {/* Header Cột 1 */}
+            {/* Header Bước 1 */}
             <div className="pb-3 border-b border-slate-200 mb-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-7 h-7 rounded-lg bg-red-600 text-white font-black flex items-center justify-center text-sm shadow-xs">
-                    1
+                  <span className="px-2 py-0.5 rounded text-[10px] font-black bg-red-600 text-white uppercase tracking-wider shadow-2xs">
+                    BƯỚC 1
                   </span>
                   <div>
                     <h2 className="text-sm font-black text-slate-900 uppercase tracking-wider">
-                      Kho Thiết Bị Nâng Cấp
+                      Chọn Thiết Bị Chính
                     </h2>
                     <span className="text-[11px] text-slate-500 font-medium">Màn hình, camera 360, bi LED, loa sub</span>
                   </div>
                 </div>
-                <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
                   {filteredMainProducts.length} món
                 </span>
               </div>
@@ -314,10 +317,10 @@ export default function AutoModStudio() {
                 )}
               </div>
 
-              {/* THANH LỌC DANH MỤC NỔI BẬT */}
+              {/* Thanh lọc danh mục thiết bị */}
               <div className="mt-2.5 pt-1">
                 <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
-                  Chọn nhóm thiết bị:
+                  Nhóm thiết bị:
                 </div>
                 <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-1">
                   <button
@@ -325,7 +328,7 @@ export default function AutoModStudio() {
                     onClick={() => setActiveCategory('all')}
                     className={`text-[11px] px-3 py-1.5 rounded-lg font-bold shrink-0 transition ${
                       activeCategory === 'all'
-                        ? 'bg-red-600 text-white shadow-xs'
+                        ? 'bg-red-600 text-white shadow-2xs'
                         : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200'
                     }`}
                   >
@@ -338,7 +341,7 @@ export default function AutoModStudio() {
                       onClick={() => setActiveCategory(cat.slug)}
                       className={`text-[11px] px-3 py-1.5 rounded-lg font-bold shrink-0 transition ${
                         activeCategory === cat.slug
-                          ? 'bg-red-600 text-white shadow-xs'
+                          ? 'bg-red-600 text-white shadow-2xs'
                           : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 border border-slate-200'
                       }`}
                     >
@@ -349,7 +352,7 @@ export default function AutoModStudio() {
               </div>
             </div>
 
-            {/* Danh sách thẻ sản phẩm Cột 1 (Cuộn được) */}
+            {/* Danh sách thẻ sản phẩm Bước 1 (Cuộn được) */}
             <div className="flex-1 overflow-y-auto space-y-2.5 pr-1 text-xs">
               {filteredMainProducts.length === 0 ? (
                 <div className="py-12 text-center text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200 p-4">
@@ -365,12 +368,12 @@ export default function AutoModStudio() {
                       key={prod.id}
                       className={`p-3 rounded-xl border transition flex gap-3 ${
                         isSelected
-                          ? 'bg-red-50/40 border-red-500 shadow-sm ring-1 ring-red-400/40'
+                          ? 'bg-red-50/40 border-red-500 shadow-2xs ring-1 ring-red-400/40'
                           : 'bg-white border-slate-200 hover:border-red-300 hover:shadow-xs'
                       }`}
                     >
                       {/* Ảnh sản phẩm */}
-                      <div className="relative w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-slate-100 border border-slate-200">
+                      <div className="relative w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-slate-50 border border-slate-200">
                         <img
                           src={prod.image}
                           alt={prod.name}
@@ -378,8 +381,8 @@ export default function AutoModStudio() {
                           loading="lazy"
                         />
                         {prod.salePrice && (
-                          <span className="absolute top-1 left-1 px-1.5 py-0.2 rounded text-[9px] font-black bg-red-600 text-white shadow-xs">
-                            GIẢM GIÁ
+                          <span className="absolute top-1 left-1 px-1.5 py-0.2 rounded text-[9px] font-black bg-red-600 text-white shadow-2xs">
+                            GIẢM
                           </span>
                         )}
                       </div>
@@ -421,8 +424,8 @@ export default function AutoModStudio() {
                             onClick={() => toggleGear(prod)}
                             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 active:scale-95 cursor-pointer ${
                               isSelected
-                                ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs'
-                                : 'bg-slate-900 hover:bg-red-600 text-white shadow-xs'
+                                ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-2xs'
+                                : 'bg-slate-900 hover:bg-red-600 text-white shadow-2xs'
                             }`}
                           >
                             {isSelected ? (
@@ -447,41 +450,41 @@ export default function AutoModStudio() {
           </div>
 
           {/* =========================================================================
-              CỘT 2: GIẮC ZIN, MẶT DƯỠNG & PHỤ KIỆN (Chiếm 4/12 cột ~ 33%)
+              BƯỚC 2: CHỌN PHỤ KIỆN TƯƠNG THÍCH (Chiếm 4/12 cột ~ 33%)
           ========================================================================== */}
           <div
-            className={`lg:col-span-4 bg-white border-2 border-slate-200/90 rounded-2xl p-4 flex flex-col h-[760px] shadow-sm hover:shadow-md transition ${
+            className={`lg:col-span-4 bg-white border-2 border-slate-200/90 rounded-2xl p-4 flex flex-col h-[760px] shadow-xs hover:shadow-sm transition ${
               activeMobileTab === 'accessories' ? 'block' : 'hidden lg:flex'
             }`}
           >
-            {/* Header Cột 2 */}
+            {/* Header Bước 2 */}
             <div className="pb-3 border-b border-slate-200 mb-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-7 h-7 rounded-lg bg-blue-600 text-white font-black flex items-center justify-center text-sm shadow-xs">
-                    2
+                  <span className="px-2 py-0.5 rounded text-[10px] font-black bg-blue-600 text-white uppercase tracking-wider shadow-2xs">
+                    BƯỚC 2
                   </span>
                   <div>
                     <h2 className="text-sm font-black text-slate-900 uppercase tracking-wider">
-                      Giắc Zin & Phụ Kiện Kèm Theo
+                      Chọn Phụ Kiện Tương Thích
                     </h2>
-                    <span className="text-[11px] text-slate-500 font-medium">100% Cắm jack zin - Không cắt dây</span>
+                    <span className="text-[11px] text-slate-500 font-medium">Mặt dưỡng, giắc nguồn zin, Canbus</span>
                   </div>
                 </div>
-                <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
                   {selectedAccessories.length} đã chọn
                 </span>
               </div>
 
-              {/* Thông điệp cam kết giắc zin */}
+              {/* Cam kết giắc zin */}
               <div className="mt-3 p-2 bg-blue-50/70 border border-blue-200/80 rounded-xl flex items-center gap-2 text-xs text-blue-800">
                 <span className="text-base shrink-0">🔌</span>
                 <span className="text-[11px] leading-tight">
-                  Linh kiện chuẩn cắm giắc nhà máy. Giữ nguyên 100% bảo hành hãng của xe.
+                  100% Cắm jack zin theo phom xe. Giữ nguyên bảo hành hãng tuyệt đối.
                 </span>
               </div>
 
-              {/* THANH LỌC DANH MỤC PHỤ KIỆN */}
+              {/* Thanh lọc phụ kiện */}
               <div className="mt-2.5 pt-1">
                 <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
                   Phân loại phụ kiện:
@@ -492,9 +495,9 @@ export default function AutoModStudio() {
                       key={cat.id}
                       type="button"
                       onClick={() => setActiveAccCategory(cat.id)}
-                      className={`text-[11px] px-3 py-1.5 rounded-lg font-bold shrink-0 transition ${
+                      className={`text-[11px] px-2.5 py-1.5 rounded-lg font-bold shrink-0 transition ${
                         activeAccCategory === cat.id
-                          ? 'bg-blue-600 text-white shadow-xs'
+                          ? 'bg-blue-600 text-white shadow-2xs'
                           : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 border border-slate-200'
                       }`}
                     >
@@ -505,7 +508,7 @@ export default function AutoModStudio() {
               </div>
             </div>
 
-            {/* Danh sách thẻ linh kiện Cột 2 (Cuộn được) */}
+            {/* Danh sách thẻ linh kiện Bước 2 (Cuộn được) */}
             <div className="flex-1 overflow-y-auto space-y-2.5 pr-1 text-xs">
               {filteredAccessories.map((acc) => {
                 const isSelected = selectedAccessories.some((item) => item.accessory.id === acc.id);
@@ -518,7 +521,7 @@ export default function AutoModStudio() {
                     key={acc.id}
                     className={`p-3 rounded-xl border transition flex flex-col justify-between gap-2 ${
                       isSelected
-                        ? 'bg-blue-50/50 border-blue-500 shadow-sm ring-1 ring-blue-400/40'
+                        ? 'bg-blue-50/50 border-blue-500 shadow-2xs ring-1 ring-blue-400/40'
                         : isMatchedWithGear
                         ? 'bg-amber-50/30 border-amber-300 hover:border-blue-400'
                         : 'bg-white border-slate-200 hover:border-slate-300'
@@ -547,7 +550,7 @@ export default function AutoModStudio() {
                         onClick={() => toggleAccessory(acc)}
                         className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 active:scale-95 cursor-pointer ${
                           isSelected
-                            ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs'
+                            ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-2xs'
                             : 'bg-white hover:bg-blue-600 text-blue-700 hover:text-white border border-blue-400 transition'
                         }`}
                       >
@@ -571,35 +574,30 @@ export default function AutoModStudio() {
           </div>
 
           {/* =========================================================================
-              CỘT 3: INBOX QUA ZALO KỸ THUẬT VIÊN (Chiếm 4/12 cột ~ 32%)
+              BƯỚC 3: KIỂM TRA & NHẬN BÁO GIÁ ZALO (Chiếm 4/12 cột ~ 32%)
           ========================================================================== */}
           <div
-            className={`lg:col-span-4 bg-white border-2 border-[#0068FF] rounded-2xl p-4 flex flex-col h-[760px] shadow-xl relative ${
+            className={`lg:col-span-4 bg-white border-2 border-[#0068FF] rounded-2xl p-4 flex flex-col h-[760px] shadow-lg relative ${
               activeMobileTab === 'inbox' ? 'block' : 'hidden lg:flex'
             }`}
           >
-            {/* Header Cột 3: Khung Inbox Kỹ Thuật Viên */}
+            {/* Header Bước 3 */}
             <div className="pb-3 border-b border-slate-200 mb-3">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="relative">
-                    <div className="w-10 h-10 rounded-full bg-[#0068FF] flex items-center justify-center font-black text-white text-base shadow-sm">
-                      DC
-                    </div>
-                    <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white"></span>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-black bg-[#0068FF] text-white uppercase tracking-wider shadow-2xs">
+                    BƯỚC 3
+                  </span>
                   <div>
-                    <div className="flex items-center gap-1.5">
-                      <h2 className="text-sm font-black text-slate-900">Inbox Zalo Kỹ Thuật</h2>
-                      <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.2 rounded-full border border-emerald-200">
-                        Online
-                      </span>
-                    </div>
-                    <span className="text-[11px] text-slate-500 font-medium">
-                      Tư vấn chuẩn giắc zin 24/7 • Hotline: {DEFAULT_SHOP_SETTINGS.phone}
-                    </span>
+                    <h2 className="text-sm font-black text-slate-900 uppercase tracking-wider">
+                      Kiểm Tra & Báo Giá Zalo
+                    </h2>
+                    <span className="text-[11px] text-slate-500 font-medium">Tư vấn chuẩn form xe 24/7</span>
                   </div>
                 </div>
+                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                  Online
+                </span>
               </div>
 
               {/* Ô tự nhập dòng xe của khách */}
@@ -617,10 +615,10 @@ export default function AutoModStudio() {
               </div>
             </div>
 
-            {/* Nội dung danh sách món đã chọn (Cuộn được) */}
+            {/* Danh sách các món trong cấu hình (Cuộn được) */}
             <div className="flex-1 overflow-y-auto space-y-2 pr-1 text-xs">
               <div className="font-bold text-slate-700 text-[11px] uppercase tracking-wider mb-1 flex items-center justify-between">
-                <span>Cấu hình bạn đang chọn ({totalItemsCount} món):</span>
+                <span>Cấu hình đã chọn ({totalItemsCount} món):</span>
                 {totalItemsCount > 0 && (
                   <button
                     type="button"
@@ -637,8 +635,8 @@ export default function AutoModStudio() {
 
               {totalItemsCount === 0 ? (
                 <div className="py-12 text-center text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200 p-4">
-                  <span className="text-3xl block mb-2">📋</span>
-                  Bạn chưa chọn món nào. Hãy bấm <strong>[+ Chọn món]</strong> ở Cột 1 và Cột 2 để phối bộ nâng cấp cho xe.
+                  <span className="text-2xl block mb-2">📋</span>
+                  Chưa chọn món nào. Hãy bấm <strong>[+ Chọn món]</strong> ở Bước 1 & Bước 2 để phối bộ nâng cấp.
                 </div>
               ) : (
                 <>
@@ -697,7 +695,7 @@ export default function AutoModStudio() {
               {/* Ô gõ ghi chú thêm cho Kỹ thuật viên */}
               <div className="pt-2">
                 <label className="block text-[11px] font-bold text-slate-700 mb-1">
-                  Ghi chú riêng / Câu hỏi cho Kỹ thuật viên:
+                  Ghi chú riêng / Câu hỏi cho thợ:
                 </label>
                 <input
                   type="text"
@@ -709,14 +707,26 @@ export default function AutoModStudio() {
               </div>
             </div>
 
-            {/* Phần Chốt Đơn & Gửi Zalo (Cố định ở đáy Cột 3) */}
+            {/* Phân định tổng tiền & Nút gửi Zalo (Cố định ở đáy Bước 3) */}
             <div className="pt-3 border-t border-slate-200 mt-3">
-              {/* Tổng tiền tạm tính */}
-              <div className="flex items-baseline justify-between mb-2.5">
-                <span className="text-xs text-slate-600 font-semibold">Tổng tiền dự toán:</span>
-                <span className="text-xl font-black text-red-600">
-                  {totalPrice.toLocaleString('vi-VN')} đ
-                </span>
+              <div className="space-y-1 mb-2.5 text-xs">
+                <div className="flex items-center justify-between text-slate-600">
+                  <span>Tiền thiết bị & giắc zin:</span>
+                  <span className="font-bold text-slate-900">{totalPrice.toLocaleString('vi-VN')} đ</span>
+                </div>
+                <div className="flex items-center justify-between text-slate-600">
+                  <span>Công lắp đặt & vật tư phụ:</span>
+                  <span className="text-emerald-700 font-bold text-[11px]">Báo theo dòng xe</span>
+                </div>
+                <div className="flex items-baseline justify-between pt-1 border-t border-slate-100">
+                  <span className="text-xs text-slate-700 font-black">Tổng dự toán tạm tính:</span>
+                  <span className="text-lg sm:text-xl font-black text-red-600">
+                    {totalPrice.toLocaleString('vi-VN')} đ
+                  </span>
+                </div>
+                <p className="text-[10px] text-slate-400 italic">
+                  *Kỹ thuật viên sẽ xác nhận chuẩn form mặt dưỡng và báo giá thi công trọn gói qua Zalo.
+                </p>
               </div>
 
               {/* Nút to: CHAT & GỬI CẤU HÌNH QUA ZALO NGAY */}
@@ -724,22 +734,22 @@ export default function AutoModStudio() {
                 href={zaloUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3.5 px-4 rounded-xl bg-[#0068FF] hover:bg-[#0055d4] text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 transition transform active:scale-98"
+                className="w-full py-3.5 px-4 rounded-xl bg-[#0068FF] hover:bg-[#0055d4] text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md shadow-blue-500/25 transition transform active:scale-98"
               >
                 <svg className="w-5 h-5 fill-current shrink-0" viewBox="0 0 24 24">
                   <path d="M12 2C6.48 2 2 6.48 2 12c0 1.82.49 3.53 1.34 5L2 22l5.22-1.31C8.6 21.48 10.25 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z" />
                 </svg>
-                <span>GỬI CẤU HÌNH & CHAT QUA ZALO NGAY</span>
+                <span>GỬI CẤU HÌNH & BÁO GIÁ ZALO NGAY</span>
               </a>
 
-              {/* Thông tin Hotline */}
+              {/* Hotline hỗ trợ */}
               <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
-                <span>Zalo hỗ trợ: <strong className="text-slate-800">{DEFAULT_SHOP_SETTINGS.zalo}</strong></span>
+                <span>Zalo: <strong className="text-slate-800">{DEFAULT_SHOP_SETTINGS.zalo}</strong></span>
                 <a
                   href={`tel:${cleanZaloPhone}`}
                   className="text-red-600 hover:underline font-bold"
                 >
-                  Gọi Hotline ngay 📞
+                  Gọi Hotline: {DEFAULT_SHOP_SETTINGS.phone} 📞
                 </a>
               </div>
             </div>

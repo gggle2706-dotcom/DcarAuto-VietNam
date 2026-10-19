@@ -1,5 +1,110 @@
 ---
-const url = new URL(Astro.request.url);
-const search = url.search;
-return Astro.redirect(`/${search}`);
+import Layout from '@/layouts/Layout.astro';
+import ProductCard from '@/components/ProductCard.astro';
+import { DEFAULT_SHOP_SETTINGS, CATEGORIES_LIST } from '@/lib/constants';
+import { MOCK_PRODUCTS } from '@/lib/mock-products';
+
+const currentCategory = Astro.url.searchParams.get('category') || 'all';
+const filteredProducts = currentCategory === 'all'
+  ? MOCK_PRODUCTS
+  : MOCK_PRODUCTS.filter((p) => p.categorySlug === currentCategory);
 ---
+
+<Layout
+  title={`Danh Mục Sản Phẩm Phụ Kiện & Đồ Chơi Xe Hơi - ${DEFAULT_SHOP_SETTINGS.shop_name}`}
+  description="Khám phá toàn bộ phụ kiện ô tô chính hãng: màn hình Android, camera 360, độ đèn Bi LED, loa sub gầm ghế chuẩn giắc zin 100% tại Dcar Auto."
+>
+  <!-- Breadcrumb & Tiêu đề trang Sáng -->
+  <div class="bg-slate-100/80 border-b border-slate-200 py-6 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto">
+      <nav class="text-xs text-slate-500 mb-2 flex items-center gap-2">
+        <a href="/" class="hover:text-slate-900">Trang chủ</a>
+        <span>/</span>
+        <span class="text-red-600 font-semibold">Sản phẩm</span>
+      </nav>
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            Kho Sản Phẩm & Phụ Kiện Chính Hãng
+          </h1>
+          <p class="text-slate-600 text-xs sm:text-sm mt-1">
+            Cam kết 100% cắm giắc zin theo từng dòng xe, bảo hành điện tử chính hãng từ 12 - 36 tháng.
+          </p>
+        </div>
+
+        <a
+          href="/#studio"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-red-600 text-white font-bold text-xs transition shadow-xs shrink-0"
+        >
+          <span>🛠️ Tự Phối Đồ & Giắc Zin</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+    <!-- Thanh Lọc Danh Mục Ngang -->
+    <div class="mb-8 pb-4 border-b border-slate-200">
+      <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+        Chọn danh mục sản phẩm:
+      </div>
+      <div class="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-1 text-xs">
+        <a
+          href="/san-pham"
+          class={`px-3.5 py-2 rounded-xl font-bold shrink-0 transition ${
+            currentCategory === 'all'
+              ? 'bg-red-600 text-white shadow-2xs'
+              : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
+          }`}
+        >
+          Tất cả ({MOCK_PRODUCTS.length})
+        </a>
+        {CATEGORIES_LIST.map((cat) => {
+          const count = MOCK_PRODUCTS.filter((p) => p.categorySlug === cat.slug).length;
+          const isActive = currentCategory === cat.slug;
+          return (
+            <a
+              href={`/san-pham?category=${cat.slug}`}
+              class={`px-3.5 py-2 rounded-xl font-bold shrink-0 transition ${
+                isActive
+                  ? 'bg-red-600 text-white shadow-2xs'
+                  : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
+              }`}
+            >
+              {cat.name} {count > 0 ? `(${count})` : ''}
+            </a>
+          );
+        })}
+      </div>
+    </div>
+
+    <!-- Grid Sản phẩm -->
+    {filteredProducts.length === 0 ? (
+      <div class="py-16 text-center text-slate-500 bg-white rounded-2xl border border-dashed border-slate-200 p-6">
+        <p class="text-sm font-semibold mb-2">Chưa có sản phẩm nào trong danh mục này.</p>
+        <a href="/san-pham" class="text-red-600 font-bold hover:underline text-xs">
+          Quay lại xem tất cả sản phẩm →
+        </a>
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {filteredProducts.map((prod) => (
+          <ProductCard
+            id={prod.id}
+            slug={prod.slug}
+            name={prod.name}
+            brand={prod.brand}
+            categoryName={prod.categoryName}
+            price={prod.price}
+            salePrice={prod.salePrice}
+            image={prod.image}
+            specs={prod.specs}
+            warrantyMonths={prod.warrantyMonths}
+            isUniversal={prod.isUniversal}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+</Layout>

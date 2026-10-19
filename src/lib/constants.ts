@@ -22,6 +22,7 @@ export const DEFAULT_SHOP_SETTINGS = {
 
 export const NAVIGATION_LINKS = [
   { label: 'Trang chủ', href: '/' },
+  { label: 'Sản phẩm', href: '/san-pham' },
   { label: 'Kinh nghiệm & Video', href: '/blog' },
   { label: 'Giới thiệu', href: '/gioi-thieu' },
   { label: 'Liên hệ', href: '/lien-he' },
