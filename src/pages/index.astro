@@ -1,194 +1,108 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import CarSelectorWidget from '@/components/CarSelectorWidget';
-import ProductCard from '@/components/ProductCard.astro';
-import { CATEGORIES_LIST, CAR_BRANDS_SAMPLE, DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
-import { MOCK_PRODUCTS } from '@/lib/mock-products';
+import AutoModStudio from '@/components/AutoModStudio';
+import { DEFAULT_SHOP_SETTINGS } from '@/lib/constants';
 import { MOCK_POSTS } from '@/lib/mock-posts';
 import { parseVideoUrl } from '@/lib/video-helpers';
 
-const featuredProducts = MOCK_PRODUCTS.filter((p) => p.isFeatured).slice(0, 8);
 const latestPosts = MOCK_POSTS.slice(0, 3);
 ---
 
-<Layout>
-  <!-- 1. Hero Section Nền Sáng Thanh Lịch -->
-  <section class="bg-gradient-to-b from-slate-100 to-slate-50 py-10 sm:py-16 px-4 sm:px-6 border-b border-slate-200">
-    <div class="max-w-6xl mx-auto text-center space-y-4">
-      <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-        Nâng Cấp Phụ Kiện & Đồ Chơi Công Nghệ Ô Tô
-      </h1>
-
-      <p class="text-xs sm:text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed">
-        Phân phối và lắp đặt Màn hình Android, Camera 360, Âm thanh, Độ đèn Bi LED, Cảm biến áp suất lốp chuẩn giắc zin 100% theo từng đời xe.
-      </p>
-
-      <!-- Widget Tra cứu theo xe -->
-      <div class="pt-2">
-        <CarSelectorWidget client:load />
-      </div>
-
-      <!-- 4 Cam kết ngắn gọn -->
-      <div class="pt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto text-left text-xs text-slate-600">
-        <div class="flex items-center gap-2">
-          <span class="text-emerald-600 font-bold">✓</span>
-          <span>100% Cắm giắc zin theo xe</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="text-emerald-600 font-bold">✓</span>
-          <span>Bảo hành chính hãng 12 - 36 tháng</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="text-emerald-600 font-bold">✓</span>
-          <span>Hỗ trợ kỹ thuật trọn đời</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="text-emerald-600 font-bold">✓</span>
-          <span>Hỗ trợ lắp đặt tận nơi</span>
-        </div>
-      </div>
-    </div>
+<Layout
+  title={`Dcar Auto Vietnam - Trung Tâm Phối Đồ & Cấu Hình Độ Xe Chuyên Nghiệp`}
+  description={`Tự chọn màn hình android, camera 360, độ đèn bi LED, âm thanh và phụ kiện chuẩn giắc zin 100% theo xe. Nhận báo giá trọn gói trực tiếp qua Zalo kỹ thuật viên.`}
+>
+  <!-- 1. AUTO MOD STUDIO: TRUNG TÂM CẤU HÌNH & INBOX ZALO 3 CỘT (HERO CENTERPIECE) -->
+  <section class="bg-slate-950 border-b border-slate-800">
+    <AutoModStudio client:load />
   </section>
 
-  <!-- 2. Danh mục Nâng Cấp Nổi Bật -->
-  <section class="py-12 px-4 sm:px-6 max-w-7xl mx-auto">
-    <div class="flex items-center justify-between mb-6">
-      <h2 class="text-lg sm:text-xl font-bold text-slate-900">Danh Mục Sản Phẩm</h2>
-      <a href="/san-pham" class="text-xs font-semibold text-slate-600 hover:text-red-600 transition">
-        Xem tất cả →
-      </a>
-    </div>
-
-    <div id="home-categories-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-      {CATEGORIES_LIST.map((cat) => (
-        <a
-          href={`/san-pham?category=${cat.slug}`}
-          class="p-4 rounded-xl bg-white border border-slate-200 hover:border-red-500 hover:shadow-md transition flex flex-col justify-between group"
-        >
-          <div class="font-bold text-slate-800 group-hover:text-red-600 transition text-sm">
-            {cat.name}
-          </div>
-          <span class="text-[11px] text-slate-400 mt-3 flex items-center gap-1 group-hover:text-red-600 transition">
-            <span>Xem phụ kiện</span>
-            <span>→</span>
-          </span>
-        </a>
-      ))}
-    </div>
-  </section>
-
-  <!-- 3. Sản Phẩm Bán Chạy / Nổi Bật -->
-  <section class="py-12 px-4 sm:px-6 bg-slate-100/70 border-y border-slate-200">
+  <!-- 2. CAM KẾT VÀNG TỪ DCAR AUTO VIETNAM -->
+  <section class="py-10 px-4 sm:px-6 bg-slate-900 border-b border-slate-800 text-slate-200">
     <div class="max-w-7xl mx-auto">
-      <div class="flex items-center justify-between mb-6">
-        <div>
-          <h2 class="text-lg sm:text-xl font-bold text-slate-900">Sản Phẩm Được Lắp Đặt Nhiều Nhất</h2>
-          <p class="text-xs text-slate-500 mt-0.5">Sản phẩm chính hãng, đầy đủ mặt dưỡng zin và canbus theo xe</p>
-        </div>
-        <a href="/san-pham" class="text-xs font-semibold text-slate-600 hover:text-red-600 transition">
-          Xem toàn bộ (<span id="home-products-count">{MOCK_PRODUCTS.length}</span>) →
-        </a>
-      </div>
-
-      <!-- Tabs chuyển nhanh danh mục trên Trang Chủ -->
-      <div class="mb-6 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none" id="home-category-tabs">
-        <button
-          type="button"
-          data-cat-slug=""
-          class="home-cat-tab shrink-0 text-xs px-3.5 py-1.5 rounded-xl font-bold bg-slate-900 text-white shadow-xs transition cursor-pointer"
-        >
-          Tất cả sản phẩm
-        </button>
-        {CATEGORIES_LIST.slice(0, 6).map((cat) => (
-          <button
-            type="button"
-            data-cat-slug={cat.slug}
-            class="home-cat-tab shrink-0 text-xs px-3.5 py-1.5 rounded-xl font-medium bg-white text-slate-700 border border-slate-200 hover:border-red-500 hover:text-red-600 shadow-2xs transition cursor-pointer"
-          >
-            {cat.name}
-          </button>
-        ))}
-      </div>
-
-      <div id="home-featured-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        {featuredProducts.map((prod) => (
-          <ProductCard
-            id={prod.id}
-            slug={prod.slug}
-            name={prod.name}
-            brand={prod.brand}
-            categoryName={prod.categoryName}
-            price={prod.price}
-            salePrice={prod.salePrice}
-            image={prod.image}
-            specs={prod.specs}
-            warrantyMonths={prod.warrantyMonths}
-            isUniversal={prod.isUniversal}
-          />
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. Lựa Chọn Theo Hãng Xe -->
-  <section class="py-12 px-4 sm:px-6 max-w-7xl mx-auto">
-    <div class="text-center max-w-xl mx-auto mb-8">
-      <h2 class="text-lg sm:text-xl font-bold text-slate-900">Tra Cứu Theo Hãng Xe Của Bạn</h2>
-      <p class="text-xs text-slate-500 mt-1">Bấm chọn hãng xe để xem ngay toàn bộ phụ kiện tương thích</p>
-    </div>
-
-    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
-      {CAR_BRANDS_SAMPLE.map((brand) => (
-        <a
-          href={`/tim-theo-xe?brand=${brand.slug}`}
-          class="p-4 rounded-xl bg-white border border-slate-200 hover:border-red-500 hover:shadow-sm text-center transition flex flex-col items-center justify-center gap-2 group"
-        >
-          <div class="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-red-50 text-slate-700 group-hover:text-red-600 font-extrabold text-sm flex items-center justify-center transition">
-            {brand.name[0]}
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-start gap-3">
+          <div class="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 font-black text-lg flex items-center justify-center shrink-0 border border-emerald-500/30">
+            ✓
           </div>
-          <span class="font-semibold text-xs text-slate-700 group-hover:text-red-600 transition">
-            {brand.name}
-          </span>
-        </a>
-      ))}
+          <div>
+            <h3 class="font-bold text-white text-xs sm:text-sm">100% Giắc Zin Theo Xe</h3>
+            <p class="text-[11px] text-slate-400 mt-0.5">Không cắt trích 1 sợi dây điện, giữ trọn bảo hành hãng.</p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-start gap-3">
+          <div class="w-10 h-10 rounded-lg bg-blue-500/20 text-blue-400 font-black text-lg flex items-center justify-center shrink-0 border border-blue-500/30">
+            🛡️
+          </div>
+          <div>
+            <h3 class="font-bold text-white text-xs sm:text-sm">Bảo Hành 12 - 36 Tháng</h3>
+            <p class="text-[11px] text-slate-400 mt-0.5">Lỗi 1 đổi 1 nhanh chóng, kích hoạt bảo hành điện tử chính hãng.</p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-start gap-3">
+          <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 font-black text-lg flex items-center justify-center shrink-0 border border-amber-500/30">
+            🚗
+          </div>
+          <div>
+            <h3 class="font-bold text-white text-xs sm:text-sm">Lắp Đặt Tận Nơi</h3>
+            <p class="text-[11px] text-slate-400 mt-0.5">Hỗ trợ kỹ thuật viên thi công tại nhà hoặc tại xưởng chuyên nghiệp.</p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-start gap-3">
+          <div class="w-10 h-10 rounded-lg bg-red-500/20 text-red-400 font-black text-lg flex items-center justify-center shrink-0 border border-red-500/30">
+            💬
+          </div>
+          <div>
+            <h3 class="font-bold text-white text-xs sm:text-sm">Tư Vấn Zalo 24/7</h3>
+            <p class="text-[11px] text-slate-400 mt-0.5">Kỹ thuật viên trực tiếp phản hồi, báo giá minh bạch trọn gói.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- 5. Dự Án Thi Công Thực Tế & Video Hướng Dẫn -->
-  <section class="py-12 px-4 sm:px-6 bg-slate-50 border-t border-slate-200">
+  <!-- 3. DỰ ÁN THI CÔNG THỰC TẾ & VIDEO REVIEW -->
+  <section class="py-14 px-4 sm:px-6 bg-slate-900 border-b border-slate-800">
     <div class="max-w-7xl mx-auto">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
         <div>
           <div class="flex items-center gap-2 mb-1">
-            <span class="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse"></span>
-            <span class="text-xs font-bold text-red-600 uppercase tracking-wider">Video & Hình Ảnh Thực Tế</span>
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
+            <span class="text-xs font-bold text-red-400 uppercase tracking-wider">Hình Ảnh & Video Thực Tế</span>
           </div>
-          <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+          <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">
             Kinh Nghiệm & Dự Án Đã Thi Công
           </h2>
-          <p class="text-xs text-slate-500 mt-0.5">
-            Xem thực tế hình ảnh lắp đặt màn hình, độ đèn bi LED, cách âm và loa sub trên từng dòng xe
+          <p class="text-xs text-slate-400 mt-0.5">
+            Xem thực tế các xe Vios, Accent, Xpander, Ranger, SantaFe... vừa hoàn thiện lắp đặt tại Dcar Auto
           </p>
         </div>
 
-        <a href="/blog" class="text-xs font-semibold text-red-600 hover:underline flex items-center gap-1 shrink-0">
+        <a
+          href="/blog"
+          class="text-xs font-bold text-red-400 hover:text-red-300 flex items-center gap-1.5 transition shrink-0"
+        >
           <span>Xem tất cả bài viết & video</span>
           <span>→</span>
         </a>
       </div>
 
-      <div id="home-latest-posts-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         {latestPosts.map((post) => {
           const video = parseVideoUrl(post.videoUrl);
           return (
-            <article class="flex flex-col rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md transition overflow-hidden group">
-              <a href={`/blog/${post.slug}`} class="relative aspect-video overflow-hidden bg-slate-100 block">
+            <article class="flex flex-col rounded-2xl bg-slate-800/80 border border-slate-700/80 hover:border-slate-600 hover:shadow-xl transition overflow-hidden group">
+              <a href={`/blog/${post.slug}`} class="relative aspect-video overflow-hidden bg-slate-950 block">
                 <img
                   src={post.image}
                   alt={post.title}
-                  class="w-full h-full object-cover group-hover:scale-103 transition duration-300"
+                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                  loading="lazy"
                 />
-                <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[11px] font-semibold bg-white/90 text-slate-800 border border-slate-200 shadow-2xs">
+                <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[11px] font-bold bg-slate-950/80 text-white backdrop-blur-xs border border-slate-700">
                   {post.category}
                 </span>
 
@@ -205,30 +119,26 @@ const latestPosts = MOCK_POSTS.slice(0, 3);
                   <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1.5">
                     <span>{post.publishedAt}</span>
                     {post.relatedCar && (
-                      <span class="text-slate-600 font-semibold truncate max-w-[140px]">
+                      <span class="text-red-400 font-semibold truncate max-w-[140px]">
                         🚗 {post.relatedCar}
                       </span>
                     )}
                   </div>
 
-                  <h3 class="font-bold text-sm text-slate-900 group-hover:text-red-600 transition line-clamp-2 mb-2 leading-snug">
+                  <h3 class="font-bold text-sm text-white group-hover:text-red-400 transition line-clamp-2 mb-2 leading-snug">
                     <a href={`/blog/${post.slug}`}>{post.title}</a>
                   </h3>
-                  <p class="text-slate-600 line-clamp-2 leading-relaxed">
+                  <p class="text-slate-400 line-clamp-2 leading-relaxed">
                     {post.excerpt}
                   </p>
                 </div>
 
-                <div class="pt-3 border-t border-slate-100 mt-4 flex items-center justify-between">
-                  {post.relatedProductIds && post.relatedProductIds.length > 0 ? (
-                    <span class="text-[11px] text-emerald-700 font-medium">
-                      🛠️ {post.relatedProductIds.length} phụ kiện gắn kèm
-                    </span>
-                  ) : (
-                    <span class="text-[11px] text-slate-400">Tư vấn kỹ thuật</span>
-                  )}
-                  <a href={`/blog/${post.slug}`} class="text-red-600 hover:underline font-semibold flex items-center gap-1">
-                    <span>Xem dự án</span>
+                <div class="pt-3 border-t border-slate-700/70 mt-4 flex items-center justify-between">
+                  <span class="text-[11px] text-emerald-400 font-medium">
+                    🛠️ Kèm giắc zin theo xe
+                  </span>
+                  <a href={`/blog/${post.slug}`} class="text-red-400 hover:underline font-bold flex items-center gap-1">
+                    <span>Xem chi tiết</span>
                     <span>→</span>
                   </a>
                 </div>
@@ -240,231 +150,33 @@ const latestPosts = MOCK_POSTS.slice(0, 3);
     </div>
   </section>
 
-  <!-- 6. Khung Liên Hệ & Báo Giá Thực Tế -->
-  <section class="py-12 px-4 sm:px-6 bg-white border-t border-slate-200">
-    <div class="max-w-4xl mx-auto text-center space-y-4">
-      <h2 class="text-xl sm:text-2xl font-bold text-slate-900">
-        Bạn Chưa Rõ Xe Của Mình Lắp Được Những Gì?
+  <!-- 4. KHUNG LIÊN HỆ & BÁO GIÁ TRỰC TIẾP -->
+  <section class="py-12 px-4 sm:px-6 bg-slate-950 text-center">
+    <div class="max-w-3xl mx-auto space-y-4">
+      <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">
+        Bạn Cần Tư Vấn Riêng Cho Dòng Xe Của Mình?
       </h2>
-      <p class="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
-        Hãy chụp ảnh bảng điều khiển hoặc nhắn tên dòng xe qua Zalo, kỹ thuật viên sẽ tư vấn cụ thể loại màn hình, mặt dưỡng và báo giá trọn gói thi công.
+      <p class="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
+        Hãy chụp ảnh bảng điều khiển taplo xe hoặc nhắn tên xe qua Zalo, kỹ thuật viên Dcar Auto sẽ gửi ảnh mặt dưỡng thực tế và báo giá trọn gói cắm giắc zin.
       </p>
       <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
         <a
-          href={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo}`}
+          href={`https://zalo.me/${DEFAULT_SHOP_SETTINGS.zalo.replace(/[^0-9]/g, '')}`}
           target="_blank"
           rel="noopener noreferrer"
-          class="shop-zalo-link px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition"
+          class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs shadow-lg shadow-blue-600/30 transition flex items-center gap-2 active:scale-95"
         >
-          Nhắn Zalo Kỹ Thuật Viên (<span class="shop-zalo-val">{DEFAULT_SHOP_SETTINGS.zalo}</span>)
+          <span>Nhắn Zalo Kỹ Thuật Viên:</span>
+          <span>{DEFAULT_SHOP_SETTINGS.zalo}</span>
         </a>
         <a
           href={`tel:${DEFAULT_SHOP_SETTINGS.phone.replace(/[^0-9]/g, '')}`}
-          class="shop-phone-link px-6 py-3 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-300 transition"
+          class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-extrabold text-xs border border-slate-700 transition flex items-center gap-2 active:scale-95"
         >
-          Gọi Hotline: <span class="shop-phone-val">{DEFAULT_SHOP_SETTINGS.phone}</span>
+          <span>Gọi Hotline:</span>
+          <span>{DEFAULT_SHOP_SETTINGS.phone}</span>
         </a>
       </div>
     </div>
   </section>
-
-  <script id="home-initial-products" type="application/json" set:html={JSON.stringify(MOCK_PRODUCTS)}></script>
-
-  <!-- Client-side Hydration Script: Tự động tải sản phẩm, danh mục và bài viết từ localStorage nếu có -->
-  <script is:inline>
-    (function () {
-      try {
-        const formatVND = function (n) {
-          return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n);
-        };
-
-        const parseVideoBadge = function (url) {
-          if (!url) return null;
-          const u = url.toLowerCase();
-          if (u.includes('youtube.com') || u.includes('youtu.be')) return { name: 'YouTube', bg: 'bg-red-600 text-white' };
-          if (u.includes('tiktok.com')) return { name: 'TikTok', bg: 'bg-slate-950 text-white' };
-          if (u.includes('facebook.com') || u.includes('fb.watch')) return { name: 'Facebook', bg: 'bg-blue-600 text-white' };
-          return { name: 'Video', bg: 'bg-slate-800 text-white' };
-        };
-
-        // Lấy danh sách sản phẩm
-        const homeProds = (function() {
-          const s = localStorage.getItem('app_products');
-          if (s) { try { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; } catch(e){} }
-          const raw = document.getElementById('home-initial-products');
-          if (raw && raw.textContent) { try { return JSON.parse(raw.textContent); } catch(e){} }
-          return [];
-        })();
-
-        // Xử lý chuyển Tabs danh mục nổi bật trên Trang Chủ
-        document.querySelectorAll('.home-cat-tab').forEach(function(tab) {
-          tab.addEventListener('click', function() {
-            const cat = tab.getAttribute('data-cat-slug') || '';
-            document.querySelectorAll('.home-cat-tab').forEach(function(t) {
-              if (t === tab) {
-                t.className = 'home-cat-tab shrink-0 text-xs px-3.5 py-1.5 rounded-xl font-bold bg-slate-900 text-white shadow-xs transition cursor-pointer';
-              } else {
-                t.className = 'home-cat-tab shrink-0 text-xs px-3.5 py-1.5 rounded-xl font-medium bg-white text-slate-700 border border-slate-200 hover:border-red-500 hover:text-red-600 shadow-2xs transition cursor-pointer';
-              }
-            });
-
-            const filtered = cat ? homeProds.filter(function(p) { return p.categorySlug === cat; }) : homeProds;
-            const grid = document.getElementById('home-featured-products-grid');
-            if (grid) {
-              grid.innerHTML = (filtered.slice(0, 8)).map(function(p) {
-                const hasDiscount = p.salePrice && p.salePrice < p.price;
-                const currentPrice = hasDiscount ? p.salePrice : p.price;
-                return '<div class="flex flex-col rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md transition overflow-hidden group">' +
-                  '<a href="/san-pham/' + p.slug + '" class="relative aspect-[4/3] bg-slate-100 overflow-hidden block">' +
-                    '<img src="' + p.image + '" alt="' + p.name + '" loading="lazy" class="w-full h-full object-cover group-hover:scale-103 transition duration-300" />' +
-                    (hasDiscount ? '<span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[11px] font-bold bg-red-600 text-white shadow-xs">Giảm giá</span>' : '') +
-                  '</a>' +
-                  '<div class="p-4 flex-1 flex flex-col justify-between text-xs">' +
-                    '<div>' +
-                      '<div class="text-[11px] text-slate-500 mb-1.5 flex items-center justify-between">' +
-                        '<span class="font-bold text-slate-700 uppercase tracking-wide">' + (p.brand || '') + '</span>' +
-                        '<span class="text-slate-400">' + (p.categoryName || '') + '</span>' +
-                      '</div>' +
-                      '<h3 class="font-bold text-slate-900 text-sm line-clamp-2 group-hover:text-red-600 transition mb-2.5 leading-snug">' +
-                        '<a href="/san-pham/' + p.slug + '">' + p.name + '</a>' +
-                      '</h3>' +
-                    '</div>' +
-                    '<div class="pt-3 border-t border-slate-100 mt-auto">' +
-                      '<div class="mb-3">' +
-                        '<span class="text-base font-extrabold text-red-600">' + formatVND(currentPrice) + '</span>' +
-                        (hasDiscount ? ' <span class="text-xs text-slate-400 line-through">' + formatVND(p.price) + '</span>' : '') +
-                      '</div>' +
-                      '<div class="grid grid-cols-2 gap-2 text-xs">' +
-                        '<a href="/san-pham/' + p.slug + '" class="py-2 text-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold transition">Xem chi tiết</a>' +
-                        '<a href="https://zalo.me/0858382468?text=' + encodeURIComponent('Xin chào shop, tôi cần tư vấn sản phẩm: ' + p.name) + '" target="_blank" rel="noopener noreferrer" class="py-2 text-center rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition shadow-xs">Nhắn Zalo</a>' +
-                      '</div>' +
-                    '</div>' +
-                  '</div>' +
-                '</div>';
-              }).join('');
-            }
-          });
-        });
-
-        // 1. Hydrate Categories
-        const savedCats = localStorage.getItem('app_categories');
-        if (savedCats) {
-          const cats = JSON.parse(savedCats);
-          if (Array.isArray(cats) && cats.length > 0) {
-            const catGrid = document.getElementById('home-categories-grid');
-            if (catGrid) {
-              catGrid.innerHTML = cats.map(function (c) {
-                return '<a href="/san-pham?category=' + c.slug + '" class="p-4 rounded-xl bg-white border border-slate-200 hover:border-red-500 hover:shadow-md transition flex flex-col justify-between group">' +
-                  '<div class="font-bold text-slate-800 group-hover:text-red-600 transition text-sm">' + c.name + '</div>' +
-                  '<span class="text-[11px] text-slate-400 mt-3 flex items-center gap-1 group-hover:text-red-600 transition">' +
-                  '<span>Xem phụ kiện</span><span>→</span></span></a>';
-              }).join('');
-            }
-          }
-        }
-
-        // 2. Hydrate Featured Products
-        const savedProds = localStorage.getItem('app_products');
-        if (savedProds) {
-          const prods = JSON.parse(savedProds);
-          if (Array.isArray(prods) && prods.length > 0) {
-            const countEl = document.getElementById('home-products-count');
-            if (countEl) countEl.textContent = prods.length;
-
-            const featured = prods.filter(function (p) { return p.isFeatured; }).slice(0, 8);
-            const displayProds = featured.length > 0 ? featured : prods.slice(0, 8);
-            const prodGrid = document.getElementById('home-featured-products-grid');
-            if (prodGrid) {
-              prodGrid.innerHTML = displayProds.map(function (p) {
-                const hasDiscount = p.salePrice && p.salePrice < p.price;
-                const discountPct = hasDiscount ? Math.round(((p.price - p.salePrice) / p.price) * 100) : 0;
-                const specs = Array.isArray(p.specs) ? p.specs.slice(0, 3) : [];
-
-                return '<div class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition flex flex-col justify-between group">' +
-                  '<div>' +
-                    '<a href="/san-pham/' + p.slug + '" class="block relative aspect-4/3 bg-slate-50 overflow-hidden">' +
-                      '<img src="' + p.image + '" alt="' + p.name + '" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src=\'/images/placeholder.jpg\'" />' +
-                      (hasDiscount ? '<span class="absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-bold bg-red-600 text-white shadow-2xs">-' + discountPct + '%</span>' : '') +
-                      '<span class="absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900/80 text-white backdrop-blur-xs">' + (p.warrantyMonths || 24) + 'T BH</span>' +
-                    '</a>' +
-                    '<div class="p-3.5">' +
-                      '<div class="text-[11px] text-slate-400 font-medium mb-1">' + (p.brand || 'Chính hãng') + '</div>' +
-                      '<h3 class="font-bold text-xs text-slate-800 line-clamp-2 min-h-8 mb-2 group-hover:text-red-600 transition">' +
-                        '<a href="/san-pham/' + p.slug + '">' + p.name + '</a>' +
-                      '</h3>' +
-                      (specs.length > 0 ? (
-                        '<div class="space-y-1 py-1.5 mb-2 border-y border-slate-100">' +
-                          specs.map(function (s) {
-                            return '<div class="text-[11px] text-slate-600 truncate flex items-center gap-1.5">' +
-                              '<span class="text-emerald-600 font-bold">✓</span>' +
-                              '<span class="text-slate-400 font-medium">' + s.k + ':</span>' +
-                              '<span class="font-semibold text-slate-700">' + s.v + '</span>' +
-                            '</div>';
-                          }).join('') +
-                        '</div>'
-                      ) : '') +
-                    '</div>' +
-                  '</div>' +
-                  '<div class="p-3.5 pt-0 mt-auto">' +
-                    '<div class="flex items-baseline justify-between mb-3">' +
-                      '<div>' +
-                        '<span class="text-sm font-extrabold text-red-600">' + formatVND(p.salePrice || p.price) + '</span>' +
-                        (hasDiscount ? '<div class="text-[10px] text-slate-400 line-through">' + formatVND(p.price) + '</div>' : '') +
-                      '</div>' +
-                      '<span class="text-[10px] text-slate-400 font-medium">' + (p.categoryName || '') + '</span>' +
-                    '</div>' +
-                    '<a href="/san-pham/' + p.slug + '" class="block w-full text-center py-2 rounded-lg bg-slate-900 hover:bg-red-600 text-white font-bold text-xs transition">' +
-                      'Xem Chi Tiết & Báo Giá' +
-                    '</a>' +
-                  '</div>' +
-                '</div>';
-              }).join('');
-            }
-          }
-        }
-
-        // 3. Hydrate Latest Posts
-        const savedPosts = localStorage.getItem('app_posts');
-        if (savedPosts) {
-          const posts = JSON.parse(savedPosts);
-          if (Array.isArray(posts) && posts.length > 0) {
-            const latest = posts.slice(0, 3);
-            const postGrid = document.getElementById('home-latest-posts-grid');
-            if (postGrid) {
-              postGrid.innerHTML = latest.map(function (post) {
-                const vid = parseVideoBadge(post.videoUrl);
-                const hasRel = post.relatedProductIds && post.relatedProductIds.length > 0;
-
-                return '<article class="flex flex-col rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md transition overflow-hidden group">' +
-                  '<a href="/blog/' + post.slug + '" class="relative aspect-video overflow-hidden bg-slate-100 block">' +
-                    '<img src="' + post.image + '" alt="' + post.title + '" class="w-full h-full object-cover group-hover:scale-103 transition duration-300" onerror="this.src=\'/images/placeholder.jpg\'" />' +
-                    '<span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[11px] font-semibold bg-white/90 text-slate-800 border border-slate-200 shadow-2xs">' + (post.category || 'Chia sẻ') + '</span>' +
-                    (vid ? '<span class="absolute bottom-2.5 left-2.5 px-2 py-0.5 rounded text-[10px] font-bold shadow-xs flex items-center gap-1 ' + vid.bg + '"><span>▶</span><span>Video ' + vid.name + '</span></span>' : '') +
-                  '</a>' +
-                  '<div class="p-4 flex-1 flex flex-col justify-between text-xs">' +
-                    '<div>' +
-                      '<div class="flex items-center justify-between text-[11px] text-slate-400 mb-1.5">' +
-                        '<span>' + (post.publishedAt || '') + '</span>' +
-                        (post.relatedCar ? '<span class="text-slate-600 font-semibold truncate max-w-[140px]">🚗 ' + post.relatedCar + '</span>' : '') +
-                      '</div>' +
-                      '<h3 class="font-bold text-sm text-slate-900 group-hover:text-red-600 transition line-clamp-2 mb-2 leading-snug">' +
-                        '<a href="/blog/' + post.slug + '">' + post.title + '</a>' +
-                      '</h3>' +
-                      '<p class="text-slate-600 line-clamp-2 leading-relaxed">' + (post.excerpt || '') + '</p>' +
-                    '</div>' +
-                    '<div class="pt-3 border-t border-slate-100 mt-4 flex items-center justify-between">' +
-                      (hasRel ? '<span class="text-[11px] text-emerald-700 font-medium">🛠️ ' + post.relatedProductIds.length + ' phụ kiện gắn kèm</span>' : '<span class="text-[11px] text-slate-400">Tư vấn kỹ thuật</span>') +
-                      '<a href="/blog/' + post.slug + '" class="text-red-600 hover:underline font-semibold flex items-center gap-1"><span>Xem dự án</span><span>→</span></a>' +
-                    '</div>' +
-                  '</div>' +
-                '</article>';
-              }).join('');
-            }
-          }
-        }
-      } catch (e) {
-        console.error('Home hydration error:', e);
-      }
-    })();
-  </script>
 </Layout>
