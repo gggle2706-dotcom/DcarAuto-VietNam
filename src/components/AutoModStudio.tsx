@@ -193,42 +193,25 @@ export default function AutoModStudio() {
     <div className="w-full bg-slate-100/70 text-slate-800 py-6 sm:py-8 px-3 sm:px-6">
       <div className="max-w-[1440px] mx-auto">
         {/* =========================================================================
-            STUDIO HEADER: HƯỚNG DẪN 3 BƯỚC RÕ RÀNG
+            HEADER DANH MỤC SẢN PHẨM (TINH GỌN THEO YÊU CẦU)
         ========================================================================== */}
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 mb-5 shadow-xs">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-ping"></span>
-                <span className="text-xs font-black text-red-600 uppercase tracking-wider">
-                  Dcar Auto Studio • Quy Trình 3 Bước Tự Phối Đồ
-                </span>
-              </div>
-              <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-1">
-                Tự Chọn Thiết Bị & Nhận Báo Giá Giắc Zin Trọn Gói
-              </h1>
-              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-                Chủ động chọn thiết bị chính, linh kiện phụ trợ và gửi cấu hình trực tiếp qua Zalo kỹ thuật viên.
-              </p>
-            </div>
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 mb-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              Danh Mục Sản Phẩm
+            </h1>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Chọn thiết bị và phụ kiện cắm giắc zin theo xe, nhận báo giá trọn gói trực tiếp qua Zalo kỹ thuật viên.
+            </p>
+          </div>
 
-            {/* 3 Bước chỉ dẫn nhanh */}
-            <div className="flex items-center gap-2 sm:gap-3 text-xs shrink-0 bg-slate-50 p-2 rounded-xl border border-slate-200">
-              <div className="flex items-center gap-1.5 font-bold text-slate-800">
-                <span className="w-5 h-5 rounded-full bg-red-600 text-white font-black text-[11px] flex items-center justify-center">1</span>
-                <span>Chọn Thiết Bị</span>
-              </div>
-              <span className="text-slate-300">→</span>
-              <div className="flex items-center gap-1.5 font-bold text-slate-800">
-                <span className="w-5 h-5 rounded-full bg-blue-600 text-white font-black text-[11px] flex items-center justify-center">2</span>
-                <span>Chọn Giắc Zin</span>
-              </div>
-              <span className="text-slate-300">→</span>
-              <div className="flex items-center gap-1.5 font-bold text-slate-800">
-                <span className="w-5 h-5 rounded-full bg-[#0068FF] text-white font-black text-[11px] flex items-center justify-center">3</span>
-                <span>Báo Giá Zalo</span>
-              </div>
-            </div>
+          <div className="flex items-center gap-2 text-xs font-semibold shrink-0">
+            <span className="px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 font-bold border border-emerald-200 flex items-center gap-1">
+              ✓ 100% Cắm Giắc Zin
+            </span>
+            <span className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 font-bold border border-blue-200 flex items-center gap-1">
+              🛡️ Giữ Bảo Hành Hãng
+            </span>
           </div>
         </div>
 
